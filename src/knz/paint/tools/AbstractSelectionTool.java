@@ -10,6 +10,15 @@ public abstract class AbstractSelectionTool extends AbstractTool {
 
     protected Polygon polygon = new Polygon();
 
+    @Override
+    public boolean needsRepaint() {
+        return true;
+    }
+
+    public void selectNone() {
+        polygon.reset();
+    }
+
     public void clearSelection(Graphics2D g2d) {
         if (polygon.npoints > 2) {
             g2d.setColor(mainPanel.getColorSecondary());
@@ -19,7 +28,7 @@ public abstract class AbstractSelectionTool extends AbstractTool {
     }
 
     protected void drawSelection(Graphics2D g2d, boolean includeCurrentPixel) {
-        if ((includeCurrentPixel && (x < 0 || y < 0)) || polygon.npoints < 1) {
+        if (polygon.npoints < 1) {
             return;
         }
         Polygon polygon2;

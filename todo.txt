@@ -2,20 +2,26 @@ all FIXMEs
 all TODOs
 
 
+color picker window
+    show primary color and hsb/rgb/a
+    show secondary color and hsb/rgb/a
+    values should be textfields (editable, as hex)
+    vertical colored sliders for rgbhsba (these will adaptively change colors)
+transparency support
+    new should either use black,white,transparent,a specific color,primary color or secondary color
+    clear selection could use transparent
+    any tool that uses setrgb might need to be adjusted to use drawline or smth
+    any tool that does not use setrgb should already work
+
+
 consistent usage of various tools
 * Use keyboard keys !? or double click & right click !?
     'A': Apply (polygon will be applied to image and the operation is done)
     'C': Cancel (cancel operation and nothing will be applied)
 
 
-show primary and secondary color in colorbar and their rgba/hsba
-allow specific rgba/hsba colors to be typed into the colorbar
-transparency support
-
-
 selection tools
     move selection
-fill with color tool (produces StackOverflows right now, look at https://en.wikipedia.org/wiki/Flood_fill#Span_Filling)
 brush tool
     with brush heads/sizes
     dashing etc
@@ -30,9 +36,10 @@ measure tool? (measures distances)
 magnetic lasso tool? (as in Photoshop)
 magic wand tool? (as in Photoshop)
 
-redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
+https://docs.oracle.com/javase/tutorial/2d/geometry/primitives.html
+https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
 
-history menus (how to implement a goooood history!?!?!)
+redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
 
 preset brushes (not just heads/sizes but also effects on different colors)
     pencil
@@ -41,8 +48,15 @@ preset brushes (not just heads/sizes but also effects on different colors)
     calligraphy
     etc
 
-https://docs.oracle.com/javase/tutorial/2d/geometry/primitives.html
-https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
+history feature
+    stored as plain text
+    can be saved/loaded
+    can implement back/restore
+    can be shown in a history view
+    every tool has two methods: parseStr, formatStr
+    some menu points need entries too
+    new/open reset the history
+    history tree!?
 
 look at other programs
     paint

@@ -19,7 +19,7 @@ public class PickColorTool extends AbstractTool {
     @Override
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
         super.mousePressed(g2d, e);
-        mainPanel.setColorPrimary(new Color(mainPanel.getImage().getRGB(x, y)));
+        mainPanel.setColorPrimary(new Color(mainPanel.getImage().getRGB(x, y), true));
     }
 
 }

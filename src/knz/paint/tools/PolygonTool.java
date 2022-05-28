@@ -38,6 +38,11 @@ public class PolygonTool extends AbstractPolygonTool {
     }
 
     @Override
+    public boolean needsRepaint() {
+        return polygon.npoints > 0;
+    }
+
+    @Override
     public void paint(Graphics2D g2d) {
         super.paint(g2d);
         drawPolygon(g2d, true);

@@ -13,8 +13,7 @@ public class PolylineTool extends AbstractPolylineTool {
 
     @Override
     public String getIcon() {
-        // FIXME add icon
-        return "";
+        return "tool_13b.png";
     }
 
     @Override
@@ -36,6 +35,11 @@ public class PolylineTool extends AbstractPolylineTool {
         if (SwingUtilities.isLeftMouseButton(e)) {
             polygon.addPoint(x, y);
         }
+    }
+
+    @Override
+    public boolean needsRepaint() {
+        return polygon.npoints > 0;
     }
 
     @Override

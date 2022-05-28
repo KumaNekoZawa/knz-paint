@@ -7,20 +7,19 @@ import java.util.Stack;
 
 public class FloodFillTool extends AbstractTool {
 
-    private static class Quad {
-        public int x1, x2, y, dy;
+    private static class Pair {
+        public int x, y;
 
-        Quad(int x1, int x2, int y, int dy) {
+        Pair(int x, int y) {
             super();
-            this.x1 = x1;
-            this.x2 = x2;
+            this.x = x;
             this.y = y;
-            this.dy = dy;
         }
     }
 
-    private int rgbToBeReplaced = 0;
-    private int rgbReplaceWith = 0;
+    private BufferedImage image;
+    private int rgbFrom = 0;
+    private int rgbTo = 0;
 
     @Override
     public String getName() {
@@ -35,62 +34,54 @@ public class FloodFillTool extends AbstractTool {
     @Override
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
         super.mousePressed(g2d, e);
-        BufferedImage image = mainPanel.getImage();
-        rgbToBeReplaced = image.getRGB(x, y);
-        rgbReplaceWith = mainPanel.getColorPrimary().getRGB();
+        image = mainPanel.getImage();
+        rgbFrom = image.getRGB(x, y);
+        rgbTo = mainPanel.getColorPrimary().getRGB();
+        if (rgbFrom == rgbTo) {
+            return;
+        }
         floodFill(x, y);
     }
 
-    // FIXME this algo doesn't work yet
     private void floodFill(int x, int y) {
-        if (!inside(x, y)) {
-            return;
-        }
-        BufferedImage image = mainPanel.getImage();
-        Stack<Quad> s = new Stack<>();
-        s.push(new Quad(x, x, y, 1));
-        s.push(new Quad(x, x, y - 1, -1));
+        Stack<Pair> s = new Stack<>();
+        s.push(new Pair(x, y));
         while (!s.isEmpty()) {
-            Quad q = s.pop();
-            int x1 = q.x1;
-            int x2 = q.x2;
-            int yb = q.y;
-            int dy = q.dy;
-            x = x1;
-            if (inside(x, yb)) {
-                while (inside(x - 1, yb)) {
-                    image.setRGB(x - 1, yb, rgbReplaceWith);
-                    x--;
-                }
+            Pair p = s.pop();
+            x = p.x;
+            y = p.y;
+            int lx = x;
+            while (inside(lx - 1, y)) {
+                image.setRGB(lx - 1, y, rgbTo);
+                lx--;
             }
-            if (x < x1) {
-                s.push(new Quad(x, x1 - 1, yb - dy, -dy));
+            while (inside(x, y)) {
+                image.setRGB(x, y, rgbTo);
+                x++;
             }
-            while (x1 <= x2) {
-                while (inside(x1, yb)) {
-                    image.setRGB(x1, yb, rgbReplaceWith);
-                    x1++;
-                }
-                s.push(new Quad(x, x1 - 1, yb + dy, dy));
-                if (x1 - 1 > x2) {
-                    s.push(new Quad(x2 + 1, x1 - 1, yb - dy, -dy));
-                }
-                x1++;
-                while (x1 < x2 && !inside(x1, yb)) {
-                    x1++;
-                }
-                x = x1;
+            scan(s, lx, x - 1, y + 1);
+            scan(s, lx, x - 1, y - 1);
+        }
+    }
+
+    private void scan(Stack<Pair> s, int lx, int rx, int y) {
+        boolean added = false;
+        for (int x = lx; x <= rx; x++) {
+            if (!inside(x, y)) {
+                added = false;
+            } else if (!added) {
+                s.push(new Pair(x, y));
+                added = true;
             }
         }
     }
 
     private boolean inside(int x, int y) {
-        BufferedImage image = mainPanel.getImage();
         if (!(0 <= x && x < image.getWidth()
            && 0 <= y && y < image.getHeight())) {
             return false;
         }
-        return image.getRGB(x, y) == rgbToBeReplaced;
+        return image.getRGB(x, y) == rgbFrom;
     }
 
 }

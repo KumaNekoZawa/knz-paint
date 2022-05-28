@@ -13,8 +13,7 @@ public class ChangeCanvasSizeTool extends AbstractTool {
 
     @Override
     public String getIcon() {
-        // FIXME add icon
-        return "";
+        return "ccs.png";
     }
 
     @Override

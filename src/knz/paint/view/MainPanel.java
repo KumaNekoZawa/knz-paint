@@ -4,10 +4,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import knz.paint.tools.AbstractSelectionTool;
@@ -78,6 +81,8 @@ public class MainPanel extends JPanel {
         }
     }
 
+    private static final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
+
     private MainWindow parent;
 
     private BufferedImage image;
@@ -123,8 +128,6 @@ public class MainPanel extends JPanel {
                 if (0 <= x && x < image.getWidth()
                  && 0 <= y && y < image.getHeight()) {
                     parent.updateStatusBarCurrentPixel(x, y, image.getRGB(x, y));
-                } else {
-                    parent.updateStatusBarCurrentPixel(0, 0, 0);
                 }
             }
         });
@@ -137,19 +140,26 @@ public class MainPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        BufferedImage canvas = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        selectedTool.getToolObject().paint(canvas.createGraphics());
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.GRAY);
         g2d.fillRect(0, 0, getWidth(), getHeight());
         g2d.drawImage(image, 0, 0, zoomLevel * image.getWidth(), zoomLevel * image.getHeight(), null);
-        g2d.drawImage(canvas, 0, 0, zoomLevel * canvas.getWidth(), zoomLevel * canvas.getHeight(), null);
+        AbstractTool toolObject = selectedTool.getToolObject();
+        if (toolObject.needsRepaint()) {
+            BufferedImage canvas = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+            toolObject.paint(canvas.createGraphics());
+            g2d.drawImage(canvas, 0, 0, zoomLevel * canvas.getWidth(), zoomLevel * canvas.getHeight(), null);
+        }
     }
 
     // File
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public void setImage(BufferedImage image) {
+        setImageAndGraphics(image, image.createGraphics());
     }
 
     public void setImageAndGraphics(BufferedImage image, Graphics2D g2d) {
@@ -163,30 +173,48 @@ public class MainPanel extends JPanel {
     }
 
     public void newImage(int width, int height, Color fillColor) {
-        if (g2d != null) {
-            g2d.dispose();
-        }
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        g2d = image.createGraphics();
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
         if (fillColor != null) {
             g2d.setColor(fillColor);
             g2d.fillRect(0, 0, width, height);
         }
-        updatePanelSize();
-        repaint();
-    }
-
-    public void openImage(BufferedImage image) {
-        if (g2d != null) {
-            g2d.dispose();
-        }
-        this.image = image;
-        g2d = image.createGraphics();
-        updatePanelSize();
-        repaint();
+        setImageAndGraphics(image, g2d);
     }
 
     // Edit
+
+    public void selectNone() {
+        AbstractTool toolObject = selectedTool.getToolObject();
+        if (toolObject instanceof AbstractSelectionTool) {
+            AbstractSelectionTool ast = (AbstractSelectionTool) toolObject;
+            ast.selectNone();
+            repaint();
+        }
+    }
+
+    public void selectAll() {
+        selectedTool = Tool.SELECT_RECTANGLE;
+        AbstractTool toolObject = selectedTool.getToolObject();
+        if (toolObject instanceof SelectRectangleTool) {
+            SelectRectangleTool srt = (SelectRectangleTool) toolObject;
+            srt.selectAll(image.getWidth(), image.getHeight());
+            repaint();
+        } else {
+            throw new AssertionError();
+        }
+    }
+
+    public void cropToSelection() {
+        AbstractTool toolObject = selectedTool.getToolObject();
+        if (toolObject instanceof SelectRectangleTool) {
+            SelectRectangleTool srt = (SelectRectangleTool) toolObject;
+            srt.cropToSelection(image);
+            repaint();
+        } else {
+            JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     public void clearSelection() {
         AbstractTool toolObject = selectedTool.getToolObject();
@@ -194,6 +222,30 @@ public class MainPanel extends JPanel {
             AbstractSelectionTool ast = (AbstractSelectionTool) toolObject;
             ast.clearSelection(g2d);
             repaint();
+        } else {
+            JOptionPane.showMessageDialog(parent, "You have to select a region first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void cut() {
+        AbstractTool toolObject = selectedTool.getToolObject();
+        if (toolObject instanceof SelectRectangleTool) {
+            SelectRectangleTool srt = (SelectRectangleTool) toolObject;
+            CLIPBOARD.setContents(new TransferableImage(srt.getSubimage(image)), null);
+            srt.clearSelection(g2d);
+            repaint();
+        } else {
+            JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void copy() {
+        AbstractTool toolObject = selectedTool.getToolObject();
+        if (toolObject instanceof SelectRectangleTool) {
+            SelectRectangleTool srt = (SelectRectangleTool) toolObject;
+            CLIPBOARD.setContents(new TransferableImage(srt.getSubimage(image)), null);
+        } else {
+            JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
         }
     }
 

@@ -43,13 +43,18 @@ public class BezierCurveTool extends AbstractTool {
     }
 
     @Override
+    public boolean needsRepaint() {
+        return polygon.npoints > 0;
+    }
+
+    @Override
     public void paint(Graphics2D g2d) {
         super.paint(g2d);
         drawBezierCurve(g2d, true);
     }
 
     private void drawBezierCurve(Graphics2D g2d, boolean includeCurrentPixel) {
-        if ((includeCurrentPixel && (x < 0 || y < 0)) || polygon.npoints < 1) {
+        if (polygon.npoints < 1) {
             return;
         }
         Polygon polygon2;
@@ -99,7 +104,7 @@ public class BezierCurveTool extends AbstractTool {
     }
 
     private static double inBetween(double a, double b, double ratio) {
-        if (a < 0. || b < 0. || !(0. <= ratio && ratio <= 1.)) {
+        if (!(0. <= ratio && ratio <= 1.)) {
             throw new IllegalArgumentException();
         }
         final double invRatio = 1. - ratio;

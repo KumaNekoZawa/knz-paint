@@ -9,7 +9,7 @@ public abstract class AbstractPolygonTool extends AbstractTool {
     protected Polygon polygon = new Polygon();
 
     protected void drawPolygon(Graphics2D g2d, boolean includeCurrentPixel) {
-        if ((includeCurrentPixel && (x < 0 || y < 0)) || polygon.npoints < 1) {
+        if (polygon.npoints < 1) {
             return;
         }
         Polygon polygon2;

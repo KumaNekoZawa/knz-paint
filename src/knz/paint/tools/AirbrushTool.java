@@ -37,9 +37,6 @@ public class AirbrushTool extends AbstractTool {
     }
 
     private void drawAirbrush() {
-        if (x < 0 || y < 0) {
-            return;
-        }
         final double a = Math.random() * 2.0 * Math.PI;
         final double d = RADIUS * Math.random();
         final int lx = x + (int) (d * Math.sin(a));
@@ -47,6 +44,9 @@ public class AirbrushTool extends AbstractTool {
         BufferedImage image = mainPanel.getImage();
         if (0 <= lx && lx < image.getWidth()
          && 0 <= ly && ly < image.getHeight()) {
+            // TODO also support these random color modes:
+            //Color.HSBtoRGB((float) Math.random(), 1f, 1f)
+            //new Color((int) (255 * Math.random()), (int) (255 * Math.random()), (int) (255 * Math.random())).getRGB()
             image.setRGB(lx, ly, mainPanel.getColorPrimary().getRGB());
         }
     }

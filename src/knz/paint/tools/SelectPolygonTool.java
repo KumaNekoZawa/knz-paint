@@ -12,8 +12,7 @@ public class SelectPolygonTool extends AbstractSelectionTool {
 
     @Override
     public String getIcon() {
-        // FIXME add icon
-        return "";
+        return "tool_13c.png";
     }
 
     @Override

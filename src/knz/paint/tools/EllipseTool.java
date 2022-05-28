@@ -23,15 +23,17 @@ public class EllipseTool extends AbstractTool {
     }
 
     @Override
+    public boolean needsRepaint() {
+        return mousePressed;
+    }
+
+    @Override
     public void paint(Graphics2D g2d) {
         super.paint(g2d);
         drawOval(g2d);
     }
 
     private void drawOval(Graphics2D g2d) {
-        if (x < 0 || y < 0 || startX < 0 || startY < 0) {
-            return;
-        }
         final int fromX = Math.min(startX, x);
         final int fromY = Math.min(startY, y);
         final int toX = Math.max(startX, x);

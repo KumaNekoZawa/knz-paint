@@ -9,7 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -20,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -31,29 +37,27 @@ import knz.paint.tools.AbstractTool;
 
 public class MainWindow extends JFrame {
 
-    private static final int[] ZOOM_LEVELS = { 1, 2, 4, 8 };
+    private static final int[] ZOOM_LEVELS = { 1, 2, 4, 8, 16, 32 };
+
+    private Properties properties = new Properties();
+    private int colorBarSize = 16 * 3;
+    private List<File> colorPaletteFiles = new ArrayList<>();
 
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menuFile = new JMenu("File");
     private JMenuItem menuFileNew = new JMenuItem("New");
-    private JMenuItem menuFileOpen = new JMenuItem("Open...");
-    // TODO Save/Save as distinction (!?)
+    private JMenuItem menuFileLoad = new JMenuItem("Load...");
     private JMenuItem menuFileSave = new JMenuItem("Save...");
-    // TODO ---
-    // TODO Quit (Ctrl+Q)
+    private JMenuItem menuFileQuit = new JMenuItem("Quit");
 
     private JMenu menuEdit = new JMenu("Edit");
-    // TODO Select all (Ctrl+A)
-    // TODO Select none
-    // TODO Invert selection
-    // ---
-    // TODO Crop to selection
+    private JMenuItem menuEditSelectNone = new JMenuItem("Select none");
+    private JMenuItem menuEditSelectAll = new JMenuItem("Select all");
+    private JMenuItem menuEditCropToSelection = new JMenuItem("Crop to selection");
     private JMenuItem menuEditClearSelection = new JMenuItem("Clear selection");
-    // TODO ---
-    // TODO Cut (Ctrl+X)
-    // TODO Copy (Ctrl+C)
+    private JMenuItem menuEditCut = new JMenuItem("Cut");
+    private JMenuItem menuEditCopy = new JMenuItem("Copy");
     // TODO Paste (Ctrl+V)
-    // TODO Clear clipboard (!?)
 
     private JMenu menuView = new JMenu("View");
     private JMenu menuViewZoom = new JMenu("Zoom");
@@ -77,6 +81,21 @@ public class MainWindow extends JFrame {
         super("熊猫沢ペイント");
         mainPanel.setParent(this);
 
+        try (InputStream is = new FileInputStream("config.properties")) {
+            properties.load(is);
+            colorBarSize = Integer.parseInt(properties.getProperty("colorbarsize"));
+            for (int i = 1; true; i++) {
+                String filename = properties.getProperty("colorpalette" + i);
+                if (filename != null && !filename.isEmpty()) {
+                    colorPaletteFiles.add(new File(filename));
+                } else {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         menuFileNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -84,8 +103,9 @@ public class MainWindow extends JFrame {
                 mainPanel.newImage(400, 300, Color.WHITE);
             }
         });
+        menuFileNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
         menuFile.add(menuFileNew);
-        menuFileOpen.addActionListener(new ActionListener() {
+        menuFileLoad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fc = new JFileChooser();
@@ -93,7 +113,7 @@ public class MainWindow extends JFrame {
                     File file = fc.getSelectedFile();
                     if (file.isFile()) {
                         try {
-                            mainPanel.openImage(ImageIO.read(file));
+                            mainPanel.setImage(ImageIO.read(file));
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
@@ -101,7 +121,8 @@ public class MainWindow extends JFrame {
                 }
             }
         });
-        menuFile.add(menuFileOpen);
+        menuFileLoad.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        menuFile.add(menuFileLoad);
         menuFileSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -127,7 +148,7 @@ public class MainWindow extends JFrame {
                 if (fc.showSaveDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION) {
                     File file = fc.getSelectedFile();
                     if (file.exists()) {
-                        System.err.println("Can't overwrite files!");
+                        JOptionPane.showMessageDialog(MainWindow.this, "You have to delete the file first!", getTitle(), JOptionPane.ERROR_MESSAGE);
                         return;
                     }
                     try {
@@ -138,17 +159,68 @@ public class MainWindow extends JFrame {
                 }
             }
         });
+        menuFileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         menuFile.add(menuFileSave);
+        menuFile.addSeparator();
+        menuFileQuit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindow.this.dispose();
+            }
+        });
+        menuFileQuit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+        menuFile.add(menuFileQuit);
         menuBar.add(menuFile);
 
-        menuEditClearSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        menuEditSelectNone.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.selectNone();
+            }
+        });
+        menuEditSelectNone.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
+        menuEdit.add(menuEditSelectNone);
+        menuEditSelectAll.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.selectAll();
+            }
+        });
+        menuEditSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+        menuEdit.add(menuEditSelectAll);
+        menuEdit.addSeparator();
+        menuEditCropToSelection.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.cropToSelection();
+            }
+        });
+        menuEdit.add(menuEditCropToSelection);
         menuEditClearSelection.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainPanel.clearSelection();
             }
         });
+        menuEditClearSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
         menuEdit.add(menuEditClearSelection);
+        menuEdit.addSeparator();
+        menuEditCut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.cut();
+            }
+        });
+        menuEditCut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+        menuEdit.add(menuEditCut);
+        menuEditCopy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.copy();
+            }
+        });
+        menuEditCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        menuEdit.add(menuEditCopy);
         menuBar.add(menuEdit);
 
         ButtonGroup bgZoomLevels = new ButtonGroup();
@@ -161,6 +233,7 @@ public class MainWindow extends JFrame {
                 }
             });
             if (zoomLevel == 1) {
+                menuViewZoomLevel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_0, ActionEvent.CTRL_MASK));
                 menuViewZoomLevel.setSelected(true);
             }
             bgZoomLevels.add(menuViewZoomLevel);
@@ -213,16 +286,16 @@ public class MainWindow extends JFrame {
 
         add(new JScrollPane(mainPanel), BorderLayout.CENTER);
 
-        colorBar.setOrientation(SwingConstants.VERTICAL);
-        for (int i = 0; i < 7; i++) {
-            colorBar.add(new ColorPanel(mainPanel, i));
+        colorBar.setOrientation(SwingConstants.HORIZONTAL);
+        for (int i = 0; i < colorPaletteFiles.size(); i++) {
+            colorBar.add(new ColorPanel(mainPanel, colorBarSize, colorPaletteFiles.get(i)));
         }
-        add(colorBar, BorderLayout.LINE_END);
+        add(colorBar, BorderLayout.PAGE_START);
 
         add(statusBar, BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 700);
+        setSize(800, 600);
         setLocationRelativeTo(null);
         setVisible(true);
         mainPanel.newImage(400, 300, Color.WHITE);
@@ -300,8 +373,11 @@ public class MainWindow extends JFrame {
     }
 
     private void updateStatusBar() {
-        statusBar.setText("Size: " + statusBarWidth + " × " + statusBarHeight + "; " +
-                          "Current: (" + statusBarCurrentX + ", " + statusBarCurrentY + ") = 0x" + String.format("%08X", statusBarCurrentRGBA));
+        String text = "";
+        text += "Size: " + statusBarWidth + " × " + statusBarHeight;
+        text += "; ";
+        text += "Current: (" + statusBarCurrentX + ", " + statusBarCurrentY + ") = 0x" + String.format("%08X", statusBarCurrentRGBA);
+        statusBar.setText(text);
     }
 
 }
