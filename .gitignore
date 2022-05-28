@@ -1,4 +1,5 @@
 /bin/
 /icons/tool*.png
+/effects.txt
 *.class
 *.jar
