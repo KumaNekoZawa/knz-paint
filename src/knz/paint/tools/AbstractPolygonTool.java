@@ -21,6 +21,7 @@ public abstract class AbstractPolygonTool extends AbstractTool {
         }
         Color colorPrimary = mainPanel.getColorPrimary();
         Color colorSecondary = mainPanel.getColorSecondary();
+        g2d.setStroke(mainPanel.getStroke());
         switch (mainPanel.getFillStyle()) {
         case NONE:
             g2d.setColor(colorPrimary);

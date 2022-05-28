@@ -16,12 +16,6 @@ consistent usage of various tools
 
 selection tools
     move selection
-brush tool
-    with brush heads/sizes
-    dashing etc
-rounded rectangle tool
-    many options
-https://docs.oracle.com/javase/tutorial/2d/geometry/primitives.html
 https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
 --
 arrow tool?

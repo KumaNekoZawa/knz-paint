@@ -6,9 +6,8 @@ import java.awt.event.MouseEvent;
 
 public class RoundedRectangleTool extends AbstractTool {
 
-    // FIXME make these variables:
-    private static final int ARC_WIDTH = 20;
-    private static final int ARC_HEIGHT = 20;
+    private int arcWidth = 20;
+    private int arcHeight = 20;
 
     @Override
     public String getName() {
@@ -18,6 +17,13 @@ public class RoundedRectangleTool extends AbstractTool {
     @Override
     public String getIcon() {
         return "tool_15.png";
+    }
+
+    @Override
+    public void mousePressed(Graphics2D g2d, MouseEvent e) {
+        super.mousePressed(g2d, e);
+        arcWidth = mainPanel.getRoundedRectangleArcWidth();
+        arcHeight = mainPanel.getRoundedRectangleArcHeight();
     }
 
     @Override
@@ -46,20 +52,21 @@ public class RoundedRectangleTool extends AbstractTool {
         final int height = toY - fromY;
         Color colorPrimary = mainPanel.getColorPrimary();
         Color colorSecondary = mainPanel.getColorSecondary();
+        g2d.setStroke(mainPanel.getStroke());
         switch (mainPanel.getFillStyle()) {
         case NONE:
             g2d.setColor(colorPrimary);
-            g2d.drawRoundRect(fromX, fromY, width, height, ARC_WIDTH, ARC_HEIGHT);
+            g2d.drawRoundRect(fromX, fromY, width, height, arcWidth, arcHeight);
             break;
         case PRIMARY:
             g2d.setColor(colorPrimary);
-            g2d.fillRoundRect(fromX, fromY, width, height, ARC_WIDTH, ARC_HEIGHT);
+            g2d.fillRoundRect(fromX, fromY, width, height, arcWidth, arcHeight);
             break;
         case SECONDARY:
             g2d.setColor(colorSecondary);
-            g2d.fillRoundRect(fromX, fromY, width, height, ARC_WIDTH, ARC_HEIGHT);
+            g2d.fillRoundRect(fromX, fromY, width, height, arcWidth, arcHeight);
             g2d.setColor(colorPrimary);
-            g2d.drawRoundRect(fromX, fromY, width, height, ARC_WIDTH, ARC_HEIGHT);
+            g2d.drawRoundRect(fromX, fromY, width, height, arcWidth, arcHeight);
             break;
         default:
             throw new AssertionError();

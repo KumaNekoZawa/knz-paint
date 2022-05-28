@@ -1,10 +1,12 @@
 package knz.paint.view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -89,6 +91,45 @@ public class MainPanel extends JPanel {
         }
     }
 
+    public enum StrokeDash {
+        NORMAL("Normal"),
+        DOTS("Dots"),
+        DASHES("Dashes"),
+        DASHES_AND_DOTS("Dashes and dots"),
+        DASHES_DASHES_AND_DOTS("Dashes, dashes and dots"),
+        DASHES_DOTS_AND_DOTS("Dashes, dots and dots"),
+
+        ;
+
+        private String title;
+
+        StrokeDash(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
+    public enum AirbrushType {
+        NORMAL("Normal"),
+        RANDOM_COLOR("Random color"),
+        RANDOM_HUE("Random hue"),
+
+        ;
+
+        private String title;
+
+        AirbrushType(String title) {
+            this.title = title;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+    }
+
     private static final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     private MainWindow parentElement;
@@ -103,6 +144,12 @@ public class MainPanel extends JPanel {
     private Color colorPrimary = Color.BLACK;
     private Color colorSecondary = Color.WHITE;
     private FillStyle fillStyle = FillStyle.NONE;
+    private int strokeWidth = 1;
+    private StrokeDash strokeDash = StrokeDash.NORMAL;
+    private int roundedRectangleArcWidth = 20;
+    private int roundedRectangleArcHeight = 20;
+    private AirbrushType airbrushType = AirbrushType.NORMAL;
+    private int airbrushSize = 15;
 
     public MainPanel() {
         super();
@@ -388,6 +435,90 @@ public class MainPanel extends JPanel {
 
     public void setFillStyle(FillStyle fillStyle) {
         this.fillStyle = fillStyle;
+    }
+
+    public int getStrokeWidth() {
+        return strokeWidth;
+    }
+
+    public void setStrokeWidth(int strokeWidth) {
+        this.strokeWidth = strokeWidth;
+    }
+
+    public StrokeDash getStrokeDash() {
+        return strokeDash;
+    }
+
+    public void setStrokeDash(StrokeDash strokeDash) {
+        this.strokeDash = strokeDash;
+    }
+
+    // FIXME don't create BasicStrokes in here
+    public Stroke getStroke() {
+        final float width = (float) strokeWidth;
+        final int cap = BasicStroke.CAP_ROUND;
+        final int join = BasicStroke.JOIN_ROUND;
+        Stroke stroke;
+        if (strokeDash == StrokeDash.NORMAL) {
+            stroke = new BasicStroke(width, cap, join);
+        } else {
+            float[] dash;
+            switch (strokeDash) {
+            case NORMAL:
+                throw new AssertionError();
+            case DOTS:
+                dash = new float[] { strokeWidth, 2f * strokeWidth };
+                break;
+            case DASHES:
+                dash = new float[] { 4f * strokeWidth };
+                break;
+            case DASHES_AND_DOTS:
+                dash = new float[] { 4f * strokeWidth, 2f * strokeWidth, strokeWidth, 2f * strokeWidth };
+                break;
+            case DASHES_DASHES_AND_DOTS:
+                dash = new float[] { 4f * strokeWidth, 2f * strokeWidth, 4f * strokeWidth, 2f * strokeWidth, strokeWidth, 2f * strokeWidth };
+                break;
+            case DASHES_DOTS_AND_DOTS:
+                dash = new float[] { 4f * strokeWidth, 2f * strokeWidth, strokeWidth, 2f * strokeWidth, strokeWidth, 2f * strokeWidth };
+                break;
+            default:
+                throw new AssertionError();
+            }
+            stroke = new BasicStroke(width, cap, join, 0f, dash, 0f);
+        }
+        return stroke;
+    }
+
+    public int getRoundedRectangleArcWidth() {
+        return roundedRectangleArcWidth;
+    }
+
+    public void setRoundedRectangleArcWidth(int roundedRectangleArcWidth) {
+        this.roundedRectangleArcWidth = roundedRectangleArcWidth;
+    }
+
+    public int getRoundedRectangleArcHeight() {
+        return roundedRectangleArcHeight;
+    }
+
+    public void setRoundedRectangleArcHeight(int roundedRectangleArcHeight) {
+        this.roundedRectangleArcHeight = roundedRectangleArcHeight;
+    }
+
+    public AirbrushType getAirbrushType() {
+        return airbrushType;
+    }
+
+    public void setAirbrushType(AirbrushType airbrushType) {
+        this.airbrushType = airbrushType;
+    }
+
+    public int getAirbrushSize() {
+        return airbrushSize;
+    }
+
+    public void setAirbrushSize(int airbrushSize) {
+        this.airbrushSize = airbrushSize;
     }
 
     // Misc

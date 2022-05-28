@@ -34,6 +34,7 @@ public class LineTool extends AbstractTool {
 
     private void drawLine(Graphics2D g2d) {
         g2d.setColor(mainPanel.getColorPrimary());
+        g2d.setStroke(mainPanel.getStroke());
         g2d.drawLine(startX, startY, x, y);
     }
 

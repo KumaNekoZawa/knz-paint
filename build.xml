@@ -30,7 +30,7 @@
         </checkstyle>
     </target>
 
-    <target name="package" depends="build">
+    <target name="package" depends="checkstyle">
         <jar destfile="${jar.file}" basedir="${bin.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${main.class}" />

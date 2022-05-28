@@ -19,6 +19,7 @@ public abstract class AbstractPolylineTool extends AbstractTool {
             polygon2 = polygon;
         }
         g2d.setColor(mainPanel.getColorPrimary());
+        g2d.setStroke(mainPanel.getStroke());
         g2d.drawPolyline(polygon2.xpoints, polygon2.ypoints, polygon2.npoints);
     }
 

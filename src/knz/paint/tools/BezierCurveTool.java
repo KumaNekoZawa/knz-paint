@@ -8,6 +8,8 @@ import javax.swing.SwingUtilities;
 
 public class BezierCurveTool extends AbstractTool {
 
+    // FIXME does not work well with dashes!
+
     private Polygon polygon = new Polygon();
 
     @Override
@@ -64,6 +66,7 @@ public class BezierCurveTool extends AbstractTool {
             polygon2 = polygon;
         }
         g2d.setColor(mainPanel.getColorPrimary());
+        g2d.setStroke(mainPanel.getStroke());
 
         /* calc quality */
         final int minX = Arrays.stream(polygon2.xpoints).min().orElse(0);

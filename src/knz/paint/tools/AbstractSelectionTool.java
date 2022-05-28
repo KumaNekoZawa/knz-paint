@@ -9,8 +9,8 @@ import java.awt.Stroke;
 
 public abstract class AbstractSelectionTool extends AbstractTool {
 
-    private static final Stroke STROKE = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{ 4.0f }, 0.0f);
     private static final Color COLOR = new Color(0x00, 0x00, 0x00, 0x80);
+    private static final Stroke STROKE = new BasicStroke(1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0f, new float[]{ 4f }, 0f);
 
     protected Polygon polygon = new Polygon();
 

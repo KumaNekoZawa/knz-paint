@@ -16,8 +16,13 @@ public class Config {
 
     private String lookAndFeel = null;
     private Color backgroundColor = Color.GRAY;
+
     private int colorBarSize = 16 * 3;
     private List<File> colorPaletteFiles = new ArrayList<>();
+
+    private boolean toolsAirbrushUseTimer = true;
+    private int toolsAirbrushTickDelay = 100;
+    private int toolsAirbrushPixelsPerTick = 10;
 
     private static final Config config = new Config();
 
@@ -34,6 +39,9 @@ public class Config {
                     colorPaletteFiles.add(new File(filename));
                 }
             }
+            toolsAirbrushUseTimer = Boolean.parseBoolean(properties.getProperty("tools.airbrush.use-timer"));
+            toolsAirbrushTickDelay = Integer.parseInt(properties.getProperty("tools.airbrush.tick-delay"));
+            toolsAirbrushPixelsPerTick = Integer.parseInt(properties.getProperty("tools.airbrush.pixels-per-tick"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,6 +85,18 @@ public class Config {
 
     public List<File> getColorPaletteFiles() {
         return colorPaletteFiles;
+    }
+
+    public boolean getToolsAirbrushUseTimer() {
+        return toolsAirbrushUseTimer;
+    }
+
+    public int getToolsAirbrushTickDelay() {
+        return toolsAirbrushTickDelay;
+    }
+
+    public int getToolsAirbrushPixelsPerTick() {
+        return toolsAirbrushPixelsPerTick;
     }
 
 }

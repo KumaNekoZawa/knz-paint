@@ -8,14 +8,13 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
+import knz.paint.model.Config;
+
 public class AirbrushTool extends AbstractTool {
 
-    // FIXME make these variables:
-    private final int RADIUS = 15;
-    private final boolean USE_RANDOM_COLORS = true;
-    private final boolean USE_TIMER = true;
-    private final int TICK_DELAY = 100;
-    private final int PIXELS_PER_TICK = 10;
+    private final boolean USE_TIMER = Config.getConfig().getToolsAirbrushUseTimer();
+    private final int TICK_DELAY = Config.getConfig().getToolsAirbrushTickDelay();
+    private final int PIXELS_PER_TICK = Config.getConfig().getToolsAirbrushPixelsPerTick();
 
     private Timer timer = new Timer(TICK_DELAY, new ActionListener() {
         @Override
@@ -26,6 +25,8 @@ public class AirbrushTool extends AbstractTool {
             mainPanel.repaint();
         }
     });
+
+    private int radius = 15;
 
     @Override
     public String getName() {
@@ -40,6 +41,7 @@ public class AirbrushTool extends AbstractTool {
     @Override
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
         super.mousePressed(g2d, e);
+        radius = mainPanel.getAirbrushSize();
         if (USE_TIMER) {
             timer.start();
         } else {
@@ -67,17 +69,27 @@ public class AirbrushTool extends AbstractTool {
 
     private void drawAirbrush() {
         final double a = Math.random() * 2.0 * Math.PI;
-        final double d = RADIUS * Math.random();
+        final double d = radius * Math.random();
         final int lx = x + (int) (d * Math.sin(a));
         final int ly = y + (int) (d * Math.cos(a));
         BufferedImage image = mainPanel.getImage();
         if (0 <= lx && lx < image.getWidth()
          && 0 <= ly && ly < image.getHeight()) {
             int rgb;
-            if (USE_RANDOM_COLORS) {
-                rgb = Color.HSBtoRGB((float) Math.random(), 1f, 1f);
-            } else {
+            switch (mainPanel.getAirbrushType()) {
+            case NORMAL:
                 rgb = mainPanel.getColorPrimary().getRGB();
+                break;
+            case RANDOM_COLOR:
+                rgb = new Color((int) (255 * Math.random()),
+                                (int) (255 * Math.random()),
+                                (int) (255 * Math.random())).getRGB();
+                break;
+            case RANDOM_HUE:
+                rgb = Color.HSBtoRGB((float) Math.random(), 1f, 1f);
+                break;
+            default:
+                throw new AssertionError();
             }
             image.setRGB(lx, ly, rgb);
         }
