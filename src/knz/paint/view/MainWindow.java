@@ -2,11 +2,8 @@ package knz.paint.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -22,10 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,22 +29,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import knz.paint.model.Config;
-import knz.paint.model.effects.AbstractParameter;
-import knz.paint.model.effects.BooleanParameter;
-import knz.paint.model.effects.DoubleParameter;
 import knz.paint.model.effects.Effect;
-import knz.paint.model.effects.IntegerParameter;
-import knz.paint.model.effects.PresetParameter;
 import knz.paint.model.effects.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.hsba.ExtractSaturationEffect;
@@ -510,7 +496,7 @@ public class MainWindow extends JFrame {
                 menuEffects.addSeparator();
                 continue;
             }
-            String title = effect.getName() + (effect.getParameters().isEmpty() ? "" : "...");
+            final String title = effect.getName() + (effect.getParameters().isEmpty() ? "" : "...");
             JMenuItem menuEffectsEffect = new JMenuItem(title);
             menuEffectsEffect.addActionListener(new ActionListener() {
                 @Override
@@ -518,150 +504,7 @@ public class MainWindow extends JFrame {
                     if (effect.getParameters().isEmpty()) {
                         mainPanel.setImage(effect.apply(mainPanel.getImage()));
                     } else {
-                        for (AbstractParameter parameter : effect.getParameters()) {
-                            parameter.reset();
-                        }
-
-                        BufferedImage image = mainPanel.getImage();
-                        final Rectangle rect = scrollPane.getViewport().getViewRect();
-                        rect.x /= mainPanel.getZoomFactor();
-                        rect.y /= mainPanel.getZoomFactor();
-                        rect.width /= mainPanel.getZoomFactor();
-                        rect.height /= mainPanel.getZoomFactor();
-                        final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth() - 1));
-                        final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
-                        final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
-                        final int imageTempHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
-                        BufferedImage imageTemp = image.getSubimage(imageTempX, imageTempY, imageTempWidth, imageTempHeight);
-                        /* initially draw the image with the effect once */
-                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-
-                        // FIXME maybe move this JFrame to a separate class file
-                        JDialog effectFrame = new JDialog(MainWindow.this, title, true);
-                        effectFrame.addWindowListener(new WindowAdapter() {
-                            @Override
-                            public void windowClosing(WindowEvent e) {
-                                mainPanel.setImageTempReset();
-                                mainPanel.repaint();
-                                effectFrame.dispose();
-                            }
-                        });
-                        effectFrame.setLayout(new GridBagLayout());
-                        GridBagConstraints c = new GridBagConstraints();
-                        c.fill = GridBagConstraints.HORIZONTAL;
-                        c.insets = new Insets(5, 5, 5, 5);
-                        c.gridx = 0;
-                        c.gridy = 0;
-                        for (AbstractParameter parameter : effect.getParameters()) {
-                            if (parameter instanceof PresetParameter) {
-                                PresetParameter presetParameter = (PresetParameter) parameter;
-                                JComboBox<String> comboBox = new JComboBox<>(presetParameter.getPresetNames());
-                                comboBox.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        // FIXME this doesn't update the UI elements
-                                        final String[] parameterNames = presetParameter.getParameterNames();
-                                        final Object[] values = presetParameter.getPresets().get(comboBox.getSelectedIndex()).getValues();
-                                        for (int i = 0; i < parameterNames.length; i++) {
-                                            final String parameterName = parameterNames[i];
-                                            final Object value = values[i];
-                                            boolean found = false;
-                                            for (AbstractParameter parameterToSet : effect.getParameters()) {
-                                                if (parameterToSet.getName().equals(parameterName)) {
-                                                    if (parameterToSet instanceof BooleanParameter) {
-                                                        ((BooleanParameter) parameterToSet).setValue((boolean) value);
-                                                    } else if (parameterToSet instanceof IntegerParameter) {
-                                                        ((IntegerParameter) parameterToSet).setValue((int) value);
-                                                    } else if (parameterToSet instanceof DoubleParameter) {
-                                                        ((DoubleParameter) parameterToSet).setValue((double) value);
-                                                    } else {
-                                                        throw new AssertionError();
-                                                    }
-                                                    found = true;
-                                                    break;
-                                                }
-                                            }
-                                            if (!found) {
-                                                System.err.println("Could not find parameter: " + parameterName);
-                                            }
-                                        }
-                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                                    }
-                                });
-                                effectFrame.add(comboBox, c);
-                                c.gridy++;
-                            } else if (parameter instanceof BooleanParameter) {
-                                BooleanParameter booleanParameter = (BooleanParameter) parameter;
-                                JCheckBox checkBox = new JCheckBox(parameter.getName());
-                                checkBox.setSelected(booleanParameter.getDef());
-                                checkBox.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        booleanParameter.setValue(checkBox.isSelected());
-                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                                    }
-                                });
-                                effectFrame.add(checkBox, c);
-                                c.gridy++;
-                            } else {
-                                JLabel label = new JLabel(parameter.getLabelText());
-                                label.setAlignmentX(Component.LEFT_ALIGNMENT);
-                                effectFrame.add(label, c);
-                                c.gridy++;
-                                if (parameter instanceof IntegerParameter) {
-                                    IntegerParameter integerParameter = (IntegerParameter) parameter;
-                                    JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                                        integerParameter.getMin(),
-                                        integerParameter.getMax(),
-                                        integerParameter.getDef());
-                                    slider.addChangeListener(new ChangeListener() {
-                                        @Override
-                                        public void stateChanged(ChangeEvent e) {
-                                            integerParameter.setValue(slider.getValue());
-                                            label.setText(parameter.getLabelText());
-                                            mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                                        }
-                                    });
-                                    effectFrame.add(slider, c);
-                                    c.gridy++;
-                                } else if (parameter instanceof DoubleParameter) {
-                                    DoubleParameter doubleParameter = (DoubleParameter) parameter;
-                                    JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                                        (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
-                                        (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
-                                        (int) (doubleParameter.getResolution() * doubleParameter.getDef()));
-                                    slider.addChangeListener(new ChangeListener() {
-                                        @Override
-                                        public void stateChanged(ChangeEvent e) {
-                                            doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
-                                            label.setText(parameter.getLabelText());
-                                            mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                                        }
-                                    });
-                                    effectFrame.add(slider, c);
-                                    c.gridy++;
-                                } else {
-                                    throw new AssertionError();
-                                }
-                            }
-                        }
-                        JButton buttonOkay = new JButton("Okay");
-                        buttonOkay.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                mainPanel.setImageTempReset();
-                                mainPanel.setImage(effect.apply(image));
-                                effectFrame.dispose();
-                            }
-                        });
-                        effectFrame.add(buttonOkay, c);
-
-                        effectFrame.setAlwaysOnTop(true);
-                        effectFrame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-                        effectFrame.setResizable(false);
-                        effectFrame.pack();
-                        effectFrame.setLocationRelativeTo(null);
-                        effectFrame.setVisible(true);
+                        new EffectWindow(MainWindow.this, scrollPane, mainPanel, effect, title);
                     }
                 }
             });

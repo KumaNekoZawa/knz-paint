@@ -310,11 +310,13 @@ public class MainPanel extends JPanel {
         repaint();
     }
 
-    public void setImageTempReset() {
+    public void setImageTempReset(boolean repaint) {
         this.imageTemp = null;
         this.imageTempX = 0;
         this.imageTempY = 0;
-        // do not repaint
+        if (repaint) {
+            repaint();
+        }
     }
 
     // Edit
