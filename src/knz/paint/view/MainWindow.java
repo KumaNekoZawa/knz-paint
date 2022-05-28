@@ -71,6 +71,7 @@ import knz.paint.model.effects.rgba.GrayscaleEffect;
 import knz.paint.model.effects.rgba.NegateEffect;
 import knz.paint.model.effects.rgba.NoiseEffect;
 import knz.paint.model.effects.rgba.NormalizeEffect;
+import knz.paint.model.effects.rgba.ReduceContrastEffect;
 import knz.paint.model.effects.rgba.SepiaEffect;
 import knz.paint.model.effects.rgba.SolarizationEffect;
 import knz.paint.tools.AbstractTool;
@@ -117,6 +118,7 @@ public class MainWindow extends JFrame {
         new NegateEffect(),
         new NoiseEffect(),
         new NormalizeEffect(),
+        new ReduceContrastEffect(),
         new SepiaEffect(),
         new SolarizationEffect(),
         null,

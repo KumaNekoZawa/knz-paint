@@ -1,4 +1,6 @@
-all FIXMEs/TODOs
+delete old backup files?
+
+all FIXMEs/TODOs: `grep -EIir 'FIXME|TODO|XXX' .`
 
 redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
 
@@ -24,6 +26,8 @@ clone stamp tool? (as in IrfanPaint and Photoshop)
 measure tool? (measures distances)
 magnetic lasso tool? (as in Photoshop)
 magic wand tool? (as in Photoshop)
+
+multi language ui support
 
 preset brushes (not just heads/sizes but also effects on different colors)
     pencil

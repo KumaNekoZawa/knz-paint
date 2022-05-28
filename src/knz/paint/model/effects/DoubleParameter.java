@@ -4,6 +4,7 @@ public class DoubleParameter extends AbstractParameter {
 
     private double min, def, max, resolution;
     private double value;
+    private boolean set;
 
     public DoubleParameter(String name, double min, double def, double max) {
         this(name, min, def, max, 100);
@@ -16,12 +17,13 @@ public class DoubleParameter extends AbstractParameter {
         this.def = def;
         this.max = max;
         this.resolution = resolution;
-        this.value = def;
+        reset();
     }
 
     @Override
     public void reset() {
         this.value = def;
+        this.set = false;
     }
 
     @Override
@@ -51,6 +53,11 @@ public class DoubleParameter extends AbstractParameter {
 
     public void setValue(double value) {
         this.value = value;
+        this.set = true;
+    }
+
+    public boolean isSet() {
+        return set;
     }
 
 }

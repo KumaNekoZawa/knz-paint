@@ -30,10 +30,18 @@ public class AdjustRGBAEffect extends RGBAEffect {
         final double blue  = paramBlue.getValue();
         final boolean invertAlpha = paramInvertAlpha.getValue();
         final double alpha = paramAlpha.getValue();
-        out_r = (int) (0xFF * (float) Math.pow(in_r / (double) 0xFF, invertRGB   ? 1 / red   : red));
-        out_g = (int) (0xFF * (float) Math.pow(in_g / (double) 0xFF, invertRGB   ? 1 / green : green));
-        out_b = (int) (0xFF * (float) Math.pow(in_b / (double) 0xFF, invertRGB   ? 1 / blue  : blue));
-        out_a = (int) (0xFF * (float) Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha : alpha));
+        if (paramRed.isSet()) {
+            out_r = (int) (0xFF * (float) Math.pow(in_r / (double) 0xFF, invertRGB   ? 1 / red   : red));
+        }
+        if (paramGreen.isSet()) {
+            out_g = (int) (0xFF * (float) Math.pow(in_g / (double) 0xFF, invertRGB   ? 1 / green : green));
+        }
+        if (paramBlue.isSet()) {
+            out_b = (int) (0xFF * (float) Math.pow(in_b / (double) 0xFF, invertRGB   ? 1 / blue  : blue));
+        }
+        if (paramAlpha.isSet()) {
+            out_a = (int) (0xFF * (float) Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha : alpha));
+        }
     }
 
 }
