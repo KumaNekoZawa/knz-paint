@@ -1,6 +1,7 @@
 delete old backup files?
 
-all FIXMEs/TODOs: `grep -EIir 'FIXME|TODO|XXX' .`
+all FIXMEs/TODOs/XXXs: `grep -EIir 'FIXME|TODO|XXX' .`
+go throw all // and /* comments
 
 redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
 

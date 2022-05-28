@@ -13,7 +13,7 @@ public abstract class AbstractParameter {
 
     public abstract String getLabelText();
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 

@@ -12,6 +12,8 @@ public class Config {
 
     private static final int MAX_NUMBER_OF_COLOR_PALETTES = 25;
 
+    private static final Config config = new Config();
+
     private Properties properties = new Properties();
 
     private String lookAndFeel = null;
@@ -20,11 +22,13 @@ public class Config {
     private int colorBarSize = 16 * 3;
     private List<File> colorPaletteFiles = new ArrayList<>();
 
+    private int newImageWidth = 400;
+    private int newImageHeight = 300;
+    private Color newImageColor = Color.WHITE;
+
     private boolean toolsAirbrushUseTimer = true;
     private int toolsAirbrushTickDelay = 100;
     private int toolsAirbrushPixelsPerTick = 10;
-
-    private static final Config config = new Config();
 
     private Config() {
         super();
@@ -39,6 +43,9 @@ public class Config {
                     colorPaletteFiles.add(new File(filename));
                 }
             }
+            newImageWidth = Integer.parseInt(properties.getProperty("new-image.width"));
+            newImageHeight = Integer.parseInt(properties.getProperty("new-image.height"));
+            newImageColor = parseColor(properties.getProperty("new-image.color"));
             toolsAirbrushUseTimer = Boolean.parseBoolean(properties.getProperty("tools.airbrush.use-timer"));
             toolsAirbrushTickDelay = Integer.parseInt(properties.getProperty("tools.airbrush.tick-delay"));
             toolsAirbrushPixelsPerTick = Integer.parseInt(properties.getProperty("tools.airbrush.pixels-per-tick"));
@@ -85,6 +92,18 @@ public class Config {
 
     public List<File> getColorPaletteFiles() {
         return colorPaletteFiles;
+    }
+
+    public int getNewImageWidth() {
+        return newImageWidth;
+    }
+
+    public int getNewImageHeight() {
+        return newImageHeight;
+    }
+
+    public Color getNewImageColor() {
+        return newImageColor;
     }
 
     public boolean getToolsAirbrushUseTimer() {

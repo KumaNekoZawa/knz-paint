@@ -6,8 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class SelectRectangleTool extends AbstractSelectionTool {
 
-    // FIXME don't use Polygon in this class
-
     @Override
     public String getName() {
         return "Select rectangle";

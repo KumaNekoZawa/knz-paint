@@ -2,6 +2,8 @@ package knz.paint.model.effects.rgba;
 
 public class SepiaEffect extends RGBAEffect {
 
+    // FIXME add presets
+
     public SepiaEffect() {
         super("Sepia", false, false);
     }

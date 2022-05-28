@@ -24,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -49,6 +50,7 @@ import knz.paint.model.effects.BooleanParameter;
 import knz.paint.model.effects.DoubleParameter;
 import knz.paint.model.effects.Effect;
 import knz.paint.model.effects.IntegerParameter;
+import knz.paint.model.effects.PresetParameter;
 import knz.paint.model.effects.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.hsba.ExtractSaturationEffect;
@@ -534,6 +536,7 @@ public class MainWindow extends JFrame {
                         /* initially draw the image with the effect once */
                         mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
 
+                        // FIXME maybe move this JFrame to a separate class file
                         JDialog effectFrame = new JDialog(MainWindow.this, title, true);
                         effectFrame.addWindowListener(new WindowAdapter() {
                             @Override
@@ -550,7 +553,44 @@ public class MainWindow extends JFrame {
                         c.gridx = 0;
                         c.gridy = 0;
                         for (AbstractParameter parameter : effect.getParameters()) {
-                            if (parameter instanceof BooleanParameter) {
+                            if (parameter instanceof PresetParameter) {
+                                PresetParameter presetParameter = (PresetParameter) parameter;
+                                JComboBox<String> comboBox = new JComboBox<>(presetParameter.getPresetNames());
+                                comboBox.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        // FIXME this doesn't update the UI elements
+                                        final String[] parameterNames = presetParameter.getParameterNames();
+                                        final Object[] values = presetParameter.getPresets().get(comboBox.getSelectedIndex()).getValues();
+                                        for (int i = 0; i < parameterNames.length; i++) {
+                                            final String parameterName = parameterNames[i];
+                                            final Object value = values[i];
+                                            boolean found = false;
+                                            for (AbstractParameter parameterToSet : effect.getParameters()) {
+                                                if (parameterToSet.getName().equals(parameterName)) {
+                                                    if (parameterToSet instanceof BooleanParameter) {
+                                                        ((BooleanParameter) parameterToSet).setValue((boolean) value);
+                                                    } else if (parameterToSet instanceof IntegerParameter) {
+                                                        ((IntegerParameter) parameterToSet).setValue((int) value);
+                                                    } else if (parameterToSet instanceof DoubleParameter) {
+                                                        ((DoubleParameter) parameterToSet).setValue((double) value);
+                                                    } else {
+                                                        throw new AssertionError();
+                                                    }
+                                                    found = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!found) {
+                                                System.err.println("Could not find parameter: " + parameterName);
+                                            }
+                                        }
+                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                                    }
+                                });
+                                effectFrame.add(comboBox, c);
+                                c.gridy++;
+                            } else if (parameter instanceof BooleanParameter) {
                                 BooleanParameter booleanParameter = (BooleanParameter) parameter;
                                 JCheckBox checkBox = new JCheckBox(parameter.getName());
                                 checkBox.setSelected(booleanParameter.getDef());
@@ -680,8 +720,9 @@ public class MainWindow extends JFrame {
         setIconImage(new ImageIcon("icons" + File.separator + "icon.png").getImage());
         setSize(800, 600);
         setLocationRelativeTo(null);
-        // FIXME move to config.properties:
-        mainPanel.newImage(400, 300, Color.WHITE);
+        mainPanel.newImage(Config.getConfig().getNewImageWidth(),
+                           Config.getConfig().getNewImageHeight(),
+                           Config.getConfig().getNewImageColor());
 
         setVisible(true);
     }

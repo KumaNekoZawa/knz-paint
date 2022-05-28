@@ -10,7 +10,7 @@ public class IntegerParameter extends AbstractParameter {
         this.min = min;
         this.def = def;
         this.max = max;
-        this.value = def;
+        reset();
     }
 
     @Override

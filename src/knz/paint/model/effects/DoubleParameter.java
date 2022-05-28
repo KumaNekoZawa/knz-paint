@@ -10,8 +10,7 @@ public class DoubleParameter extends AbstractParameter {
         this(name, min, def, max, 100);
     }
 
-    // this could be made public, if there is an effect, that needs to have a resolution != 100
-    private DoubleParameter(String name, double min, double def, double max, double resolution) {
+    public DoubleParameter(String name, double min, double def, double max, double resolution) {
         super(name);
         this.min = min;
         this.def = def;
@@ -28,7 +27,7 @@ public class DoubleParameter extends AbstractParameter {
 
     @Override
     public String getLabelText() {
-        return getName() + ": " + String.format("%.2f", value);
+        return getName() + ": " + String.format("%." + (int) Math.log10(resolution) + "f", value);
     }
 
     public double getMin() {

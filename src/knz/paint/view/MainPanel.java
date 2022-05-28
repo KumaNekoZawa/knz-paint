@@ -150,6 +150,7 @@ public class MainPanel extends JPanel {
     private FillStyle fillStyle = FillStyle.NONE;
     private int strokeWidth = 1;
     private StrokeDash strokeDash = StrokeDash.NORMAL;
+    private Stroke stroke = null;
     private int roundedRectangleArcWidth = 20;
     private int roundedRectangleArcHeight = 20;
     private AirbrushType airbrushType = AirbrushType.NORMAL;
@@ -157,6 +158,7 @@ public class MainPanel extends JPanel {
 
     public MainPanel() {
         super();
+        updateStroke();
         for (Tool tool : Tool.values()) {
             tool.getToolObject().setMainPanel(this);
         }
@@ -464,6 +466,7 @@ public class MainPanel extends JPanel {
 
     public void setStrokeWidth(int strokeWidth) {
         this.strokeWidth = strokeWidth;
+        updateStroke();
     }
 
     public StrokeDash getStrokeDash() {
@@ -472,14 +475,17 @@ public class MainPanel extends JPanel {
 
     public void setStrokeDash(StrokeDash strokeDash) {
         this.strokeDash = strokeDash;
+        updateStroke();
     }
 
-    // FIXME don't create BasicStrokes in here
     public Stroke getStroke() {
+        return stroke;
+    }
+
+    private void updateStroke() {
         final float width = (float) strokeWidth;
         final int cap = BasicStroke.CAP_ROUND;
         final int join = BasicStroke.JOIN_ROUND;
-        Stroke stroke;
         if (strokeDash == StrokeDash.NORMAL) {
             stroke = new BasicStroke(width, cap, join);
         } else {
@@ -507,7 +513,6 @@ public class MainPanel extends JPanel {
             }
             stroke = new BasicStroke(width, cap, join, 0f, dash, 0f);
         }
-        return stroke;
     }
 
     public int getRoundedRectangleArcWidth() {

@@ -8,7 +8,7 @@ public class BooleanParameter extends AbstractParameter {
     public BooleanParameter(String name, boolean def) {
         super(name);
         this.def = def;
-        this.value = def;
+        reset();
     }
 
     @Override
