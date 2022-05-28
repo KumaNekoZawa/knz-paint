@@ -2,18 +2,16 @@ package knz.paint.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -27,8 +25,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileFilter;
 
-@SuppressWarnings("serial")
+import knz.paint.tools.AbstractTool;
+
 public class MainWindow extends JFrame {
 
     private static final int[] ZOOM_LEVELS = { 1, 2, 4, 8 };
@@ -238,16 +238,17 @@ public class MainWindow extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTHWEST;
         for (MainPanel.Tool tool : MainPanel.Tool.values()) {
-            String title = tool.getTitle();
-            String icon = tool.getIcon();
+            AbstractTool toolObject = tool.getToolObject();
+            String title = toolObject.getName();
+            String icon = toolObject.getIcon();
             JButton button = icon.isEmpty()
-                ? new JButton(title)
+                ? new JButton(title.substring(0, 2))
                 : new JButton(new ImageIcon("icons" + File.separator + icon));
             button.setToolTipText(title);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setTool(tool);
+                    mainPanel.setSelectedTool(tool);
                 }
             });
             final int j = tool.ordinal();
@@ -260,10 +261,11 @@ public class MainWindow extends JFrame {
                 c.gridx = j / 2;
                 c.gridy = j % 2;
                 break;
+            default:
+                throw new AssertionError();
             }
             c.insets = j == 0 || j == 1 ? insetsFirstRow : insetsNo;
-            if (j == numberOfTools - 2
-             || j == numberOfTools - 1) {
+            if ((numberOfTools % 2 == 0 && j == numberOfTools - 2) || j == numberOfTools - 1) {
                 switch (orient) {
                 case JToolBar.VERTICAL:
                     c.weightx = 0;
@@ -273,6 +275,8 @@ public class MainWindow extends JFrame {
                     c.weightx = 1;
                     c.weighty = 0;
                     break;
+                default:
+                    throw new AssertionError();
                 }
             } else {
                 c.weightx = 0;

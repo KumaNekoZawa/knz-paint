@@ -1,7 +1,7 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 
 import knz.paint.view.MainPanel;
 
@@ -11,10 +11,13 @@ public abstract class AbstractTool {
     protected int startX, startY;
     protected int x, y;
 
-    public AbstractTool(MainPanel mainPanel) {
-        super();
+    public final void setMainPanel(MainPanel mainPanel) {
         this.mainPanel = mainPanel;
     }
+
+    public abstract String getName();
+
+    public abstract String getIcon();
 
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
         x = e.getX() / mainPanel.getZoomLevel();

@@ -1,15 +1,20 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-
-import knz.paint.view.MainPanel;
 
 public class ChangeCanvasSizeTool extends AbstractTool {
 
-    public ChangeCanvasSizeTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getName() {
+        return "Change canvas size";
+    }
+
+    @Override
+    public String getIcon() {
+        // FIXME add icon
+        return "";
     }
 
     @Override
@@ -40,7 +45,6 @@ public class ChangeCanvasSizeTool extends AbstractTool {
         g2d.fillRect(0, 0, imageNew.getWidth(), imageNew.getHeight());
         g2d.drawImage(mainPanel.getImage(), 0, 0, null);
         mainPanel.setImageAndGraphics(imageNew, g2d);
-        mainPanel.updatePanelSize();
     }
 
 }

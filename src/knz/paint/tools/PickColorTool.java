@@ -1,15 +1,19 @@
 package knz.paint.tools;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
-
-import knz.paint.view.MainPanel;
+import java.awt.event.MouseEvent;
 
 public class PickColorTool extends AbstractTool {
 
-    public PickColorTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getName() {
+        return "Pick color";
+    }
+
+    @Override
+    public String getIcon() {
+        return "tool_4.png";
     }
 
     @Override

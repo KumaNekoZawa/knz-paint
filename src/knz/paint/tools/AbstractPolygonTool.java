@@ -1,22 +1,14 @@
 package knz.paint.tools;
 
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 
-import knz.paint.view.MainPanel;
-
-// not for all Draw*Tool classes! only for DrawFreeHand and DrawPolygon!
-public abstract class AbstractDrawingTool extends AbstractTool {
+public abstract class AbstractPolygonTool extends AbstractTool {
 
     protected Polygon polygon = new Polygon();
 
-    public AbstractDrawingTool(MainPanel mainPanel) {
-        super(mainPanel);
-    }
-
-    protected void drawPolygon(Graphics2D g2d, Polygon polygon, boolean includeCurrentPixel) {
+    protected void drawPolygon(Graphics2D g2d, boolean includeCurrentPixel) {
         if ((includeCurrentPixel && (x < 0 || y < 0)) || polygon.npoints < 1) {
             return;
         }
@@ -46,6 +38,8 @@ public abstract class AbstractDrawingTool extends AbstractTool {
             g2d.setColor(colorPrimary);
             g2d.drawPolygon(polygon2);
             break;
+        default:
+            throw new AssertionError();
         }
     }
 

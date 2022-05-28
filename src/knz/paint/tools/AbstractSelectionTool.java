@@ -2,20 +2,13 @@ package knz.paint.tools;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Stroke;
 
-import knz.paint.view.MainPanel;
-
 public abstract class AbstractSelectionTool extends AbstractTool {
 
     protected Polygon polygon = new Polygon();
-
-    public AbstractSelectionTool(MainPanel mainPanel) {
-        super(mainPanel);
-    }
 
     public void clearSelection(Graphics2D g2d) {
         if (polygon.npoints > 2) {

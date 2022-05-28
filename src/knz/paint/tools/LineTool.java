@@ -1,14 +1,18 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 
-import knz.paint.view.MainPanel;
+public class LineTool extends AbstractTool {
 
-public class DrawLineTool extends AbstractTool {
+    @Override
+    public String getName() {
+        return "Line";
+    }
 
-    public DrawLineTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getIcon() {
+        return "tool_10.png";
     }
 
     @Override

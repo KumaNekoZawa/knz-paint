@@ -1,43 +1,47 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import knz.paint.view.MainPanel;
+public class AirbrushTool extends AbstractTool {
 
-public class DrawAirbrushTool extends AbstractTool {
+    private final int RADIUS = 10; // FIXME make variable
 
-    private final int AIRBRUSH_SIZE = 10; // FIXME make variable
+    @Override
+    public String getName() {
+        return "Airbrush";
+    }
 
-    public DrawAirbrushTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getIcon() {
+        return "tool_8.png";
     }
 
     @Override
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
         super.mousePressed(g2d, e);
-        drawAirBrush();
+        drawAirbrush();
     }
 
     @Override
     public void mouseDragged(Graphics2D g2d, MouseEvent e) {
         super.mouseDragged(g2d, e);
-        drawAirBrush();
+        drawAirbrush();
     }
 
     @Override
     public void mouseReleased(Graphics2D g2d, MouseEvent e) {
         super.mouseReleased(g2d, e);
-        drawAirBrush();
+        drawAirbrush();
     }
 
-    private void drawAirBrush() {
+    private void drawAirbrush() {
         if (x < 0 || y < 0) {
             return;
         }
         final double a = Math.random() * 2.0 * Math.PI;
-        final double d = AIRBRUSH_SIZE * Math.random();
+        final double d = RADIUS * Math.random();
         final int lx = x + (int) (d * Math.sin(a));
         final int ly = y + (int) (d * Math.cos(a));
         BufferedImage image = mainPanel.getImage();

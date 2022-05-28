@@ -1,15 +1,18 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-
-import knz.paint.view.MainPanel;
+import java.awt.event.MouseEvent;
 
 public class SelectRectangleTool extends AbstractSelectionTool {
 
-    public SelectRectangleTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getName() {
+        return "Select rectangle";
+    }
+
+    @Override
+    public String getIcon() {
+        return "tool_1.png";
     }
 
     @Override

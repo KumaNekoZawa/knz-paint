@@ -1,17 +1,18 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
+import java.awt.event.MouseEvent;
 
-import knz.paint.view.MainPanel;
+public class PolylineFreeFormTool extends AbstractPolylineTool {
 
-public class DrawBrushTool extends AbstractTool {
+    @Override
+    public String getName() {
+        return "Polyline free-form (Brush)";
+    }
 
-    private Polygon polygon = new Polygon();
-
-    public DrawBrushTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getIcon() {
+        return "tool_7.png";
     }
 
     @Override
@@ -30,22 +31,14 @@ public class DrawBrushTool extends AbstractTool {
     @Override
     public void mouseReleased(Graphics2D g2d, MouseEvent e) {
         super.mouseReleased(g2d, e);
-        drawPolyline(g2d);
+        drawPolyline(g2d, false);
         polygon.reset();
     }
 
     @Override
     public void paint(Graphics2D g2d) {
         super.paint(g2d);
-        drawPolyline(g2d);
-    }
-
-    private void drawPolyline(Graphics2D g2d) {
-        if (polygon.npoints < 1) {
-            return;
-        }
-        g2d.setColor(mainPanel.getColorPrimary());
-        g2d.drawPolyline(polygon.xpoints, polygon.ypoints, polygon.npoints);
+        drawPolyline(g2d, false);
     }
 
 }

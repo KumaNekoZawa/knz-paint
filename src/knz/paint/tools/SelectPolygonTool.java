@@ -1,15 +1,19 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-
-import knz.paint.view.MainPanel;
+import java.awt.event.MouseEvent;
 
 public class SelectPolygonTool extends AbstractSelectionTool {
 
-    public SelectPolygonTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getName() {
+        return "Select polygon";
+    }
+
+    @Override
+    public String getIcon() {
+        // FIXME add icon
+        return "";
     }
 
     @Override

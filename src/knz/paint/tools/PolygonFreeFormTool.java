@@ -1,15 +1,18 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
+import java.awt.event.MouseEvent;
 
-import knz.paint.view.MainPanel;
+public class PolygonFreeFormTool extends AbstractPolygonTool {
 
-public class DrawFreeFormTool extends AbstractDrawingTool {
+    @Override
+    public String getName() {
+        return "Polygon free-form";
+    }
 
-    public DrawFreeFormTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getIcon() {
+        return "tool_0b.png";
     }
 
     @Override
@@ -28,14 +31,14 @@ public class DrawFreeFormTool extends AbstractDrawingTool {
     @Override
     public void mouseReleased(Graphics2D g2d, MouseEvent e) {
         super.mouseReleased(g2d, e);
-        drawPolygon(g2d, polygon, false);
+        drawPolygon(g2d, false);
         polygon.reset();
     }
 
     @Override
     public void paint(Graphics2D g2d) {
         super.paint(g2d);
-        drawPolygon(g2d, polygon, false);
+        drawPolygon(g2d, false);
     }
 
 }

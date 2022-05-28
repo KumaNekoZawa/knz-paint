@@ -1,17 +1,20 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
-
+import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
-import knz.paint.view.MainPanel;
+public class PolylineTool extends AbstractPolylineTool {
 
-public class DrawPolygonTool extends AbstractDrawingTool {
+    @Override
+    public String getName() {
+        return "Polyline";
+    }
 
-    public DrawPolygonTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getIcon() {
+        // FIXME add icon
+        return "";
     }
 
     @Override
@@ -22,7 +25,7 @@ public class DrawPolygonTool extends AbstractDrawingTool {
                 polygon.addPoint(x, y);
             }
         } else if (SwingUtilities.isRightMouseButton(e)) {
-            drawPolygon(g2d, polygon, false);
+            drawPolyline(g2d, false);
             polygon.reset();
         }
     }
@@ -38,7 +41,7 @@ public class DrawPolygonTool extends AbstractDrawingTool {
     @Override
     public void paint(Graphics2D g2d) {
         super.paint(g2d);
-        drawPolygon(g2d, polygon, true);
+        drawPolyline(g2d, true);
     }
 
 }

@@ -1,21 +1,24 @@
 package knz.paint.tools;
 
-import java.awt.event.MouseEvent;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-
+import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
-import knz.paint.view.MainPanel;
+public class BezierCurveTool extends AbstractTool {
 
-public class DrawBezierTool extends AbstractTool {
-
-    private final int BEZIER_QUALITY = 100;
+    private final int QUALITY = 100;
 
     private Polygon polygon = new Polygon();
 
-    public DrawBezierTool(MainPanel mainPanel) {
-        super(mainPanel);
+    @Override
+    public String getName() {
+        return "Bézier curve";
+    }
+
+    @Override
+    public String getIcon() {
+        return "tool_11.png";
     }
 
     @Override
@@ -26,7 +29,7 @@ public class DrawBezierTool extends AbstractTool {
                 polygon.addPoint(x, y);
             }
         } else if (SwingUtilities.isRightMouseButton(e)) {
-            drawBezier(g2d, false);
+            drawBezierCurve(g2d, false);
             polygon.reset();
         }
     }
@@ -42,10 +45,10 @@ public class DrawBezierTool extends AbstractTool {
     @Override
     public void paint(Graphics2D g2d) {
         super.paint(g2d);
-        drawBezier(g2d, true);
+        drawBezierCurve(g2d, true);
     }
 
-    private void drawBezier(Graphics2D g2d, boolean includeCurrentPixel) {
+    private void drawBezierCurve(Graphics2D g2d, boolean includeCurrentPixel) {
         if ((includeCurrentPixel && (x < 0 || y < 0)) || polygon.npoints < 1) {
             return;
         }
@@ -58,8 +61,8 @@ public class DrawBezierTool extends AbstractTool {
         }
         g2d.setColor(mainPanel.getColorPrimary());
         int lastX = -1, lastY = -1;
-        for (int i = 0; i < BEZIER_QUALITY; i++) {
-            final double ratio = i / (double) BEZIER_QUALITY;
+        for (int i = 0; i < QUALITY; i++) {
+            final double ratio = i / (double) QUALITY;
 
             double[] xcoords = new double[polygon2.npoints];
             for (int j = 0; j < xcoords.length; j++) {

@@ -2,6 +2,7 @@
 
     <property name="main.class" value="knz.paint.Main" />
     <property name="bin.dir"    value="bin" />
+    <property name="lib.dir"    value="lib" />
     <property name="src.dir"    value="src" />
     <property name="jar.file"   value="${ant.project.name}.jar" />
 
@@ -13,8 +14,21 @@
     <target name="build" depends="clean">
         <mkdir dir="${bin.dir}" />
         <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="on" includeantruntime="false">
-            <compilerarg value="-Xlint:all" />
+            <compilerarg value="-Xlint:cast" />
+            <compilerarg value="-Xlint:deprecation" />
+            <compilerarg value="-Xlint:divzero" />
+            <compilerarg value="-Xlint:fallthrough" />
+            <compilerarg value="-Xlint:overrides" />
+            <compilerarg value="-Xlint:static" />
+            <compilerarg value="-Xlint:try" />
         </javac>
+    	<path id="checkstyle.lib.path">
+            <fileset dir="${lib.dir}" includes="*.jar" />
+	    </path>
+        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.lib.path" />
+        <checkstyle config="../knz-style.xml">
+            <fileset dir="${src.dir}" includes="**/*.java" />
+        </checkstyle>
     </target>
 
     <target name="package" depends="build">
