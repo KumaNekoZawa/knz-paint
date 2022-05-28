@@ -1,3 +1,20 @@
+check for unused imports in all classes
+check for unused variables in all classes
+check for correct import order
+check for unused parameters
+check for unused methods
+
+
+all TODOs and FIXMEs first
+
+
+consistent usage of various tools
+* Use keyboard keys !?
+    'A': Apply (polygon will be applied to image and the operation is done)
+    'C': Cancel (cancel operation and nothing will be applied)
+* Even use this for the Brush tool etc. (this will be a polyline as well)
+
+
 show primary and secondary color in colorbar and their rgba/hsba
 allow specific rgba/hsba colors to be typed into the colorbar
 transparency support
@@ -5,23 +22,25 @@ transparency support
 
 
 selection tools
-fill with color tool
-zoom tool
+    move selection
+fill with color tool (produces StackOverflows right now, look at https://en.wikipedia.org/wiki/Flood_fill#Span_Filling)
 brush tool
     with brush heads/sizes
+    dashing etc
 air brush tool
     sizes
 rounded rectangle tool
 --
 arrow tool?
 triangle tool?
-clone tool? (as in IrfanPaint and Photoshop)
+clone stamp tool? (as in IrfanPaint and Photoshop)
 measure tool? (measures distances)
+magnetic lasso tool? (as in Photoshop)
+magic wand tool? (as in Photoshop)
 
-history menus
-selection menus
-clipboard menus
-zoom menus
+redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
+
+history menus (how to implement a goooood history!?!?!)
 
 preset brushes (not just heads/sizes but also effects on different colors)
     pencil
@@ -30,8 +49,12 @@ preset brushes (not just heads/sizes but also effects on different colors)
     calligraphy
     etc
 
+https://docs.oracle.com/javase/tutorial/2d/geometry/primitives.html
+https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
+
 look at other programs
     paint
     irfanview
     photoshop
     coreldraw
+    gimp

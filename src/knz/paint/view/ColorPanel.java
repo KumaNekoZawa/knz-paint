@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+@SuppressWarnings("serial")
 public class ColorPanel extends JPanel {
 
     private static final int SIZE = 75;

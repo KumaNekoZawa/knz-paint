@@ -12,7 +12,9 @@
 
     <target name="build" depends="clean">
         <mkdir dir="${bin.dir}" />
-        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="on" includeantruntime="false" />
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="on" includeantruntime="false">
+            <compilerarg value="-Xlint:all" />
+        </javac>
     </target>
 
     <target name="package" depends="build">
