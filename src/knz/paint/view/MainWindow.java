@@ -52,7 +52,6 @@ import knz.paint.model.effects.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.rgba.AdjustGammaEffect;
 import knz.paint.model.effects.rgba.AdjustRGBAEffect;
 import knz.paint.model.effects.rgba.AlphaAsGrayEffect;
-import knz.paint.model.effects.rgba.AverageRGBEffect;
 import knz.paint.model.effects.rgba.BitShiftEffect;
 import knz.paint.model.effects.rgba.ExtractRGBAEffect;
 import knz.paint.model.effects.rgba.GrayscaleEffect;
@@ -99,7 +98,6 @@ public class MainWindow extends JFrame {
         new AdjustGammaEffect(),
         new AdjustRGBAEffect(),
         new AlphaAsGrayEffect(),
-        new AverageRGBEffect(),
         new BitShiftEffect(),
         new ExtractRGBAEffect(),
         new GrayscaleEffect(),

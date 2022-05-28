@@ -10,9 +10,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -29,11 +32,15 @@ import knz.paint.model.effects.PresetParameter;
 
 public class EffectWindow extends JDialog {
 
+    private Map<String, AbstractParameter> parameters = new HashMap<>();
+    private Map<String, JComponent> parameterElements = new HashMap<>();
+
     public EffectWindow(MainWindow parent, JScrollPane scrollPane, MainPanel mainPanel, Effect effect, String title) {
         super(parent, title, true);
 
         for (AbstractParameter parameter : effect.getParameters()) {
             parameter.reset();
+            parameters.put(parameter.getName(), parameter);
         }
 
         final BufferedImage image = mainPanel.getImage();
@@ -65,46 +72,51 @@ public class EffectWindow extends JDialog {
         c.gridx = 0;
         c.gridy = 0;
         for (AbstractParameter parameter : effect.getParameters()) {
+            final String parameterName = parameter.getName();
             if (parameter instanceof PresetParameter) {
-                PresetParameter presetParameter = (PresetParameter) parameter;
+                final PresetParameter presetParameter = (PresetParameter) parameter;
                 JComboBox<String> comboBox = new JComboBox<>(presetParameter.getPresetNames());
                 comboBox.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // FIXME this doesn't update the UI elements
-                        final String[] parameterNames = presetParameter.getParameterNames();
+                        final String[] parameterToSetNames = presetParameter.getParameterNames();
                         final Object[] values = presetParameter.getPresets().get(comboBox.getSelectedIndex()).getValues();
-                        for (int i = 0; i < parameterNames.length; i++) {
-                            final String parameterName = parameterNames[i];
+                        for (int i = 0; i < parameterToSetNames.length; i++) {
+                            final String parameterToSetName = parameterToSetNames[i];
                             final Object value = values[i];
-                            boolean found = false;
-                            for (AbstractParameter parameterToSet : effect.getParameters()) {
-                                if (parameterToSet.getName().equals(parameterName)) {
-                                    if (parameterToSet instanceof BooleanParameter) {
-                                        ((BooleanParameter) parameterToSet).setValue((boolean) value);
-                                    } else if (parameterToSet instanceof IntegerParameter) {
-                                        ((IntegerParameter) parameterToSet).setValue((int) value);
-                                    } else if (parameterToSet instanceof DoubleParameter) {
-                                        ((DoubleParameter) parameterToSet).setValue((double) value);
-                                    } else {
-                                        throw new AssertionError();
-                                    }
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found) {
-                                System.err.println("Could not find parameter: " + parameterName);
+                            final AbstractParameter parameterToSet = parameters.get(parameterToSetName);
+                            final JComponent parameterToSetElement = parameterElements.get(parameterToSetName);
+                            if (parameterToSet instanceof BooleanParameter && parameterToSetElement instanceof JCheckBox) {
+                                final BooleanParameter booleanParameterToSet = (BooleanParameter) parameterToSet;
+                                final JCheckBox checkBox = (JCheckBox) parameterToSetElement;
+                                final boolean booleanValue = (boolean) value;
+                                booleanParameterToSet.setValue(booleanValue);
+                                checkBox.setSelected(booleanValue);
+                            } else if (parameterToSet instanceof IntegerParameter && parameterToSetElement instanceof JSlider) {
+                                final IntegerParameter integerParameterToSet = (IntegerParameter) parameterToSet;
+                                final JSlider slider = (JSlider) parameterToSetElement;
+                                final int intValue = (int) value;
+                                integerParameterToSet.setValue(intValue);
+                                slider.setValue(intValue);
+                            } else if (parameterToSet instanceof DoubleParameter && parameterToSetElement instanceof JSlider) {
+                                final DoubleParameter doubleParameterToSet = (DoubleParameter) parameterToSet;
+                                final JSlider slider = (JSlider) parameterToSetElement;
+                                final double doubleValue = (double) value;
+                                doubleParameterToSet.setValue(doubleValue);
+                                slider.setValue((int) (doubleParameterToSet.getResolution() * doubleValue));
+                            } else {
+                                throw new AssertionError();
                             }
                         }
                         mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
                     }
                 });
+                parameterElements.put(parameterName, comboBox);
                 add(comboBox, c);
                 c.gridy++;
             } else if (parameter instanceof BooleanParameter) {
-                BooleanParameter booleanParameter = (BooleanParameter) parameter;
-                JCheckBox checkBox = new JCheckBox(parameter.getName());
+                final BooleanParameter booleanParameter = (BooleanParameter) parameter;
+                JCheckBox checkBox = new JCheckBox(parameterName);
                 checkBox.setSelected(booleanParameter.getDef());
                 checkBox.addActionListener(new ActionListener() {
                     @Override
@@ -113,6 +125,7 @@ public class EffectWindow extends JDialog {
                         mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
                     }
                 });
+                parameterElements.put(parameterName, checkBox);
                 add(checkBox, c);
                 c.gridy++;
             } else {
@@ -121,7 +134,7 @@ public class EffectWindow extends JDialog {
                 add(label, c);
                 c.gridy++;
                 if (parameter instanceof IntegerParameter) {
-                    IntegerParameter integerParameter = (IntegerParameter) parameter;
+                    final IntegerParameter integerParameter = (IntegerParameter) parameter;
                     JSlider slider = new JSlider(JSlider.HORIZONTAL,
                         integerParameter.getMin(),
                         integerParameter.getMax(),
@@ -134,10 +147,11 @@ public class EffectWindow extends JDialog {
                             mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
                         }
                     });
+                    parameterElements.put(parameterName, slider);
                     add(slider, c);
                     c.gridy++;
                 } else if (parameter instanceof DoubleParameter) {
-                    DoubleParameter doubleParameter = (DoubleParameter) parameter;
+                    final DoubleParameter doubleParameter = (DoubleParameter) parameter;
                     JSlider slider = new JSlider(JSlider.HORIZONTAL,
                         (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
                         (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
@@ -150,6 +164,7 @@ public class EffectWindow extends JDialog {
                             mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
                         }
                     });
+                    parameterElements.put(parameterName, slider);
                     add(slider, c);
                     c.gridy++;
                 } else {

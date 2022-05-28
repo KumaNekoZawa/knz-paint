@@ -8,7 +8,7 @@ public class GrayscaleEffect extends RGBAEffect {
 
     private PresetParameter paramPresets = new PresetParameter(
         new String[] { "Red", "Green", "Blue" },
-        new Preset("Average",                 0.3333, 0.3334, 0.3333),
+        new Preset("Average RGB",             0.3333, 0.3334, 0.3333),
         new Preset("Y'UV/Y'IQ PAL/NTSC",      0.299,  0.587,  0.114 ),
         new Preset("ITU-R BT.709 / CIE 1931", 0.2126, 0.7152, 0.0722),
         new Preset("ITU-R BT.2100",           0.2627, 0.6780, 0.0593)
