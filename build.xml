@@ -1,0 +1,26 @@
+<project name="KNZ-Paint" basedir="." default="package">
+
+    <property name="main.class" value="knz.paint.Main" />
+    <property name="bin.dir"    value="bin" />
+    <property name="src.dir"    value="src" />
+    <property name="jar.file"   value="${ant.project.name}.jar" />
+
+    <target name="clean">
+        <delete dir="${bin.dir}" />
+        <delete file="${jar.file}" />
+    </target>
+
+    <target name="build" depends="clean">
+        <mkdir dir="${bin.dir}" />
+        <javac srcdir="${src.dir}" destdir="${bin.dir}" debug="on" includeantruntime="false" />
+    </target>
+
+    <target name="package" depends="build">
+        <jar destfile="${jar.file}" basedir="${bin.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main.class}" />
+            </manifest>
+        </jar>
+    </target>
+
+</project>

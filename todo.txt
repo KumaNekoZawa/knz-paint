@@ -1,0 +1,7 @@
+* nicer code (espc between MainWindow and MainPanel)
+* save as other file types (not just png)
+* brush size, fill circle/rect/polygon ...
+* polygon tool
+* zoom tool
+* pick color tool
+* allow drawing circles/rectangles from bottom right to top left
