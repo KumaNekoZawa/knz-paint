@@ -3,11 +3,10 @@ package knz.paint.tools;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import javax.swing.SwingUtilities;
 
 public class BezierCurveTool extends AbstractTool {
-
-    private final int QUALITY = 100; // FIXME move to config.properties
 
     private Polygon polygon = new Polygon();
 
@@ -65,9 +64,20 @@ public class BezierCurveTool extends AbstractTool {
             polygon2 = polygon;
         }
         g2d.setColor(mainPanel.getColorPrimary());
+
+        /* calc quality */
+        final int minX = Arrays.stream(polygon2.xpoints).min().orElse(0);
+        final int minY = Arrays.stream(polygon2.ypoints).min().orElse(0);
+        final int maxX = Arrays.stream(polygon2.xpoints).max().orElse(0);
+        final int maxY = Arrays.stream(polygon2.ypoints).max().orElse(0);
+        final int dx = maxX - minX;
+        final int dy = maxY - minY;
+        final double d = Math.sqrt(dx * dx + dy * dy);
+        final int quality = d >= 1. ? Math.max((int) (d / 3.), 1) : 1;
+
         int lastX = -1, lastY = -1;
-        for (int i = 0; i < QUALITY; i++) {
-            final double ratio = i / (double) QUALITY;
+        for (int i = 0; i < quality; i++) {
+            final double ratio = i / (double) quality;
 
             double[] xcoords = new double[polygon2.npoints];
             for (int j = 0; j < xcoords.length; j++) {

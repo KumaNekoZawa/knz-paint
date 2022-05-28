@@ -10,7 +10,7 @@ import javax.swing.Timer;
 
 public class AirbrushTool extends AbstractTool {
 
-    // FIXME make these variable
+    // FIXME make these variables:
     private final int RADIUS = 15;
     private final boolean USE_RANDOM_COLORS = true;
     private final boolean USE_TIMER = true;

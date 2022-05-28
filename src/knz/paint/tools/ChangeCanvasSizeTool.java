@@ -35,14 +35,24 @@ public class ChangeCanvasSizeTool extends AbstractTool {
     }
 
     private void changeSize() {
-        if (x < 0 || y < 0) {
+        if (x <= 0 || y <= 0) {
             return;
         }
+        BufferedImage image = mainPanel.getImage();
+        final int xOld = image.getWidth();
+        final int yOld = image.getHeight();
         BufferedImage imageNew = new BufferedImage(x, y, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = imageNew.createGraphics();
-        g2d.setColor(mainPanel.getColorSecondary());
-        g2d.fillRect(0, 0, imageNew.getWidth(), imageNew.getHeight());
-        g2d.drawImage(mainPanel.getImage(), 0, 0, null);
+        if (x > xOld || y > yOld) {
+            g2d.setColor(mainPanel.getColorSecondary());
+            if (y > yOld) {
+                g2d.fillRect(0, yOld, xOld, y);
+            }
+            if (x > xOld) {
+                g2d.fillRect(xOld, 0, x, y);
+            }
+        }
+        g2d.drawImage(image, 0, 0, null);
         mainPanel.setImageAndGraphics(imageNew, g2d);
     }
 

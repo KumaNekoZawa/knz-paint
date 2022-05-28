@@ -42,11 +42,12 @@ public class SelectRectangleTool extends AbstractSelectionTool {
         drawSelection(g2d, false);
     }
 
-    public void selectAll(int width, int height) {
+    public void selectAll() {
+        BufferedImage image = mainPanel.getImage();
         final int minX = 0;
         final int minY = 0;
-        final int maxX = width - 1;
-        final int maxY = height - 1;
+        final int maxX = image.getWidth() - 1;
+        final int maxY = image.getHeight() - 1;
         polygon.reset();
         polygon.addPoint(minX, minY);
         polygon.addPoint(maxX, minY);

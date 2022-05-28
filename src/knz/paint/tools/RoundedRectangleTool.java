@@ -6,8 +6,9 @@ import java.awt.event.MouseEvent;
 
 public class RoundedRectangleTool extends AbstractTool {
 
-    private static final int ARC_WIDTH = 20; // FIXME make variable
-    private static final int ARC_HEIGHT = 20; // FIXME make variable
+    // FIXME make these variables:
+    private static final int ARC_WIDTH = 20;
+    private static final int ARC_HEIGHT = 20;
 
     @Override
     public String getName() {

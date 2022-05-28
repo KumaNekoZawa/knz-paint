@@ -1,9 +1,11 @@
-package knz.paint.view;
+package knz.paint.view.plainpanels;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -15,18 +17,21 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
-public class ColorPanel extends JPanel {
+public class PalettePanel extends JPanel {
+
+    public static final int ACTION_LISTENER_ID = 2002;
+
+    private List<ActionListener> listeners = new ArrayList<>();
 
     private BufferedImage image;
 
-    public ColorPanel(MainPanel mainPanel, int size, File paletteFile) {
+    public PalettePanel(int size, File paletteFile) {
         super();
-        if (mainPanel == null || size <= 1 || paletteFile == null || !paletteFile.isFile()) {
+        if (size <= 1 || paletteFile == null || !paletteFile.isFile()) {
             throw new IllegalArgumentException();
         }
-        updatePanelSize(size);
+
         String name = paletteFile.getName();
         String ext = name.contains(".") ? name.substring(name.lastIndexOf(".")).toLowerCase() : "";
         switch (ext) {
@@ -45,6 +50,9 @@ public class ColorPanel extends JPanel {
             try (BufferedReader br = new BufferedReader(new FileReader(paletteFile))) {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.contains("#")) {
+                        line = line.substring(0, line.indexOf("#"));
+                    }
                     line = line.trim();
                     if (line.isEmpty()) {
                         continue;
@@ -92,16 +100,17 @@ public class ColorPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                final int x = e.getX();
-                final int y = e.getY();
-                final Color c = new Color(image.getRGB(x, y), true);
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    mainPanel.setColorPrimary(c);
-                } else if (SwingUtilities.isRightMouseButton(e)) {
-                    mainPanel.setColorSecondary(c);
+                for (ActionListener listener : listeners) {
+                    listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, PalettePanel.class.getSimpleName()));
                 }
             }
         });
+
+        Dimension d = new Dimension(size, size);
+        setMaximumSize(d);
+        setMinimumSize(d);
+        setPreferredSize(d);
+        setSize(d);
     }
 
     @Override
@@ -111,12 +120,12 @@ public class ColorPanel extends JPanel {
         g2d.drawImage(image, 0, 0, null);
     }
 
-    private void updatePanelSize(int size) {
-        Dimension d = new Dimension(size, size);
-        setMaximumSize(d);
-        setMinimumSize(d);
-        setPreferredSize(d);
-        setSize(d);
+    public void addActionListener(ActionListener listener) {
+        listeners.add(listener);
+    }
+
+    public Color getColorAt(int x, int y) {
+        return new Color(image.getRGB(x, y), true);
     }
 
 }

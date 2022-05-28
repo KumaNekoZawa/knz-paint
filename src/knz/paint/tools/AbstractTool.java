@@ -1,11 +1,14 @@
 package knz.paint.tools;
 
+import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
 import knz.paint.view.MainPanel;
 
 public abstract class AbstractTool {
+
+    public static final Cursor CURSOR_DEFAULT = new Cursor(Cursor.DEFAULT_CURSOR);
 
     protected MainPanel mainPanel;
     protected int startX = 0, startY = 0;
@@ -19,6 +22,14 @@ public abstract class AbstractTool {
     public abstract String getName();
 
     public abstract String getIcon();
+
+    public Cursor getCursor() {
+        return CURSOR_DEFAULT;
+    }
+
+    public boolean doesChangeImage() {
+        return true;
+    }
 
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
         x = e.getX() / mainPanel.getZoomLevel();

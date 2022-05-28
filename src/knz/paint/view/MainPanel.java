@@ -10,6 +10,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+/*
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+*/
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -84,8 +89,19 @@ public class MainPanel extends JPanel {
     }
 
     private static final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
+    /*
+    private static BufferedImage BG = null;
 
-    private MainWindow parent;
+    static {
+        try {
+            BG = ImageIO.read(new File(new File("res"), "bg.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    */
+
+    private MainWindow parentElement;
 
     private BufferedImage image;
     private Graphics2D g2d;
@@ -105,6 +121,16 @@ public class MainPanel extends JPanel {
         }
         addMouseListener(new MouseAdapter() {
             @Override
+            public void mouseEntered(MouseEvent e) {
+                setCursor(selectedTool.getToolObject().getCursor());
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                setCursor(AbstractTool.CURSOR_DEFAULT);
+            }
+
+            @Override
             public void mousePressed(MouseEvent e) {
                 selectedTool.getToolObject().mousePressed(g2d, e);
                 MainPanel.this.repaint();
@@ -114,43 +140,74 @@ public class MainPanel extends JPanel {
             public void mouseReleased(MouseEvent e) {
                 selectedTool.getToolObject().mouseReleased(g2d, e);
                 MainPanel.this.repaint();
+                if (selectedTool.getToolObject().doesChangeImage()) {
+                    MainPanel.this.parentElement.changedTillLastSave();
+                }
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                updateStatusBar(e);
                 selectedTool.getToolObject().mouseDragged(g2d, e);
                 MainPanel.this.repaint();
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
+                updateStatusBar(e);
+            }
+
+            private void updateStatusBar(MouseEvent e) {
                 final int x = e.getX() / zoomLevel;
                 final int y = e.getY() / zoomLevel;
                 if (0 <= x && x < image.getWidth()
                  && 0 <= y && y < image.getHeight()) {
-                    parent.updateStatusBarCurrentPixel(x, y, image.getRGB(x, y));
+                    parentElement.updateStatusBarCurrentPixel(x, y, image.getRGB(x, y));
                 }
             }
         });
     }
 
-    public void setParent(MainWindow parent) {
-        this.parent = parent;
+    public MainWindow getParentElement() {
+        return parentElement;
+    }
+
+    public void setParentElement(MainWindow parentElement) {
+        this.parentElement = parentElement;
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        final int width = getWidth();
+        final int height = getHeight();
+        /*
+        final int bgWidth = BG.getWidth();
+        final int bgHeight = BG.getHeight();
+        */
+        final int imageWidth = image.getWidth();
+        final int imageHeight = image.getHeight();
         Graphics2D g2d = (Graphics2D) g;
+        // FIXME move to config.properties:
         g2d.setColor(Color.GRAY);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-        g2d.drawImage(image, 0, 0, zoomLevel * image.getWidth(), zoomLevel * image.getHeight(), null);
+        g2d.fillRect(0, 0, width, height);
+        /* XXX Background
+        for (int y = 0; y < imageHeight; y += bgHeight) {
+            for (int x = 0; x < imageWidth; x += bgWidth) {
+                BufferedImage bg = BG.getSubimage(0, 0,
+                    x + bgWidth  > imageWidth  ? imageWidth  - x : bgWidth,
+                    y + bgHeight > imageHeight ? imageHeight - y : bgHeight);
+                g2d.drawImage(bg, x, y, null);
+            }
+        }
+        */
+        g2d.drawImage(image, 0, 0, zoomLevel * imageWidth, zoomLevel * imageHeight, null);
         AbstractTool toolObject = selectedTool.getToolObject();
         if (toolObject.needsRepaint()) {
-            BufferedImage canvas = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+            BufferedImage canvas = new BufferedImage(imageWidth, imageHeight, image.getType());
             toolObject.paint(canvas.createGraphics());
-            g2d.drawImage(canvas, 0, 0, zoomLevel * canvas.getWidth(), zoomLevel * canvas.getHeight(), null);
+            g2d.drawImage(canvas, 0, 0, zoomLevel * imageWidth, zoomLevel * imageHeight, null);
         }
     }
 
@@ -158,6 +215,10 @@ public class MainPanel extends JPanel {
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public Graphics2D getG2D() {
+        return g2d;
     }
 
     public void setImage(BufferedImage image) {
@@ -200,7 +261,7 @@ public class MainPanel extends JPanel {
         AbstractTool toolObject = selectedTool.getToolObject();
         if (toolObject instanceof SelectRectangleTool) {
             SelectRectangleTool srt = (SelectRectangleTool) toolObject;
-            srt.selectAll(image.getWidth(), image.getHeight());
+            srt.selectAll();
             repaint();
         } else {
             throw new AssertionError();
@@ -214,7 +275,7 @@ public class MainPanel extends JPanel {
             srt.cropToSelection();
             repaint();
         } else {
-            JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(parentElement, "You have to select a rectangle first!", parentElement.getTitle(), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -222,10 +283,10 @@ public class MainPanel extends JPanel {
         AbstractTool toolObject = selectedTool.getToolObject();
         if (toolObject instanceof AbstractSelectionTool) {
             AbstractSelectionTool ast = (AbstractSelectionTool) toolObject;
-            ast.clearSelection(g2d);
+            ast.clearSelection();
             repaint();
         } else {
-            JOptionPane.showMessageDialog(parent, "You have to select a region first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(parentElement, "You have to select a region first!", parentElement.getTitle(), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -234,10 +295,10 @@ public class MainPanel extends JPanel {
         if (toolObject instanceof SelectRectangleTool) {
             SelectRectangleTool srt = (SelectRectangleTool) toolObject;
             CLIPBOARD.setContents(new TransferableImage(srt.getSubimage()), null);
-            srt.clearSelection(g2d);
+            srt.clearSelection();
             repaint();
         } else {
-            JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(parentElement, "You have to select a rectangle first!", parentElement.getTitle(), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -247,7 +308,7 @@ public class MainPanel extends JPanel {
             SelectRectangleTool srt = (SelectRectangleTool) toolObject;
             CLIPBOARD.setContents(new TransferableImage(srt.getSubimage()), null);
         } else {
-            JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(parentElement, "You have to select a rectangle first!", parentElement.getTitle(), JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -314,7 +375,7 @@ public class MainPanel extends JPanel {
         setMinimumSize(d);
         setPreferredSize(d);
         setSize(d);
-        parent.updateStatusBarSize(width, height);
+        parentElement.updateStatusBarSize(width, height);
     }
 
 }
