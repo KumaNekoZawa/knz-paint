@@ -53,7 +53,7 @@ public class ColorPickerWindow extends JFrame {
                 final int rgba = (a << 24) | (rgb & 0xFFFFFF);
                 return new Color(rgba, true);
             }),
-        new GradientSliderPanel("Satur.",
+        new GradientSliderPanel("Sat.",
             (c) -> {
                 final int r = c.getRed();
                 final int g = c.getGreen();
@@ -72,7 +72,7 @@ public class ColorPickerWindow extends JFrame {
                 final int rgba = (a << 24) | (rgb & 0xFFFFFF);
                 return new Color(rgba, true);
             }),
-        new GradientSliderPanel("Brigh.",
+        new GradientSliderPanel("Br.",
             (c) -> {
                 final int r = c.getRed();
                 final int g = c.getGreen();

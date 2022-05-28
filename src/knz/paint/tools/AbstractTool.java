@@ -32,22 +32,22 @@ public abstract class AbstractTool {
     }
 
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        x = e.getX() / mainPanel.getZoomLevel();
-        y = e.getY() / mainPanel.getZoomLevel();
+        x = e.getX() / mainPanel.getZoomFactor();
+        y = e.getY() / mainPanel.getZoomFactor();
         startX = x;
         startY = y;
         mousePressed = true;
     }
 
     public void mouseDragged(Graphics2D g2d, MouseEvent e) {
-        x = e.getX() / mainPanel.getZoomLevel();
-        y = e.getY() / mainPanel.getZoomLevel();
+        x = e.getX() / mainPanel.getZoomFactor();
+        y = e.getY() / mainPanel.getZoomFactor();
     }
 
     public void mouseReleased(Graphics2D g2d, MouseEvent e) {
         mousePressed = false;
-        x = e.getX() / mainPanel.getZoomLevel();
-        y = e.getY() / mainPanel.getZoomLevel();
+        x = e.getX() / mainPanel.getZoomFactor();
+        y = e.getY() / mainPanel.getZoomFactor();
     }
 
     /** whether the paint method should be called to draw something on the canvas layer of the image */

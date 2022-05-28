@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,9 +44,20 @@ import knz.paint.view.plainpanels.PalettePanel;
 
 public class MainWindow extends JFrame {
 
-    private static final int MAX_NUMBER_OF_COLOR_PALETTES = 25;
+    private static final FileFilter FILTER_BMP = createFileFilter("Microsoft Windows Bitmap", "bmp", "dib");
+    private static final FileFilter FILTER_GIF = createFileFilter("Graphics Interchange Format", "gif");
+    private static final FileFilter FILTER_JPG = createFileFilter("Joint Photographic Experts Group", "jpg", "jpeg");
+    private static final FileFilter FILTER_PNG = createFileFilter("Portable Network Graphics", "png");
 
-    private static final int[] ZOOM_LEVELS = { 1, 2, 4, 8, 16, 32 };
+    private static final int[] ZOOM_FACTORS   = { 1, 2, 4, 8, 16, 32 };
+    private static final int[] ZOOM_SHORTCUTS = { KeyEvent.VK_0,
+                                                  KeyEvent.VK_1,
+                                                  KeyEvent.VK_2,
+                                                  KeyEvent.VK_3,
+                                                  KeyEvent.VK_4,
+                                                  KeyEvent.VK_5 };
+
+    private static final int MAX_NUMBER_OF_COLOR_PALETTES = 25;
 
     private Properties properties = new Properties();
     private int colorBarSize = 16 * 3;
@@ -55,25 +67,28 @@ public class MainWindow extends JFrame {
 
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menuFile = new JMenu("File");
-    private JMenuItem menuFileNew = new JMenuItem("New");
     private JMenuItem menuFileLoad = new JMenuItem("Load...");
     private JMenuItem menuFileSave = new JMenuItem("Save...");
+    private JMenuItem menuFileAbout = new JMenuItem("About...");
     private JMenuItem menuFileQuit = new JMenuItem("Quit");
 
     private JMenu menuEdit = new JMenu("Edit");
     private JMenuItem menuEditSelectNone = new JMenuItem("Select none");
     private JMenuItem menuEditSelectAll = new JMenuItem("Select all");
-    private JMenuItem menuEditCropToSelection = new JMenuItem("Crop to selection");
-    private JMenuItem menuEditClearSelection = new JMenuItem("Clear selection");
     private JMenuItem menuEditCut = new JMenuItem("Cut");
     private JMenuItem menuEditCopy = new JMenuItem("Copy");
-    // TODO Paste (Ctrl+V)
+    private JMenuItem menuEditPaste = new JMenuItem("Paste");
+    private JMenuItem menuEditClearSelection = new JMenuItem("Clear selection");
+    private JMenuItem menuEditCropToSelection = new JMenuItem("Crop to selection");
 
     private JMenu menuView = new JMenu("View");
     private JCheckBoxMenuItem menuViewToolBar = new JCheckBoxMenuItem("Tool bar");
     private JCheckBoxMenuItem menuViewColorBar = new JCheckBoxMenuItem("Color bar");
     private JCheckBoxMenuItem menuViewStatusBar = new JCheckBoxMenuItem("Status bar");
     private JMenu menuViewZoom = new JMenu("Zoom");
+    private JMenuItem menuViewZoomIn = new JMenuItem("Zoom in");
+    private JMenuItem menuViewZoomOut = new JMenuItem("Zoom out");
+    private List<JMenuItem> menuViewZoomLevels = new ArrayList<>();
 
     private JMenu menuOptions = new JMenu("Options");
     private JMenuItem menuOptionsColorPicker = new JMenuItem("Color picker...");
@@ -83,6 +98,10 @@ public class MainWindow extends JFrame {
     private JToolBar toolBar = new JToolBar();
     private JToolBar colorBar = new JToolBar();
     private JLabel statusBar = new JLabel();
+
+    private File lastPath = null;
+
+    private int zoomLevel = 0;
 
     private int statusBarWidth = 0;
     private int statusBarHeight = 0;
@@ -116,16 +135,6 @@ public class MainWindow extends JFrame {
             e.printStackTrace();
         }
 
-        menuFileNew.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // FIXME ask user
-                mainPanel.newImage(400, 300, Color.WHITE);
-                changedTillLastSave = false;
-            }
-        });
-        menuFileNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-        menuFile.add(menuFileNew);
         menuFileLoad.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -143,6 +152,14 @@ public class MainWindow extends JFrame {
         menuFileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         menuFile.add(menuFileSave);
         menuFile.addSeparator();
+        menuFileAbout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AboutWindow(MainWindow.this);
+            }
+        });
+        menuFileAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        menuFile.add(menuFileAbout);
         menuFileQuit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,24 +187,6 @@ public class MainWindow extends JFrame {
         menuEditSelectAll.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
         menuEdit.add(menuEditSelectAll);
         menuEdit.addSeparator();
-        menuEditCropToSelection.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainPanel.cropToSelection();
-                changedTillLastSave = true;
-            }
-        });
-        menuEdit.add(menuEditCropToSelection);
-        menuEditClearSelection.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainPanel.clearSelection();
-                changedTillLastSave = true;
-            }
-        });
-        menuEditClearSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-        menuEdit.add(menuEditClearSelection);
-        menuEdit.addSeparator();
         menuEditCut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -205,6 +204,33 @@ public class MainWindow extends JFrame {
         });
         menuEditCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         menuEdit.add(menuEditCopy);
+        menuEditPaste.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.paste();
+            }
+        });
+        menuEditPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+        menuEdit.add(menuEditPaste);
+        menuEdit.addSeparator();
+        menuEditClearSelection.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.clearSelection();
+                changedTillLastSave = true;
+            }
+        });
+        menuEditClearSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+        menuEdit.add(menuEditClearSelection);
+        menuEditCropToSelection.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.cropToSelection();
+                changedTillLastSave = true;
+            }
+        });
+        menuEditCropToSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
+        menuEdit.add(menuEditCropToSelection);
         menuBar.add(menuEdit);
 
         menuViewToolBar.addActionListener(new ActionListener() {
@@ -232,19 +258,49 @@ public class MainWindow extends JFrame {
         menuViewStatusBar.setSelected(true);
         menuView.add(menuViewStatusBar);
         menuView.addSeparator();
+        menuViewZoomIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (zoomLevel < ZOOM_FACTORS.length - 1) {
+                    zoomLevel++;
+                    menuViewZoomLevels.get(zoomLevel).setSelected(true);
+                    final int zoomFactor = ZOOM_FACTORS[zoomLevel];
+                    mainPanel.setZoomFactor(zoomFactor);
+                }
+            }
+        });
+        menuViewZoomIn.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, 0));
+        menuViewZoom.add(menuViewZoomIn);
+        menuViewZoomOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (zoomLevel > 0) {
+                    zoomLevel--;
+                    menuViewZoomLevels.get(zoomLevel).setSelected(true);
+                    final int zoomFactor = ZOOM_FACTORS[zoomLevel];
+                    mainPanel.setZoomFactor(zoomFactor);
+                }
+            }
+        });
+        menuViewZoomOut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0));
+        menuViewZoom.add(menuViewZoomOut);
+        menuViewZoom.addSeparator();
         ButtonGroup bgZoomLevels = new ButtonGroup();
-        for (int zoomLevel : ZOOM_LEVELS) {
-            JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem("×" + zoomLevel);
+        for (int zoomLevel = 0; zoomLevel < ZOOM_FACTORS.length; zoomLevel++) {
+            final int zoomFactor = ZOOM_FACTORS[zoomLevel];
+            final int zoomShortcut = ZOOM_SHORTCUTS[zoomLevel];
+            JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem("×" + zoomFactor);
             menuViewZoomLevel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setZoomLevel(zoomLevel);
+                    mainPanel.setZoomFactor(zoomFactor);
                 }
             });
-            if (zoomLevel == 1) {
-                menuViewZoomLevel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_0, ActionEvent.CTRL_MASK));
+            menuViewZoomLevel.setAccelerator(KeyStroke.getKeyStroke(zoomShortcut, ActionEvent.CTRL_MASK));
+            if (zoomFactor == 1) {
                 menuViewZoomLevel.setSelected(true);
             }
+            menuViewZoomLevels.add(menuViewZoomLevel);
             bgZoomLevels.add(menuViewZoomLevel);
             menuViewZoom.add(menuViewZoomLevel);
         }
@@ -424,53 +480,93 @@ public class MainWindow extends JFrame {
     }
 
     private void load() {
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(lastPath);
+        addFilters(fc);
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             if (file.isFile()) {
                 try {
                     mainPanel.setImage(ImageIO.read(file));
                     changedTillLastSave = false;
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                    lastPath = file.getParentFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
 
     private void save() {
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(lastPath);
         fc.setAcceptAllFileFilterUsed(false);
-        fc.addChoosableFileFilter(new FileFilter() {
+        addFilters(fc);
+        if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            FileFilter ff = fc.getFileFilter();
+            String formatString;
+            boolean supportsAlpha;
+            if (ff == FILTER_BMP) {
+                formatString = "BMP";
+                supportsAlpha = false;
+            } else if (ff == FILTER_GIF) {
+                formatString = "GIF";
+                supportsAlpha = true;
+            } else if (ff == FILTER_JPG) {
+                formatString = "JPG";
+                supportsAlpha = false;
+            } else if (ff == FILTER_PNG) {
+                formatString = "PNG";
+                supportsAlpha = true;
+            } else {
+                throw new AssertionError();
+            }
+            BufferedImage image = supportsAlpha
+                ? mainPanel.getImage()
+                : mainPanel.getImageWithoutAlpha();
+            if (file.exists()) {
+                file.delete();
+            }
+            try {
+                ImageIO.write(image, formatString, file);
+                changedTillLastSave = false;
+                lastPath = file.getParentFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void addFilters(JFileChooser fc) {
+        fc.addChoosableFileFilter(FILTER_PNG);
+        fc.addChoosableFileFilter(FILTER_BMP);
+        fc.addChoosableFileFilter(FILTER_GIF);
+        fc.addChoosableFileFilter(FILTER_JPG);
+    }
+
+    private static FileFilter createFileFilter(String name, String... extensions) {
+        return new FileFilter() {
             @Override
             public String getDescription() {
-                return "Portable Network Graphics (*.png)";
+                return name + " (*." + String.join("; *.", extensions) + ")";
             }
 
             @Override
             public boolean accept(File f) {
                 if (f.isFile()) {
-                    return f.getName().toLowerCase().endsWith(".png");
+                    final String lc = f.getName().toLowerCase();
+                    for (String extension : extensions) {
+                        if (lc.endsWith("." + extension)) {
+                            return true;
+                        }
+                    }
+                    return false;
                 } else if (f.isDirectory()) {
                     return true;
                 } else {
                     return false;
                 }
             }
-        });
-        if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            if (file.exists()) {
-                JOptionPane.showMessageDialog(this, "You have to delete the file first!", getTitle(), JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            try {
-                ImageIO.write(mainPanel.getImage(), "PNG", file);
-                changedTillLastSave = false;
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+        };
     }
 
     private void quit() {

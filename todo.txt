@@ -2,9 +2,10 @@ all FIXMEs/TODOs
 
 
 Theme color: ED86CA
-
-
+Icon
 Refactor: MainPanel should not know about MainWindow (and maybe move all Options from MainPanel into some .model. package)
+merge with workspace/UPEP/
+test program on windows
 
 
 transparency support
@@ -67,3 +68,4 @@ look at other programs
     photoshop
     coreldraw
     gimp
+    pinta

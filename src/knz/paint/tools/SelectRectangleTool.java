@@ -55,6 +55,18 @@ public class SelectRectangleTool extends AbstractSelectionTool {
         polygon.addPoint(minX, maxY);
     }
 
+    public void selectRectangle(int x, int y, int width, int height) {
+        final int minX = x;
+        final int minY = y;
+        final int maxX = x + width - 1;
+        final int maxY = y + height - 1;
+        polygon.reset();
+        polygon.addPoint(minX, minY);
+        polygon.addPoint(maxX, minY);
+        polygon.addPoint(maxX, maxY);
+        polygon.addPoint(minX, maxY);
+    }
+
     public void cropToSelection() {
         BufferedImage subimage = getSubimage();
         polygon.reset();
