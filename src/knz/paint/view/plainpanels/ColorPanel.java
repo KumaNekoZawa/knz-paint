@@ -12,13 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 
+import knz.paint.model.Config;
+
 public class ColorPanel extends JPanel {
 
     public static final int ACTION_LISTENER_ID = 2000;
 
     private List<ActionListener> listeners = new ArrayList<>();
 
-    private Color color = Color.BLACK;
+    private Color color = null;
     private boolean highlighted = false;
 
     public ColorPanel() {
@@ -39,10 +41,12 @@ public class ColorPanel extends JPanel {
         final int width = getWidth();
         final int height = getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(Config.getConfig().getBackgroundColor());
         g2d.fillRect(0, 0, width, height);
-        g2d.setColor(color);
-        g2d.fillRect(0, 0, width, height);
+        if (color != null) {
+            g2d.setColor(color);
+            g2d.fillRect(0, 0, width, height);
+        }
         if (highlighted) {
             g2d.setColor(Color.BLACK);
             g2d.setStroke(new BasicStroke(3f));

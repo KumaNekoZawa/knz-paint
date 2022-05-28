@@ -2,7 +2,6 @@
 
     <property name="main.class" value="knz.paint.Main" />
     <property name="bin.dir"    value="bin" />
-    <property name="lib.dir"    value="lib" />
     <property name="src.dir"    value="src" />
     <property name="jar.file"   value="${ant.project.name}.jar" />
 
@@ -22,10 +21,10 @@
             <compilerarg value="-Xlint:static" />
             <compilerarg value="-Xlint:try" />
         </javac>
-    	<path id="checkstyle.lib.path">
-            <fileset dir="${lib.dir}" includes="*.jar" />
-	    </path>
-        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpathref="checkstyle.lib.path" />
+    </target>
+
+    <target name="checkstyle" depends="build">
+        <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="../checkstyle-10.2-all.jar" />
         <checkstyle config="../knz-style.xml">
             <fileset dir="${src.dir}" includes="**/*.java" />
         </checkstyle>

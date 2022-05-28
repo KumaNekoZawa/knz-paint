@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.function.BiFunction;
 import javax.swing.JPanel;
 
+import knz.paint.model.Config;
+
 public class GradientSliderSubPanel extends JPanel {
 
     public static final int ACTION_LISTENER_ID = 2003;
@@ -23,7 +25,7 @@ public class GradientSliderSubPanel extends JPanel {
 
     private BiFunction<Color, Integer, Color> colorFunction;
 
-    private Color baseColor = Color.BLACK;
+    private Color baseColor = null;
     private int selectedValue = 0;
 
     private Polygon polygon = new Polygon();
@@ -70,11 +72,11 @@ public class GradientSliderSubPanel extends JPanel {
         final int width = getWidth();
         final int height = getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(Config.getConfig().getBackgroundColor());
         g2d.fillRect(0, 0, width, height);
         for (int y = 0; y < 256; y++) {
             final int value = 255 - y;
-            g2d.setColor(value == selectedValue ? Color.BLACK : colorFunction.apply(baseColor, value));
+            g2d.setColor(baseColor == null || value == selectedValue ? Color.BLACK : colorFunction.apply(baseColor, value));
             g2d.drawLine(0, y, width, y);
         }
         final int y = 255 - selectedValue;

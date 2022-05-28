@@ -9,15 +9,16 @@ import java.io.IOException;
 /** @see https://stackoverflow.com/a/4552081 */
 public class TransferableImage implements Transferable {
 
-    private Image i;
+    private Image image;
 
-    public TransferableImage(Image i) {
-        this.i = i;
+    public TransferableImage(Image image) {
+        super();
+        this.image = image;
     }
 
     public Object getTransferData(DataFlavor flavor) throws IOException, UnsupportedFlavorException {
-        if (flavor.equals(DataFlavor.imageFlavor) && i != null) {
-            return i;
+        if (flavor != null && flavor.equals(DataFlavor.imageFlavor) && image != null) {
+            return image;
         } else {
             throw new UnsupportedFlavorException(flavor);
         }
@@ -38,4 +39,5 @@ public class TransferableImage implements Transferable {
         }
         return false;
     }
+
 }

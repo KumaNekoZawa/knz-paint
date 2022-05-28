@@ -14,12 +14,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
-//import java.io.File;
 import java.io.IOException;
-//import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import knz.paint.model.Config;
 import knz.paint.tools.AbstractSelectionTool;
 import knz.paint.tools.AbstractTool;
 import knz.paint.tools.AirbrushTool;
@@ -91,17 +90,6 @@ public class MainPanel extends JPanel {
     }
 
     private static final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
-    /*
-    private static BufferedImage BG = null;
-
-    static {
-        try {
-            BG = ImageIO.read(new File(new File("res"), "bg.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 
     private MainWindow parentElement;
 
@@ -184,26 +172,11 @@ public class MainPanel extends JPanel {
         super.paint(g);
         final int width = getWidth();
         final int height = getHeight();
-        /*
-        final int bgWidth = BG.getWidth();
-        final int bgHeight = BG.getHeight();
-        */
         final int imageWidth = image.getWidth();
         final int imageHeight = image.getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        // FIXME move to config.properties:
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(Config.getConfig().getBackgroundColor());
         g2d.fillRect(0, 0, width, height);
-        /* XXX Background
-        for (int y = 0; y < imageHeight; y += bgHeight) {
-            for (int x = 0; x < imageWidth; x += bgWidth) {
-                BufferedImage bg = BG.getSubimage(0, 0,
-                    x + bgWidth  > imageWidth  ? imageWidth  - x : bgWidth,
-                    y + bgHeight > imageHeight ? imageHeight - y : bgHeight);
-                g2d.drawImage(bg, x, y, null);
-            }
-        }
-        */
         g2d.drawImage(image, 0, 0, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
         AbstractTool toolObject = selectedTool.getToolObject();
         if (toolObject.needsRepaint()) {
@@ -224,6 +197,9 @@ public class MainPanel extends JPanel {
     }
 
     public void setImage(BufferedImage image) {
+        if (image == null || image.getType() != BufferedImage.TYPE_INT_ARGB) {
+            throw new IllegalArgumentException();
+        }
         setImageAndGraphics(image, image.createGraphics());
     }
 
@@ -257,6 +233,18 @@ public class MainPanel extends JPanel {
         g2d.drawImage(image, 0, 0, null);
         g2d.dispose();
         return imageNew;
+    }
+
+    public void setImageWithOrWithoutAlpha(BufferedImage image) {
+        if (image.getType() == BufferedImage.TYPE_INT_ARGB) {
+            setImage(image);
+        } else {
+            BufferedImage imageNew = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = imageNew.createGraphics();
+            g2d.drawImage(image, 0, 0, null);
+            g2d.dispose();
+            setImage(imageNew);
+        }
     }
 
     // Edit

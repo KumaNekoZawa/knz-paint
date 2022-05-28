@@ -12,12 +12,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -38,6 +35,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import knz.paint.model.Config;
 import knz.paint.tools.AbstractTool;
 import knz.paint.view.colorpicker.ColorPickerWindow;
 import knz.paint.view.plainpanels.PalettePanel;
@@ -56,12 +54,6 @@ public class MainWindow extends JFrame {
                                                   KeyEvent.VK_3,
                                                   KeyEvent.VK_4,
                                                   KeyEvent.VK_5 };
-
-    private static final int MAX_NUMBER_OF_COLOR_PALETTES = 25;
-
-    private Properties properties = new Properties();
-    private int colorBarSize = 16 * 3;
-    private List<File> colorPaletteFiles = new ArrayList<>();
 
     private ColorPickerWindow colorPickerWindow = null;
 
@@ -121,19 +113,6 @@ public class MainWindow extends JFrame {
                 quit();
             }
         });
-
-        try (InputStream is = new FileInputStream("config.properties")) {
-            properties.load(is);
-            colorBarSize = Integer.parseInt(properties.getProperty("colorbarsize"));
-            for (int i = 1; i <= MAX_NUMBER_OF_COLOR_PALETTES; i++) {
-                String filename = properties.getProperty("colorpalette" + i);
-                if (filename != null && !filename.isEmpty()) {
-                    colorPaletteFiles.add(new File(filename));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         menuFileLoad.addActionListener(new ActionListener() {
             @Override
@@ -287,12 +266,14 @@ public class MainWindow extends JFrame {
         menuViewZoom.addSeparator();
         ButtonGroup bgZoomLevels = new ButtonGroup();
         for (int zoomLevel = 0; zoomLevel < ZOOM_FACTORS.length; zoomLevel++) {
+            final int zoomLevelFinal = zoomLevel;
             final int zoomFactor = ZOOM_FACTORS[zoomLevel];
             final int zoomShortcut = ZOOM_SHORTCUTS[zoomLevel];
             JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem("×" + zoomFactor);
             menuViewZoomLevel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    MainWindow.this.zoomLevel = zoomLevelFinal;
                     mainPanel.setZoomFactor(zoomFactor);
                 }
             });
@@ -357,6 +338,8 @@ public class MainWindow extends JFrame {
         add(new JScrollPane(mainPanel), BorderLayout.CENTER);
 
         colorBar.setOrientation(SwingConstants.VERTICAL);
+        final int colorBarSize = Config.getConfig().getColorBarSize();
+        List<File> colorPaletteFiles = Config.getConfig().getColorPaletteFiles();
         for (int i = 0; i < colorPaletteFiles.size(); i++) {
             PalettePanel palettePanel = new PalettePanel(colorBarSize, colorPaletteFiles.get(i));
             palettePanel.addActionListener(new ActionListener() {
@@ -381,8 +364,10 @@ public class MainWindow extends JFrame {
         add(statusBar, BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        setIconImage(new ImageIcon("icons" + File.separator + "icon.png").getImage());
         setSize(800, 600);
         setLocationRelativeTo(null);
+        // FIXME move to config.properties:
         mainPanel.newImage(400, 300, Color.WHITE);
 
         setVisible(true);
@@ -391,12 +376,6 @@ public class MainWindow extends JFrame {
     private void addToolBarButtons(JToolBar toolBar) {
         final int numberOfTools = MainPanel.Tool.values().length;
         final int orient = toolBar.getOrientation();
-        /* XXX Look & Feel
-        Insets insetsFirstRow = new Insets(orient == JToolBar.VERTICAL   ? 10 : 0,
-                                           orient == JToolBar.HORIZONTAL ? 10 : 0,
-                                           0, 0);
-        Insets insetsNo = new Insets(0, 0, 0, 0);
-        */
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTHWEST;
         for (MainPanel.Tool tool : MainPanel.Tool.values()) {
@@ -426,7 +405,6 @@ public class MainWindow extends JFrame {
             default:
                 throw new AssertionError();
             }
-            //c.insets = j == 0 || j == 1 ? insetsFirstRow : insetsNo;
             if ((numberOfTools % 2 == 0 && j == numberOfTools - 2) || j == numberOfTools - 1) {
                 switch (orient) {
                 case JToolBar.VERTICAL:
@@ -486,7 +464,7 @@ public class MainWindow extends JFrame {
             File file = fc.getSelectedFile();
             if (file.isFile()) {
                 try {
-                    mainPanel.setImage(ImageIO.read(file));
+                    mainPanel.setImageWithOrWithoutAlpha(ImageIO.read(file));
                     changedTillLastSave = false;
                     lastPath = file.getParentFile();
                 } catch (IOException e) {

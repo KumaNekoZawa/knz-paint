@@ -1,34 +1,28 @@
 all FIXMEs/TODOs
 
+redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
 
-Theme color: ED86CA
-Icon
 Refactor: MainPanel should not know about MainWindow (and maybe move all Options from MainPanel into some .model. package)
-merge with workspace/UPEP/
-test program on windows
-
 
 transparency support
-    show a checkboard pattern as background
-    new should either use black,white,transparent,a specific color,primary color or secondary color
     clear selection could use transparent
     any tool that uses setrgb might need to be adjusted to use drawline or smth
     any tool that does not use setrgb should already work
-
 
 consistent usage of various tools
 * Use keyboard keys !? or double click & right click !?
     'A': Apply (polygon will be applied to image and the operation is done)
     'C': Cancel (cancel operation and nothing will be applied)
 
-
 selection tools
     move selection
 brush tool
     with brush heads/sizes
     dashing etc
-air brush tool
+rounded rectangle tool
     many options
+https://docs.oracle.com/javase/tutorial/2d/geometry/primitives.html
+https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
 --
 arrow tool?
 triangle tool?
@@ -37,17 +31,14 @@ measure tool? (measures distances)
 magnetic lasso tool? (as in Photoshop)
 magic wand tool? (as in Photoshop)
 
-https://docs.oracle.com/javase/tutorial/2d/geometry/primitives.html
-https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
-
-redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
-
 preset brushes (not just heads/sizes but also effects on different colors)
     pencil
     erasor
     highlighter
     calligraphy
     etc
+
+create palette from image feature
 
 history feature
     stored as plain text

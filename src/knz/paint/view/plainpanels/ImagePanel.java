@@ -16,6 +16,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import knz.paint.model.Config;
+
 public class ImagePanel extends JPanel {
 
     public static final int ACTION_LISTENER_ID = 2001;
@@ -54,7 +56,7 @@ public class ImagePanel extends JPanel {
         final int width = getWidth();
         final int height = getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.GRAY);
+        g2d.setColor(Config.getConfig().getBackgroundColor());
         g2d.fillRect(0, 0, width, height);
         g2d.drawImage(image, 0, 0, null);
     }

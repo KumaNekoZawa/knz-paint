@@ -89,13 +89,15 @@ public class PalettePanel extends JPanel {
                         }   break;
                         default:
                             System.err.println("Unknown color format: " + color);
+                            break;
                         }
                     }
                 }
             }
             break;
         default:
-            System.out.println("Unknown file extension: " + name);
+            System.err.println("Unknown file extension: " + name);
+            break;
         }
         addMouseListener(new MouseAdapter() {
             @Override

@@ -1,6 +1,4 @@
 /bin/
-/etc/
-/examples/
-/icons/
+/icons/tool*.png
 *.class
 *.jar
