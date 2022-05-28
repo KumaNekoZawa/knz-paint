@@ -1,5 +1,6 @@
-package knz.paint.model.effects;
+package knz.paint.model.effects.rgba;
 
+/* also called Invert */
 public class NegateEffect extends RGBAEffect {
 
     public NegateEffect() {

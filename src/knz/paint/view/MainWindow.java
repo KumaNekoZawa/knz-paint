@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -43,14 +44,28 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import knz.paint.model.Config;
-import knz.paint.model.effects.BlackWhiteEffect;
-import knz.paint.model.effects.ContrastEffect;
+import knz.paint.model.effects.AbstractParameter;
+import knz.paint.model.effects.BooleanParameter;
+import knz.paint.model.effects.DoubleParameter;
 import knz.paint.model.effects.Effect;
-import knz.paint.model.effects.EffectParameter;
-import knz.paint.model.effects.GammaEffect;
-import knz.paint.model.effects.GrayscaleEffect;
-import knz.paint.model.effects.NegateEffect;
-import knz.paint.model.effects.NormalizeEffect;
+import knz.paint.model.effects.IntegerParameter;
+import knz.paint.model.effects.hsba.AdjustBrightnessEffect;
+import knz.paint.model.effects.hsba.AdjustSaturationEffect;
+import knz.paint.model.effects.hsba.ExtractBrightnessEffect;
+import knz.paint.model.effects.hsba.ShiftHueEffect;
+import knz.paint.model.effects.positional.ExplosionEffect;
+import knz.paint.model.effects.positional.MosaicEffect;
+import knz.paint.model.effects.positional.PolarCoordinatesEffect;
+import knz.paint.model.effects.rgba.AdjustContrastEffect;
+import knz.paint.model.effects.rgba.AdjustGammaEffect;
+import knz.paint.model.effects.rgba.BalancedGrayscaleEffect;
+import knz.paint.model.effects.rgba.BlackWhiteEffect;
+import knz.paint.model.effects.rgba.GrayscaleEffect;
+import knz.paint.model.effects.rgba.NegateEffect;
+import knz.paint.model.effects.rgba.NoiseEffect;
+import knz.paint.model.effects.rgba.NormalizeEffect;
+import knz.paint.model.effects.rgba.SaltPepperEffect;
+import knz.paint.model.effects.rgba.SepiaEffect;
 import knz.paint.tools.AbstractTool;
 import knz.paint.view.colorpicker.ColorPickerWindow;
 import knz.paint.view.plainpanels.PalettePanel;
@@ -77,12 +92,25 @@ public class MainWindow extends JFrame {
     private static final int[] AIRBRUSH_SIZES = { 5, 10, 15, 20, 25 };
 
     private static final Effect[] EFFECTS = {
+        new ExplosionEffect(),
+        new MosaicEffect(),
+        new PolarCoordinatesEffect(),
+        null,
+        new AdjustContrastEffect(),
+        new AdjustGammaEffect(),
+        new BalancedGrayscaleEffect(),
         new BlackWhiteEffect(),
-        new ContrastEffect(),
-        new GammaEffect(),
         new GrayscaleEffect(),
         new NegateEffect(),
+        new NoiseEffect(),
         new NormalizeEffect(),
+        new SaltPepperEffect(),
+        new SepiaEffect(),
+        null,
+        new AdjustBrightnessEffect(),
+        new AdjustSaturationEffect(),
+        new ExtractBrightnessEffect(),
+        new ShiftHueEffect(),
     };
 
     private ColorPickerWindow colorPickerWindow = null;
@@ -459,6 +487,10 @@ public class MainWindow extends JFrame {
         menuBar.add(menuOptions);
 
         for (Effect effect : EFFECTS) {
+            if (effect == null) {
+                menuEffects.addSeparator();
+                continue;
+            }
             String title = effect.getName() + (effect.getParameters().isEmpty() ? "" : "...");
             JMenuItem menuEffectsEffect = new JMenuItem(title);
             menuEffectsEffect.addActionListener(new ActionListener() {
@@ -467,6 +499,24 @@ public class MainWindow extends JFrame {
                     if (effect.getParameters().isEmpty()) {
                         mainPanel.setImage(effect.apply(mainPanel.getImage()));
                     } else {
+                        for (AbstractParameter parameter : effect.getParameters()) {
+                            parameter.reset();
+                        }
+
+                        BufferedImage image = mainPanel.getImage();
+                        final Rectangle rect = scrollPane.getViewport().getViewRect();
+                        rect.x /= mainPanel.getZoomFactor();
+                        rect.y /= mainPanel.getZoomFactor();
+                        rect.width /= mainPanel.getZoomFactor();
+                        rect.height /= mainPanel.getZoomFactor();
+                        final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth() - 1));
+                        final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
+                        final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
+                        final int imageTempHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
+                        BufferedImage imageTemp = image.getSubimage(imageTempX, imageTempY, imageTempWidth, imageTempHeight);
+                        /* initially draw the image with the effect once */
+                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+
                         JDialog effectFrame = new JDialog(MainWindow.this, title, true);
                         effectFrame.addWindowListener(new WindowAdapter() {
                             @Override
@@ -482,35 +532,57 @@ public class MainWindow extends JFrame {
                         c.insets = new Insets(5, 5, 5, 5);
                         c.gridx = 0;
                         c.gridy = 0;
-                        for (EffectParameter parameter : effect.getParameters()) {
-                            JLabel label = new JLabel(parameter.getName() + ": " + String.format("%.2f", parameter.getDef()));
+                        for (AbstractParameter parameter : effect.getParameters()) {
+                            JLabel label = new JLabel(parameter.getLabelText());
                             label.setAlignmentX(Component.LEFT_ALIGNMENT);
                             effectFrame.add(label, c);
                             c.gridy++;
-                            JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                                (int) (100 * parameter.getMin()),
-                                (int) (100 * parameter.getMax()),
-                                (int) (100 * parameter.getDef()));
-                            BufferedImage image = mainPanel.getImage();
-                            final Rectangle rect = scrollPane.getViewport().getViewRect();
-                            rect.x /= mainPanel.getZoomFactor();
-                            rect.y /= mainPanel.getZoomFactor();
-                            rect.width /= mainPanel.getZoomFactor();
-                            rect.height /= mainPanel.getZoomFactor();
-                            final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth() - 1));
-                            final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
-                            final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
-                            final int imageTempHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
-                            BufferedImage imageTemp = image.getSubimage(imageTempX, imageTempY, imageTempWidth, imageTempHeight);
-                            slider.addChangeListener(new ChangeListener() {
-                                @Override
-                                public void stateChanged(ChangeEvent e) {
-                                    parameter.setValue(slider.getValue() / 100.);
-                                    label.setText(parameter.getName() + ": " + String.format("%.2f", parameter.getValue()));
-                                    mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                                }
-                            });
-                            effectFrame.add(slider, c);
+                            if (parameter instanceof BooleanParameter) {
+                                BooleanParameter booleanParameter = (BooleanParameter) parameter;
+                                JCheckBox checkBox = new JCheckBox(parameter.getName());
+                                checkBox.setSelected(booleanParameter.getDef());
+                                checkBox.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        booleanParameter.setValue(checkBox.isSelected());
+                                        label.setText(parameter.getLabelText());
+                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                                    }
+                                });
+                                effectFrame.add(checkBox, c);
+                            } else if (parameter instanceof IntegerParameter) {
+                                IntegerParameter integerParameter = (IntegerParameter) parameter;
+                                JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                                    integerParameter.getMin(),
+                                    integerParameter.getMax(),
+                                    integerParameter.getDef());
+                                slider.addChangeListener(new ChangeListener() {
+                                    @Override
+                                    public void stateChanged(ChangeEvent e) {
+                                        integerParameter.setValue(slider.getValue());
+                                        label.setText(parameter.getLabelText());
+                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                                    }
+                                });
+                                effectFrame.add(slider, c);
+                            } else if (parameter instanceof DoubleParameter) {
+                                DoubleParameter doubleParameter = (DoubleParameter) parameter;
+                                JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                                    (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
+                                    (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
+                                    (int) (doubleParameter.getResolution() * doubleParameter.getDef()));
+                                slider.addChangeListener(new ChangeListener() {
+                                    @Override
+                                    public void stateChanged(ChangeEvent e) {
+                                        doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
+                                        label.setText(parameter.getLabelText());
+                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                                    }
+                                });
+                                effectFrame.add(slider, c);
+                            } else {
+                                throw new AssertionError();
+                            }
                             c.gridy++;
                         }
                         JButton buttonOkay = new JButton("Okay");
@@ -518,7 +590,7 @@ public class MainWindow extends JFrame {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 mainPanel.setImageTempReset();
-                                mainPanel.setImage(effect.apply(mainPanel.getImage()));
+                                mainPanel.setImage(effect.apply(image));
                                 effectFrame.dispose();
                             }
                         });

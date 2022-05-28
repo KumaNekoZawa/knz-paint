@@ -7,7 +7,7 @@ import java.util.List;
 public abstract class Effect {
 
     private String name;
-    protected List<EffectParameter> parameters = new ArrayList<>();
+    protected List<AbstractParameter> parameters = new ArrayList<>();
 
     public Effect(String name) {
         super();
@@ -20,7 +20,7 @@ public abstract class Effect {
         return name;
     }
 
-    public List<EffectParameter> getParameters() {
+    public List<AbstractParameter> getParameters() {
         return parameters;
     }
 

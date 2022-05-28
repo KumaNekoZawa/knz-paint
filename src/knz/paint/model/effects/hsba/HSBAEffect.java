@@ -1,12 +1,16 @@
-package knz.paint.model.effects;
+package knz.paint.model.effects.hsba;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-public abstract class RGBAEffect extends Effect {
+import knz.paint.model.effects.Effect;
 
-    protected int x, y, r, g, b, a;
+public abstract class HSBAEffect extends Effect {
 
-    public RGBAEffect(String name) {
+    protected int x, y, a;
+    protected float h, s, b;
+
+    public HSBAEffect(String name) {
         super(name);
     }
 
@@ -18,16 +22,17 @@ public abstract class RGBAEffect extends Effect {
         for (y = 0; y < height; y++) {
             for (x = 0; x < width; x++) {
                 final int in = image.getRGB(x, y);
-                b = in & 0xFF;
-                g = (in >> 8) & 0xFF;
-                r = (in >> 16) & 0xFF;
+                final float hsb[] = Color.RGBtoHSB(
+                    (in >> 16) & 0xFF,
+                    (in >> 8) & 0xFF,
+                    in & 0xFF, null);
+                h = hsb[0];
+                s = hsb[1];
+                b = hsb[2];
                 a = (in >> 24) & 0xFF;
                 filter();
-                r = Math.max(0x00, Math.min(0xFF, r));
-                g = Math.max(0x00, Math.min(0xFF, g));
-                b = Math.max(0x00, Math.min(0xFF, b));
                 a = Math.max(0x00, Math.min(0xFF, a));
-                final int out = (a << 24) | (r << 16) | (g << 8) | b;
+                final int out = (a << 24) | (Color.HSBtoRGB(h, s, b) & 0xFFFFFF);
                 result.setRGB(x, y, out);
             }
         }

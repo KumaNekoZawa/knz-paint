@@ -1,9 +1,11 @@
-package knz.paint.model.effects;
+package knz.paint.model.effects.rgba;
+
+import knz.paint.model.effects.DoubleParameter;
 
 public class NormalizeEffect extends RGBAEffect {
 
-    private EffectParameter min = new EffectParameter("Min", 0d, 0d, 1d);
-    private EffectParameter max = new EffectParameter("Max", 0d, 1d, 1d);
+    private DoubleParameter min = new DoubleParameter("Min", 0, 0, 1);
+    private DoubleParameter max = new DoubleParameter("Max", 0, 1, 1);
 
     public NormalizeEffect() {
         super("Normalize");

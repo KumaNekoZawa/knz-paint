@@ -1,11 +1,13 @@
-package knz.paint.model.effects;
+package knz.paint.model.effects.rgba;
 
-public class GammaEffect extends RGBAEffect {
+import knz.paint.model.effects.DoubleParameter;
 
-    private EffectParameter exponent = new EffectParameter("Exponent", 0d, 1d, 2d);
+public class AdjustGammaEffect extends RGBAEffect {
 
-    public GammaEffect() {
-        super("Gamma");
+    private DoubleParameter exponent = new DoubleParameter("Exponent", 0, 1, 2);
+
+    public AdjustGammaEffect() {
+        super("Adjust gamma");
         this.parameters.add(exponent);
     }
 

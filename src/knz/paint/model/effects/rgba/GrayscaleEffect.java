@@ -1,4 +1,4 @@
-package knz.paint.model.effects;
+package knz.paint.model.effects.rgba;
 
 public class GrayscaleEffect extends RGBAEffect {
 
