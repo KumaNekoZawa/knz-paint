@@ -35,6 +35,10 @@ public class FloodFillTool extends AbstractTool {
     public void mousePressed(Graphics2D g2d, MouseEvent e) {
         super.mousePressed(g2d, e);
         image = mainPanel.getImage();
+        if (!(0 <= x && x < image.getWidth()
+           && 0 <= y && y < image.getHeight())) {
+            return;
+        }
         rgbFrom = image.getRGB(x, y);
         rgbTo = mainPanel.getColorPrimary().getRGB();
         if (rgbFrom == rgbTo) {

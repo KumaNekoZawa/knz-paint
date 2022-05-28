@@ -27,6 +27,7 @@ import knz.paint.tools.PolygonTool;
 import knz.paint.tools.PolylineFreeFormTool;
 import knz.paint.tools.PolylineTool;
 import knz.paint.tools.RectangleTool;
+import knz.paint.tools.RoundedRectangleTool;
 import knz.paint.tools.SelectFreeFormTool;
 import knz.paint.tools.SelectPolygonTool;
 import knz.paint.tools.SelectRectangleTool;
@@ -42,6 +43,7 @@ public class MainPanel extends JPanel {
         POLYGON(new PolygonTool()),
         ELLIPSE(new EllipseTool()),
         RECTANGLE(new RectangleTool()),
+        ROUNDED_RECTANGLE(new RoundedRectangleTool()),
         SELECT_FREE_FORM(new SelectFreeFormTool()),
         SELECT_POLYGON(new SelectPolygonTool()),
         SELECT_RECTANGLE(new SelectRectangleTool()),
@@ -209,7 +211,7 @@ public class MainPanel extends JPanel {
         AbstractTool toolObject = selectedTool.getToolObject();
         if (toolObject instanceof SelectRectangleTool) {
             SelectRectangleTool srt = (SelectRectangleTool) toolObject;
-            srt.cropToSelection(image);
+            srt.cropToSelection();
             repaint();
         } else {
             JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
@@ -231,7 +233,7 @@ public class MainPanel extends JPanel {
         AbstractTool toolObject = selectedTool.getToolObject();
         if (toolObject instanceof SelectRectangleTool) {
             SelectRectangleTool srt = (SelectRectangleTool) toolObject;
-            CLIPBOARD.setContents(new TransferableImage(srt.getSubimage(image)), null);
+            CLIPBOARD.setContents(new TransferableImage(srt.getSubimage()), null);
             srt.clearSelection(g2d);
             repaint();
         } else {
@@ -243,7 +245,7 @@ public class MainPanel extends JPanel {
         AbstractTool toolObject = selectedTool.getToolObject();
         if (toolObject instanceof SelectRectangleTool) {
             SelectRectangleTool srt = (SelectRectangleTool) toolObject;
-            CLIPBOARD.setContents(new TransferableImage(srt.getSubimage(image)), null);
+            CLIPBOARD.setContents(new TransferableImage(srt.getSubimage()), null);
         } else {
             JOptionPane.showMessageDialog(parent, "You have to select a rectangle first!", parent.getTitle(), JOptionPane.ERROR_MESSAGE);
         }

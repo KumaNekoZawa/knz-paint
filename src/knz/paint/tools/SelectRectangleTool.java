@@ -54,13 +54,13 @@ public class SelectRectangleTool extends AbstractSelectionTool {
         polygon.addPoint(minX, maxY);
     }
 
-    public void cropToSelection(BufferedImage image) {
-        BufferedImage subimage = getSubimage(image);
+    public void cropToSelection() {
+        BufferedImage subimage = getSubimage();
         polygon.reset();
         mainPanel.setImage(subimage);
     }
 
-    public BufferedImage getSubimage(BufferedImage image) {
+    public BufferedImage getSubimage() {
         if (polygon.npoints != 4) {
             throw new AssertionError();
         }
@@ -71,10 +71,11 @@ public class SelectRectangleTool extends AbstractSelectionTool {
         final int width = maxX - minX + 1;
         final int height = maxY - minY + 1;
         /* we need a copy here, because .getSubimage() will use the same data as the original image */
+        BufferedImage image = mainPanel.getImage();
         BufferedImage subimage = new BufferedImage(width, height, image.getType());
-        Graphics2D g2d = subimage.createGraphics();
-        g2d.drawImage(image.getSubimage(minX, minY, width, height), 0, 0, null);
-        g2d.dispose();
+        Graphics2D subimageG2D = subimage.createGraphics();
+        subimageG2D.drawImage(image.getSubimage(minX, minY, width, height), 0, 0, null);
+        subimageG2D.dispose();
         return subimage;
     }
 

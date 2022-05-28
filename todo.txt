@@ -27,7 +27,6 @@ brush tool
     dashing etc
 air brush tool
     sizes
-rounded rectangle tool
 --
 arrow tool?
 triangle tool?

@@ -178,7 +178,7 @@ public class MainWindow extends JFrame {
                 mainPanel.selectNone();
             }
         });
-        menuEditSelectNone.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK));
+        menuEditSelectNone.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K, ActionEvent.CTRL_MASK | ActionEvent.ALT_MASK));
         menuEdit.add(menuEditSelectNone);
         menuEditSelectAll.addActionListener(new ActionListener() {
             @Override

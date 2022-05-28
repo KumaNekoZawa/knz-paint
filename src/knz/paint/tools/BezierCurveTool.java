@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 
 public class BezierCurveTool extends AbstractTool {
 
-    private final int QUALITY = 100;
+    private final int QUALITY = 100; // FIXME move to config.properties
 
     private Polygon polygon = new Polygon();
 
