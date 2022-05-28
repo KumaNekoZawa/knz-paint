@@ -13,7 +13,7 @@ public abstract class PositionalEffect extends Effect {
     }
 
     @Override
-    public BufferedImage apply(BufferedImage image) {
+    public BufferedImage applyHelper(BufferedImage image) {
         final int width = image.getWidth();
         final int height = image.getHeight();
         BufferedImage result = new BufferedImage(width, height, image.getType());

@@ -14,7 +14,16 @@ public abstract class Effect {
         this.name = name;
     }
 
-    public abstract BufferedImage apply(BufferedImage image);
+    public final BufferedImage apply(BufferedImage image) {
+        init(image.getWidth(), image.getHeight());
+        return applyHelper(image);
+    }
+
+    protected abstract BufferedImage applyHelper(BufferedImage image);
+
+    /* override me */
+    public void init(int width, int height) {
+    }
 
     public String getName() {
         return name;

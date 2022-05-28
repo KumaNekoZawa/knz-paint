@@ -6,10 +6,11 @@ public class DoubleParameter extends AbstractParameter {
     private double value;
 
     public DoubleParameter(String name, double min, double def, double max) {
-        this(name, min, def, max, 100.);
+        this(name, min, def, max, 100);
     }
 
-    public DoubleParameter(String name, double min, double def, double max, double resolution) {
+    // this could be made public, if there is an effect, that needs to have a resolution != 100
+    private DoubleParameter(String name, double min, double def, double max, double resolution) {
         super(name);
         this.min = min;
         this.def = def;

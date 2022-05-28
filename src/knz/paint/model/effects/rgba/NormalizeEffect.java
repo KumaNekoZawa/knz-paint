@@ -4,22 +4,23 @@ import knz.paint.model.effects.DoubleParameter;
 
 public class NormalizeEffect extends RGBAEffect {
 
-    private DoubleParameter min = new DoubleParameter("Min", 0, 0, 1);
-    private DoubleParameter max = new DoubleParameter("Max", 0, 1, 1);
+    private DoubleParameter paramMin = new DoubleParameter("Min", 0, 0, 1);
+    private DoubleParameter paramMax = new DoubleParameter("Max", 0, 1, 1);
 
     public NormalizeEffect() {
-        super("Normalize");
-        this.parameters.add(min);
-        this.parameters.add(max);
+        super("Normalize", true, true);
+        this.parameters.add(paramMin);
+        this.parameters.add(paramMax);
     }
 
     @Override
-    public void filter() {
-        final double minValue = min.getValue();
-        final double maxValue = max.getValue();
-        r = (int) (255. * (r / 255. - minValue) / (maxValue - minValue));
-        g = (int) (255. * (g / 255. - minValue) / (maxValue - minValue));
-        b = (int) (255. * (b / 255. - minValue) / (maxValue - minValue));
+    public void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+        final double min = paramMin.getValue();
+        final double max = paramMax.getValue();
+        out_r = (int) (0xFF * (in_r / (double) 0xFF - min) / (max - min));
+        out_g = (int) (0xFF * (in_g / (double) 0xFF - min) / (max - min));
+        out_b = (int) (0xFF * (in_b / (double) 0xFF - min) / (max - min));
+        out_a = (int) (0xFF * (in_a / (double) 0xFF - min) / (max - min));
     }
 
 }

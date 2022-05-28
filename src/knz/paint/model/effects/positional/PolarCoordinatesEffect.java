@@ -4,16 +4,16 @@ import knz.paint.model.effects.BooleanParameter;
 
 public class PolarCoordinatesEffect extends PositionalEffect {
 
-    private BooleanParameter swapXY = new BooleanParameter("Swap X/Y", false);
+    private BooleanParameter paramSwap = new BooleanParameter("Swap x/y", false);
 
     public PolarCoordinatesEffect() {
         super("Polar coordinates");
-        this.parameters.add(swapXY);
+        this.parameters.add(paramSwap);
     }
 
     @Override
     public void filter(int width, int height, int toX, int toY) {
-        final boolean swap = swapXY.getValue();
+        final boolean swap = paramSwap.getValue();
         final double x = toX / (double) width;
         final double y = (height - toY - 1) / (double) height;
         final double r = swap ? x : y;

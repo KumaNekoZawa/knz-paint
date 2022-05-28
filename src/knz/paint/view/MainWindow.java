@@ -49,23 +49,30 @@ import knz.paint.model.effects.BooleanParameter;
 import knz.paint.model.effects.DoubleParameter;
 import knz.paint.model.effects.Effect;
 import knz.paint.model.effects.IntegerParameter;
-import knz.paint.model.effects.hsba.AdjustBrightnessEffect;
-import knz.paint.model.effects.hsba.AdjustSaturationEffect;
+import knz.paint.model.effects.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.hsba.ExtractBrightnessEffect;
-import knz.paint.model.effects.hsba.ShiftHueEffect;
+import knz.paint.model.effects.hsba.ExtractSaturationEffect;
+import knz.paint.model.effects.hsba.SaltPepperEffect;
+import knz.paint.model.effects.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.positional.ExplosionEffect;
+import knz.paint.model.effects.positional.FlipEffect;
 import knz.paint.model.effects.positional.MosaicEffect;
 import knz.paint.model.effects.positional.PolarCoordinatesEffect;
+import knz.paint.model.effects.positional.RotationEffect;
+import knz.paint.model.effects.positional.StainedGlassEffect;
 import knz.paint.model.effects.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.rgba.AdjustGammaEffect;
-import knz.paint.model.effects.rgba.BalancedGrayscaleEffect;
-import knz.paint.model.effects.rgba.BlackWhiteEffect;
+import knz.paint.model.effects.rgba.AdjustRGBAEffect;
+import knz.paint.model.effects.rgba.AlphaAsGrayEffect;
+import knz.paint.model.effects.rgba.AverageRGBEffect;
+import knz.paint.model.effects.rgba.BitShiftEffect;
+import knz.paint.model.effects.rgba.ExtractRGBAEffect;
 import knz.paint.model.effects.rgba.GrayscaleEffect;
 import knz.paint.model.effects.rgba.NegateEffect;
 import knz.paint.model.effects.rgba.NoiseEffect;
 import knz.paint.model.effects.rgba.NormalizeEffect;
-import knz.paint.model.effects.rgba.SaltPepperEffect;
 import knz.paint.model.effects.rgba.SepiaEffect;
+import knz.paint.model.effects.rgba.SolarizationEffect;
 import knz.paint.tools.AbstractTool;
 import knz.paint.view.colorpicker.ColorPickerWindow;
 import knz.paint.view.plainpanels.PalettePanel;
@@ -93,24 +100,32 @@ public class MainWindow extends JFrame {
 
     private static final Effect[] EFFECTS = {
         new ExplosionEffect(),
+        new FlipEffect(),
         new MosaicEffect(),
         new PolarCoordinatesEffect(),
+        new RotationEffect(),
+        new StainedGlassEffect(),
         null,
         new AdjustContrastEffect(),
         new AdjustGammaEffect(),
-        new BalancedGrayscaleEffect(),
-        new BlackWhiteEffect(),
+        new AdjustRGBAEffect(),
+        new AlphaAsGrayEffect(),
+        new AverageRGBEffect(),
+        new BitShiftEffect(),
+        new ExtractRGBAEffect(),
         new GrayscaleEffect(),
         new NegateEffect(),
         new NoiseEffect(),
         new NormalizeEffect(),
-        new SaltPepperEffect(),
         new SepiaEffect(),
+        new SolarizationEffect(),
         null,
-        new AdjustBrightnessEffect(),
-        new AdjustSaturationEffect(),
+        new AdjustHSBAEffect(),
         new ExtractBrightnessEffect(),
-        new ShiftHueEffect(),
+        new ExtractSaturationEffect(),
+        new SaltPepperEffect(),
+        null,
+        new BlackWhiteEffect(),
     };
 
     private ColorPickerWindow colorPickerWindow = null;
@@ -533,10 +548,6 @@ public class MainWindow extends JFrame {
                         c.gridx = 0;
                         c.gridy = 0;
                         for (AbstractParameter parameter : effect.getParameters()) {
-                            JLabel label = new JLabel(parameter.getLabelText());
-                            label.setAlignmentX(Component.LEFT_ALIGNMENT);
-                            effectFrame.add(label, c);
-                            c.gridy++;
                             if (parameter instanceof BooleanParameter) {
                                 BooleanParameter booleanParameter = (BooleanParameter) parameter;
                                 JCheckBox checkBox = new JCheckBox(parameter.getName());
@@ -545,45 +556,52 @@ public class MainWindow extends JFrame {
                                     @Override
                                     public void actionPerformed(ActionEvent e) {
                                         booleanParameter.setValue(checkBox.isSelected());
-                                        label.setText(parameter.getLabelText());
                                         mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
                                     }
                                 });
                                 effectFrame.add(checkBox, c);
-                            } else if (parameter instanceof IntegerParameter) {
-                                IntegerParameter integerParameter = (IntegerParameter) parameter;
-                                JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                                    integerParameter.getMin(),
-                                    integerParameter.getMax(),
-                                    integerParameter.getDef());
-                                slider.addChangeListener(new ChangeListener() {
-                                    @Override
-                                    public void stateChanged(ChangeEvent e) {
-                                        integerParameter.setValue(slider.getValue());
-                                        label.setText(parameter.getLabelText());
-                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                                    }
-                                });
-                                effectFrame.add(slider, c);
-                            } else if (parameter instanceof DoubleParameter) {
-                                DoubleParameter doubleParameter = (DoubleParameter) parameter;
-                                JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                                    (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
-                                    (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
-                                    (int) (doubleParameter.getResolution() * doubleParameter.getDef()));
-                                slider.addChangeListener(new ChangeListener() {
-                                    @Override
-                                    public void stateChanged(ChangeEvent e) {
-                                        doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
-                                        label.setText(parameter.getLabelText());
-                                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                                    }
-                                });
-                                effectFrame.add(slider, c);
+                                c.gridy++;
                             } else {
-                                throw new AssertionError();
+                                JLabel label = new JLabel(parameter.getLabelText());
+                                label.setAlignmentX(Component.LEFT_ALIGNMENT);
+                                effectFrame.add(label, c);
+                                c.gridy++;
+                                if (parameter instanceof IntegerParameter) {
+                                    IntegerParameter integerParameter = (IntegerParameter) parameter;
+                                    JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                                        integerParameter.getMin(),
+                                        integerParameter.getMax(),
+                                        integerParameter.getDef());
+                                    slider.addChangeListener(new ChangeListener() {
+                                        @Override
+                                        public void stateChanged(ChangeEvent e) {
+                                            integerParameter.setValue(slider.getValue());
+                                            label.setText(parameter.getLabelText());
+                                            mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                                        }
+                                    });
+                                    effectFrame.add(slider, c);
+                                    c.gridy++;
+                                } else if (parameter instanceof DoubleParameter) {
+                                    DoubleParameter doubleParameter = (DoubleParameter) parameter;
+                                    JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                                        (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
+                                        (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
+                                        (int) (doubleParameter.getResolution() * doubleParameter.getDef()));
+                                    slider.addChangeListener(new ChangeListener() {
+                                        @Override
+                                        public void stateChanged(ChangeEvent e) {
+                                            doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
+                                            label.setText(parameter.getLabelText());
+                                            mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                                        }
+                                    });
+                                    effectFrame.add(slider, c);
+                                    c.gridy++;
+                                } else {
+                                    throw new AssertionError();
+                                }
                             }
-                            c.gridy++;
                         }
                         JButton buttonOkay = new JButton("Okay");
                         buttonOkay.addActionListener(new ActionListener() {
