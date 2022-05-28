@@ -46,6 +46,7 @@ public class GradientSliderSubPanel extends JPanel {
                 GradientSliderSubPanel.this.update(e);
             }
         });
+        setBackground(Config.getConfig().getBackgroundColor());
 
         Dimension d = new Dimension(50, 256);
         setMaximumSize(d);
@@ -70,10 +71,7 @@ public class GradientSliderSubPanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         final int width = getWidth();
-        final int height = getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Config.getConfig().getBackgroundColor());
-        g2d.fillRect(0, 0, width, height);
         for (int y = 0; y < 256; y++) {
             final int value = 255 - y;
             g2d.setColor(baseColor == null || value == selectedValue ? Color.BLACK : colorFunction.apply(baseColor, value));

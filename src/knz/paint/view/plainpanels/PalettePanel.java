@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+import knz.paint.model.Config;
 
 public class PalettePanel extends JPanel {
 
@@ -107,6 +110,13 @@ public class PalettePanel extends JPanel {
                 }
             }
         });
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                setToolTipText("0x" + String.format("%08X", image.getRGB(e.getX(), e.getY())));
+            }
+        });
+        setBackground(Config.getConfig().getBackgroundColor());
 
         Dimension d = new Dimension(size, size);
         setMaximumSize(d);

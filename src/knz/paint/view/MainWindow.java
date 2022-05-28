@@ -2,8 +2,11 @@ package knz.paint.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -20,6 +23,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,13 +33,24 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import knz.paint.model.Config;
+import knz.paint.model.effects.BlackWhiteEffect;
+import knz.paint.model.effects.ContrastEffect;
+import knz.paint.model.effects.Effect;
+import knz.paint.model.effects.EffectParameter;
+import knz.paint.model.effects.GammaEffect;
+import knz.paint.model.effects.GrayscaleEffect;
+import knz.paint.model.effects.NegateEffect;
+import knz.paint.model.effects.NormalizeEffect;
 import knz.paint.tools.AbstractTool;
 import knz.paint.view.colorpicker.ColorPickerWindow;
 import knz.paint.view.plainpanels.PalettePanel;
@@ -48,16 +63,27 @@ public class MainWindow extends JFrame {
     private static final FileFilter FILTER_PNG = createFileFilter("Portable Network Graphics", "png");
 
     private static final int[] ZOOM_FACTORS   = { 1, 2, 4, 8, 16, 32 };
-    private static final int[] ZOOM_SHORTCUTS = { KeyEvent.VK_0,
-                                                  KeyEvent.VK_1,
-                                                  KeyEvent.VK_2,
-                                                  KeyEvent.VK_3,
-                                                  KeyEvent.VK_4,
-                                                  KeyEvent.VK_5 };
+    private static final int[] ZOOM_SHORTCUTS = {
+        KeyEvent.VK_0,
+        KeyEvent.VK_1,
+        KeyEvent.VK_2,
+        KeyEvent.VK_3,
+        KeyEvent.VK_4,
+        KeyEvent.VK_5,
+    };
 
-    private static final int[] STOKE_WIDTHS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25 };
-    private static final int[] ROUNDED_RECTANGLE_RADII = { 5, 10, 15, 20, 25 };
+    private static final int[] STOKE_WIDTHS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50 };
+    private static final int[] ROUNDED_RECTANGLE_RADII = { 5, 10, 15, 20, 25, 50, 75, 100 };
     private static final int[] AIRBRUSH_SIZES = { 5, 10, 15, 20, 25 };
+
+    private static final Effect[] EFFECTS = {
+        new BlackWhiteEffect(),
+        new ContrastEffect(),
+        new GammaEffect(),
+        new GrayscaleEffect(),
+        new NegateEffect(),
+        new NormalizeEffect(),
+    };
 
     private ColorPickerWindow colorPickerWindow = null;
 
@@ -98,6 +124,9 @@ public class MainWindow extends JFrame {
     private JMenu menuOptionsAirbrushType = new JMenu("Type");
     private JMenu menuOptionsAirbrushSize = new JMenu("Size");
 
+    private JMenu menuEffects = new JMenu("Effects");
+
+    private JScrollPane scrollPane;
     private MainPanel mainPanel = new MainPanel();
     private JToolBar toolBar = new JToolBar();
     private JToolBar colorBar = new JToolBar();
@@ -428,6 +457,86 @@ public class MainWindow extends JFrame {
         menuOptionsAirbrush.add(menuOptionsAirbrushSize);
         menuOptions.add(menuOptionsAirbrush);
         menuBar.add(menuOptions);
+
+        for (Effect effect : EFFECTS) {
+            String title = effect.getName() + (effect.getParameters().isEmpty() ? "" : "...");
+            JMenuItem menuEffectsEffect = new JMenuItem(title);
+            menuEffectsEffect.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (effect.getParameters().isEmpty()) {
+                        mainPanel.setImage(effect.apply(mainPanel.getImage()));
+                    } else {
+                        JDialog effectFrame = new JDialog(MainWindow.this, title, true);
+                        effectFrame.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosing(WindowEvent e) {
+                                mainPanel.setImageTempReset();
+                                mainPanel.repaint();
+                                effectFrame.dispose();
+                            }
+                        });
+                        effectFrame.setLayout(new GridBagLayout());
+                        GridBagConstraints c = new GridBagConstraints();
+                        c.fill = GridBagConstraints.HORIZONTAL;
+                        c.insets = new Insets(5, 5, 5, 5);
+                        c.gridx = 0;
+                        c.gridy = 0;
+                        for (EffectParameter parameter : effect.getParameters()) {
+                            JLabel label = new JLabel(parameter.getName() + ": " + String.format("%.2f", parameter.getDef()));
+                            label.setAlignmentX(Component.LEFT_ALIGNMENT);
+                            effectFrame.add(label, c);
+                            c.gridy++;
+                            JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                                (int) (100 * parameter.getMin()),
+                                (int) (100 * parameter.getMax()),
+                                (int) (100 * parameter.getDef()));
+                            BufferedImage image = mainPanel.getImage();
+                            final Rectangle rect = scrollPane.getViewport().getViewRect();
+                            rect.x /= mainPanel.getZoomFactor();
+                            rect.y /= mainPanel.getZoomFactor();
+                            rect.width /= mainPanel.getZoomFactor();
+                            rect.height /= mainPanel.getZoomFactor();
+                            final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth() - 1));
+                            final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
+                            final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
+                            final int imageTempHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
+                            BufferedImage imageTemp = image.getSubimage(imageTempX, imageTempY, imageTempWidth, imageTempHeight);
+                            slider.addChangeListener(new ChangeListener() {
+                                @Override
+                                public void stateChanged(ChangeEvent e) {
+                                    parameter.setValue(slider.getValue() / 100.);
+                                    label.setText(parameter.getName() + ": " + String.format("%.2f", parameter.getValue()));
+                                    mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                                }
+                            });
+                            effectFrame.add(slider, c);
+                            c.gridy++;
+                        }
+                        JButton buttonOkay = new JButton("Okay");
+                        buttonOkay.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                mainPanel.setImageTempReset();
+                                mainPanel.setImage(effect.apply(mainPanel.getImage()));
+                                effectFrame.dispose();
+                            }
+                        });
+                        effectFrame.add(buttonOkay, c);
+
+                        effectFrame.setAlwaysOnTop(true);
+                        effectFrame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+                        effectFrame.setResizable(false);
+                        effectFrame.pack();
+                        effectFrame.setLocationRelativeTo(null);
+                        effectFrame.setVisible(true);
+                    }
+                }
+            });
+            menuEffects.add(menuEffectsEffect);
+        }
+        menuBar.add(menuEffects);
+
         setJMenuBar(menuBar);
 
         setLayout(new BorderLayout());
@@ -446,7 +555,8 @@ public class MainWindow extends JFrame {
         addToolBarButtons(toolBar);
         add(toolBar, BorderLayout.LINE_START);
 
-        add(new JScrollPane(mainPanel), BorderLayout.CENTER);
+        scrollPane = new JScrollPane(mainPanel);
+        add(scrollPane, BorderLayout.CENTER);
 
         colorBar.setOrientation(SwingConstants.VERTICAL);
         final int colorBarSize = Config.getConfig().getColorBarSize();

@@ -54,3 +54,5 @@ look at other programs
     coreldraw
     gimp
     pinta
+    photofiltre
+    xnview

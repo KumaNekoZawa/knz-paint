@@ -42,6 +42,7 @@ public class ImagePanel extends JPanel {
                 }
             }
         });
+        setBackground(Config.getConfig().getBackgroundColor());
 
         Dimension d = new Dimension(image.getWidth(), image.getHeight());
         setMaximumSize(d);
@@ -53,11 +54,7 @@ public class ImagePanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        final int width = getWidth();
-        final int height = getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Config.getConfig().getBackgroundColor());
-        g2d.fillRect(0, 0, width, height);
         g2d.drawImage(image, 0, 0, null);
     }
 

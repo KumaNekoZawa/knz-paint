@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import knz.paint.model.Config;
+
 public class GradientSliderPanel extends JPanel {
 
     public static final int ACTION_LISTENER_ID = 2004;
@@ -67,6 +69,8 @@ public class GradientSliderPanel extends JPanel {
         add(label, BorderLayout.PAGE_START);
         add(gradientSliderSubPanel, BorderLayout.CENTER);
         add(textField, BorderLayout.PAGE_END);
+
+        setBackground(Config.getConfig().getBackgroundColor());
     }
 
     @Override

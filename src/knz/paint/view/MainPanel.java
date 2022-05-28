@@ -137,6 +137,10 @@ public class MainPanel extends JPanel {
     private BufferedImage image;
     private Graphics2D g2d;
 
+    // temporary image that is being drawn when previewing effects
+    private BufferedImage imageTemp;
+    private int imageTempX, imageTempY;
+
     // View
     private int zoomFactor = 1;
     // Options
@@ -204,6 +208,7 @@ public class MainPanel extends JPanel {
                 }
             }
         });
+        setBackground(Config.getConfig().getBackgroundColor());
     }
 
     public MainWindow getParentElement() {
@@ -217,19 +222,21 @@ public class MainPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        final int width = getWidth();
-        final int height = getHeight();
-        final int imageWidth = image.getWidth();
-        final int imageHeight = image.getHeight();
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Config.getConfig().getBackgroundColor());
-        g2d.fillRect(0, 0, width, height);
-        g2d.drawImage(image, 0, 0, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
-        AbstractTool toolObject = selectedTool.getToolObject();
-        if (toolObject.needsRepaint()) {
-            BufferedImage canvas = new BufferedImage(imageWidth, imageHeight, image.getType());
-            toolObject.paint(canvas.createGraphics());
-            g2d.drawImage(canvas, 0, 0, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
+        if (imageTemp == null) {
+            final int imageWidth = image.getWidth();
+            final int imageHeight = image.getHeight();
+            g2d.drawImage(image, 0, 0, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
+            AbstractTool toolObject = selectedTool.getToolObject();
+            if (toolObject.needsRepaint()) {
+                BufferedImage canvas = new BufferedImage(imageWidth, imageHeight, image.getType());
+                toolObject.paint(canvas.createGraphics());
+                g2d.drawImage(canvas, 0, 0, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
+            }
+        } else {
+            final int imageWidth = imageTemp.getWidth();
+            final int imageHeight = imageTemp.getHeight();
+            g2d.drawImage(imageTemp, zoomFactor * imageTempX, zoomFactor * imageTempY, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
         }
     }
 
@@ -292,6 +299,20 @@ public class MainPanel extends JPanel {
             g2d.dispose();
             setImage(imageNew);
         }
+    }
+
+    public void setImageTemp(BufferedImage imageTemp, int imageTempX, int imageTempY) {
+        this.imageTemp = imageTemp;
+        this.imageTempX = imageTempX;
+        this.imageTempY = imageTempY;
+        repaint();
+    }
+
+    public void setImageTempReset() {
+        this.imageTemp = null;
+        this.imageTempX = 0;
+        this.imageTempY = 0;
+        // do not repaint
     }
 
     // Edit
