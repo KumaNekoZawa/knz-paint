@@ -8,8 +8,6 @@ import javax.swing.SwingUtilities;
 
 public class BezierCurveTool extends AbstractTool {
 
-    // FIXME does not work well with dashes!
-
     private Polygon polygon = new Polygon();
 
     @Override
@@ -78,7 +76,7 @@ public class BezierCurveTool extends AbstractTool {
         final double d = Math.sqrt(dx * dx + dy * dy);
         final int quality = d >= 1. ? Math.max((int) (d / 3.), 1) : 1;
 
-        int lastX = -1, lastY = -1;
+        Polygon polygonFinal = new Polygon();
         for (int i = 0; i < quality; i++) {
             final double ratio = i / (double) quality;
 
@@ -98,14 +96,9 @@ public class BezierCurveTool extends AbstractTool {
                 ycoords = calcBezier(ycoords, ratio);
             }
 
-            final int x = (int) xcoords[0];
-            final int y = (int) ycoords[0];
-            if (i > 0) {
-                g2d.drawLine(lastX, lastY, x, y);
-            }
-            lastX = x;
-            lastY = y;
+            polygonFinal.addPoint((int) xcoords[0], (int) ycoords[0]);
         }
+        g2d.drawPolyline(polygonFinal.xpoints, polygonFinal.ypoints, polygonFinal.npoints);
     }
 
     private double[] calcBezier(double[] coords, double ratio) {
