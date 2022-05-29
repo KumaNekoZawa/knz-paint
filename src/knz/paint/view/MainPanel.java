@@ -142,6 +142,7 @@ public class MainPanel extends JPanel {
     private int imageTempX, imageTempY;
 
     // View
+    private int zoomDivisor = 1;
     private int zoomFactor = 1;
     // Options
     private Tool selectedTool = Tool.POLYLINE_FREE_FORM;
@@ -202,8 +203,8 @@ public class MainPanel extends JPanel {
             }
 
             private void updateStatusBar(MouseEvent e) {
-                final int x = e.getX() / zoomFactor;
-                final int y = e.getY() / zoomFactor;
+                final int x = zoomDivisor * e.getX() / zoomFactor;
+                final int y = zoomDivisor * e.getY() / zoomFactor;
                 if (0 <= x && x < image.getWidth()
                  && 0 <= y && y < image.getHeight()) {
                     parentElement.updateStatusBarCurrentPixel(x, y, image.getRGB(x, y));
@@ -228,17 +229,32 @@ public class MainPanel extends JPanel {
         if (imageTemp == null) {
             final int imageWidth = image.getWidth();
             final int imageHeight = image.getHeight();
-            g2d.drawImage(image, 0, 0, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
+            g2d.drawImage(image,
+                          0,
+                          0,
+                          zoomFactor * imageWidth / zoomDivisor,
+                          zoomFactor * imageHeight / zoomDivisor,
+                          null);
             AbstractTool toolObject = selectedTool.getToolObject();
             if (toolObject.needsRepaint()) {
                 BufferedImage canvas = new BufferedImage(imageWidth, imageHeight, image.getType());
                 toolObject.paint(canvas.createGraphics());
-                g2d.drawImage(canvas, 0, 0, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
+                g2d.drawImage(canvas,
+                              0,
+                              0,
+                              zoomFactor * imageWidth / zoomDivisor,
+                              zoomFactor * imageHeight / zoomDivisor,
+                              null);
             }
         } else {
-            final int imageWidth = imageTemp.getWidth();
-            final int imageHeight = imageTemp.getHeight();
-            g2d.drawImage(imageTemp, zoomFactor * imageTempX, zoomFactor * imageTempY, zoomFactor * imageWidth, zoomFactor * imageHeight, null);
+            final int imageTempWidth = imageTemp.getWidth();
+            final int imageTempHeight = imageTemp.getHeight();
+            g2d.drawImage(imageTemp,
+                          zoomFactor * imageTempX / zoomDivisor,
+                          zoomFactor * imageTempY / zoomDivisor,
+                          zoomFactor * imageTempWidth / zoomDivisor,
+                          zoomFactor * imageTempHeight / zoomDivisor,
+                          null);
         }
     }
 
@@ -411,11 +427,16 @@ public class MainPanel extends JPanel {
 
     // View
 
+    public int getZoomDivisor() {
+        return zoomDivisor;
+    }
+
     public int getZoomFactor() {
         return zoomFactor;
     }
 
-    public void setZoomFactor(int zoomFactor) {
+    public void setZoom(int zoomDivisor, int zoomFactor) {
+        this.zoomDivisor = zoomDivisor;
         this.zoomFactor = zoomFactor;
         updatePanelSize();
         repaint();
@@ -554,7 +575,7 @@ public class MainPanel extends JPanel {
     private void updatePanelSize() {
         final int width = image.getWidth();
         final int height = image.getHeight();
-        Dimension d = new Dimension(zoomFactor * width, zoomFactor * height);
+        Dimension d = new Dimension(zoomFactor * width / zoomDivisor, zoomFactor * height / zoomDivisor);
         setMaximumSize(d);
         setMinimumSize(d);
         setPreferredSize(d);

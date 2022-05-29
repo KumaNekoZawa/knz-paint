@@ -72,15 +72,10 @@ public class MainWindow extends JFrame {
     private static final FileFilter FILTER_JPG = createFileFilter("Joint Photographic Experts Group", "jpg", "jpeg");
     private static final FileFilter FILTER_PNG = createFileFilter("Portable Network Graphics", "png");
 
-    private static final int[] ZOOM_FACTORS   = { 1, 2, 4, 8, 16, 32 };
-    private static final int[] ZOOM_SHORTCUTS = {
-        KeyEvent.VK_0,
-        KeyEvent.VK_1,
-        KeyEvent.VK_2,
-        KeyEvent.VK_3,
-        KeyEvent.VK_4,
-        KeyEvent.VK_5,
-    };
+    private static final int[] ZOOM_DIVISORS = { 32, 16, 8, 4, 2, 1, 1, 1, 1,  1,  1 };
+    private static final int[] ZOOM_FACTORS  = {  1,  1, 1, 1, 1, 1, 2, 4, 8, 16, 32 };
+    private static final int ZOOM_LEVELS = ZOOM_FACTORS.length;
+    private static final int ZOOM_DEFAULT_LEVEL = 5;
 
     private static final int[] STOKE_WIDTHS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50 };
     private static final int[] ROUNDED_RECTANGLE_RADII = { 5, 10, 15, 20, 25, 50, 75, 100 };
@@ -165,7 +160,7 @@ public class MainWindow extends JFrame {
 
     private File lastPath = null;
 
-    private int zoomLevel = 0;
+    private int zoomLevel = ZOOM_DEFAULT_LEVEL;
 
     private int statusBarWidth = 0;
     private int statusBarHeight = 0;
@@ -312,11 +307,10 @@ public class MainWindow extends JFrame {
         menuViewZoomIn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (zoomLevel < ZOOM_FACTORS.length - 1) {
+                if (zoomLevel < ZOOM_LEVELS - 1) {
                     zoomLevel++;
                     menuViewZoomLevels.get(zoomLevel).setSelected(true);
-                    final int zoomFactor = ZOOM_FACTORS[zoomLevel];
-                    mainPanel.setZoomFactor(zoomFactor);
+                    mainPanel.setZoom(ZOOM_DIVISORS[zoomLevel], ZOOM_FACTORS[zoomLevel]);
                 }
             }
         });
@@ -328,8 +322,7 @@ public class MainWindow extends JFrame {
                 if (zoomLevel > 0) {
                     zoomLevel--;
                     menuViewZoomLevels.get(zoomLevel).setSelected(true);
-                    final int zoomFactor = ZOOM_FACTORS[zoomLevel];
-                    mainPanel.setZoomFactor(zoomFactor);
+                    mainPanel.setZoom(ZOOM_DIVISORS[zoomLevel], ZOOM_FACTORS[zoomLevel]);
                 }
             }
         });
@@ -337,20 +330,22 @@ public class MainWindow extends JFrame {
         menuViewZoom.add(menuViewZoomOut);
         menuViewZoom.addSeparator();
         ButtonGroup bgZoomLevels = new ButtonGroup();
-        for (int zoomLevel = 0; zoomLevel < ZOOM_FACTORS.length; zoomLevel++) {
+        for (int zoomLevel = 0; zoomLevel < ZOOM_LEVELS; zoomLevel++) {
             final int zoomLevelFinal = zoomLevel;
+            final int zoomDivisor = ZOOM_DIVISORS[zoomLevel];
             final int zoomFactor = ZOOM_FACTORS[zoomLevel];
-            final int zoomShortcut = ZOOM_SHORTCUTS[zoomLevel];
-            JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem("×" + zoomFactor);
+            JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem(
+                zoomDivisor == 1 && zoomFactor == 1 ? "100 %" : ((zoomFactor > 1 ? "×" + zoomFactor : "") + (zoomDivisor > 1 ? "/" + zoomDivisor : ""))
+            );
             menuViewZoomLevel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     MainWindow.this.zoomLevel = zoomLevelFinal;
-                    mainPanel.setZoomFactor(zoomFactor);
+                    mainPanel.setZoom(zoomDivisor, zoomFactor);
                 }
             });
-            menuViewZoomLevel.setAccelerator(KeyStroke.getKeyStroke(zoomShortcut, ActionEvent.CTRL_MASK));
-            if (zoomFactor == 1) {
+            if (zoomLevel == ZOOM_DEFAULT_LEVEL) {
+                menuViewZoomLevel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_0, ActionEvent.CTRL_MASK));
                 menuViewZoomLevel.setSelected(true);
             }
             menuViewZoomLevels.add(menuViewZoomLevel);
