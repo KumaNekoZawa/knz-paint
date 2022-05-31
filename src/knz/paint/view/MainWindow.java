@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -332,21 +333,21 @@ public class MainWindow extends JFrame {
         menuViewZoom.add(menuViewZoomOut);
         menuViewZoom.addSeparator();
         ButtonGroup bgZoomLevels = new ButtonGroup();
-        for (int zoomLevel = 0; zoomLevel < ZOOM_LEVELS; zoomLevel++) {
-            final int zoomLevelFinal = zoomLevel;
-            final int zoomDivisor = ZOOM_DIVISORS[zoomLevel];
-            final int zoomFactor = ZOOM_FACTORS[zoomLevel];
+        for (int i = 0; i < ZOOM_LEVELS; i++) {
+            final int zoomLevelFinal = i;
+            final int zoomDivisor = ZOOM_DIVISORS[zoomLevelFinal];
+            final int zoomFactor = ZOOM_FACTORS[zoomLevelFinal];
             JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem(
                 zoomDivisor == 1 && zoomFactor == 1 ? "100 %" : ((zoomFactor > 1 ? "×" + zoomFactor : "") + (zoomDivisor > 1 ? "/" + zoomDivisor : ""))
             );
             menuViewZoomLevel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    MainWindow.this.zoomLevel = zoomLevelFinal;
+                    zoomLevel = zoomLevelFinal;
                     mainPanel.setZoom(zoomDivisor, zoomFactor);
                 }
             });
-            if (zoomLevel == ZOOM_DEFAULT_LEVEL) {
+            if (zoomLevelFinal == ZOOM_DEFAULT_LEVEL) {
                 menuViewZoomLevel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_0, ActionEvent.CTRL_MASK));
                 menuViewZoomLevel.setSelected(true);
             }
@@ -518,11 +519,11 @@ public class MainWindow extends JFrame {
             public void propertyChange(java.beans.PropertyChangeEvent e) {
                 if (e.getPropertyName().equals("orientation")) {
                     toolBar.removeAll();
-                    addToolBarButtons(toolBar);
+                    addToolBarButtons();
                 }
             }
         });
-        addToolBarButtons(toolBar);
+        addToolBarButtons();
         add(toolBar, BorderLayout.LINE_START);
 
         scrollPane = new JScrollPane(mainPanel);
@@ -566,7 +567,7 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
-    private void addToolBarButtons(JToolBar toolBar) {
+    private void addToolBarButtons() {
         final int numberOfTools = MainPanel.Tool.values().length;
         final int orient = toolBar.getOrientation();
         GridBagConstraints c = new GridBagConstraints();
@@ -723,19 +724,8 @@ public class MainWindow extends JFrame {
 
             @Override
             public boolean accept(File f) {
-                if (f.isFile()) {
-                    final String lc = f.getName().toLowerCase();
-                    for (String extension : extensions) {
-                        if (lc.endsWith("." + extension)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                } else if (f.isDirectory()) {
-                    return true;
-                } else {
-                    return false;
-                }
+                final String lc = f.getName().toLowerCase();
+                return (f.isFile() && Arrays.stream(extensions).anyMatch(extension -> lc.endsWith("." + extension))) || f.isDirectory();
             }
         };
     }

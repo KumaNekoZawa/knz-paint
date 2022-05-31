@@ -74,7 +74,7 @@ public class BezierCurveTool extends AbstractTool {
         final int dx = maxX - minX;
         final int dy = maxY - minY;
         final double d = Math.sqrt(dx * dx + dy * dy);
-        final int quality = d >= 1. ? Math.max((int) (d / 3.), 1) : 1;
+        final int quality = d >= 1 ? Math.max(d / 3, 1) : 1;
 
         Polygon polygonFinal = new Polygon();
         for (int i = 0; i < quality; i++) {
@@ -110,11 +110,11 @@ public class BezierCurveTool extends AbstractTool {
     }
 
     private static double inBetween(double a, double b, double ratio) {
-        if (!(0. <= ratio && ratio <= 1.)) {
+        if (!(0 <= ratio && ratio <= 1)) {
             throw new IllegalArgumentException();
         }
-        final double invRatio = 1. - ratio;
-        return invRatio * a + ratio * b;
+        final double negRatio = 1 - ratio;
+        return negRatio * a + ratio * b;
     }
 
 }

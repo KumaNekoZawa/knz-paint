@@ -68,10 +68,10 @@ public class AirbrushTool extends AbstractTool {
     }
 
     private void drawAirbrush() {
-        final double a = Math.random() * 2.0 * Math.PI;
-        final double d = radius * Math.random();
-        final int lx = x + (int) (d * Math.sin(a));
-        final int ly = y + (int) (d * Math.cos(a));
+        final double r = radius * Math.random();
+        final double a = 2 * Math.PI * Math.random();
+        final int lx = x + (int) (r * Math.sin(a));
+        final int ly = y + (int) (r * Math.cos(a));
         BufferedImage image = mainPanel.getImage();
         if (0 <= lx && lx < image.getWidth()
          && 0 <= ly && ly < image.getHeight()) {
@@ -81,9 +81,9 @@ public class AirbrushTool extends AbstractTool {
                 rgb = mainPanel.getColorPrimary().getRGB();
                 break;
             case RANDOM_COLOR:
-                rgb = new Color((int) (255 * Math.random()),
-                                (int) (255 * Math.random()),
-                                (int) (255 * Math.random())).getRGB();
+                rgb = new Color((int) (0xFF * Math.random()),
+                                (int) (0xFF * Math.random()),
+                                (int) (0xFF * Math.random())).getRGB();
                 break;
             case RANDOM_HUE:
                 rgb = Color.HSBtoRGB((float) Math.random(), 1f, 1f);

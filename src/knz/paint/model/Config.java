@@ -43,7 +43,7 @@ public class Config {
             backgroundColor = parseColor(properties.getProperty("background-color"));
             colorBarSize = Integer.parseInt(properties.getProperty("color-bar-size"));
             for (int i = 1; i <= MAX_NUMBER_OF_COLOR_PALETTES; i++) {
-                String filename = properties.getProperty("color-palette" + i);
+                final String filename = properties.getProperty("color-palette" + i);
                 if (filename != null && !filename.isEmpty()) {
                     colorPaletteFiles.add(new File(filename));
                 }
@@ -62,7 +62,7 @@ public class Config {
     }
 
     private static Color parseColor(String s) {
-        String[] parts = s.split(",", -1);
+        final String[] parts = s.split(",", -1);
         if (parts.length == 1) {
             return new Color(Integer.parseInt(parts[0]),
                              Integer.parseInt(parts[0]),

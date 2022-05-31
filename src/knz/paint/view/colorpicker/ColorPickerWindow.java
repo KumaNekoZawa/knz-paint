@@ -23,24 +23,24 @@ public class ColorPickerWindow extends JFrame {
     private ColorPickerTopPanel colorPickerTopPanel = new ColorPickerTopPanel();
     private GradientSliderPanel[] gradientSliderPanels = new GradientSliderPanel[] {
         new GradientSliderPanel("Gray",
-            (c) -> (c.getRed() + c.getGreen() + c.getBlue()) / 3,
+            c -> (c.getRed() + c.getGreen() + c.getBlue()) / 3,
             (c, y) -> new Color(y, y, y, c.getAlpha())),
         new GradientSliderPanel("Red",
-            (c) -> c.getRed(),
+            c -> c.getRed(),
             (c, y) -> new Color(y, c.getGreen(), c.getBlue(), c.getAlpha())),
         new GradientSliderPanel("Green",
-            (c) -> c.getGreen(),
+            c -> c.getGreen(),
             (c, y) -> new Color(c.getRed(), y, c.getBlue(), c.getAlpha())),
         new GradientSliderPanel("Blue",
-            (c) -> c.getBlue(),
+            c -> c.getBlue(),
             (c, y) -> new Color(c.getRed(), c.getGreen(), y, c.getAlpha())),
         new GradientSliderPanel("Hue",
-            (c) -> {
+            c -> {
                 final int r = c.getRed();
                 final int g = c.getGreen();
                 final int b = c.getBlue();
                 float[] hsb = Color.RGBtoHSB(r, g, b, null);
-                return (int) (255 * hsb[0]);
+                return (int) (0xFF * hsb[0]);
             },
             (c, y) -> {
                 final int r = c.getRed();
@@ -54,12 +54,12 @@ public class ColorPickerWindow extends JFrame {
                 return new Color(rgba, true);
             }),
         new GradientSliderPanel("Sat.",
-            (c) -> {
+            c -> {
                 final int r = c.getRed();
                 final int g = c.getGreen();
                 final int b = c.getBlue();
                 float[] hsb = Color.RGBtoHSB(r, g, b, null);
-                return (int) (255 * hsb[1]);
+                return (int) (0xFF * hsb[1]);
             },
             (c, y) -> {
                 final int r = c.getRed();
@@ -73,12 +73,12 @@ public class ColorPickerWindow extends JFrame {
                 return new Color(rgba, true);
             }),
         new GradientSliderPanel("Br.",
-            (c) -> {
+            c -> {
                 final int r = c.getRed();
                 final int g = c.getGreen();
                 final int b = c.getBlue();
                 float[] hsb = Color.RGBtoHSB(r, g, b, null);
-                return (int) (255 * hsb[2]);
+                return (int) (0xFF * hsb[2]);
             },
             (c, y) -> {
                 final int r = c.getRed();
@@ -92,7 +92,7 @@ public class ColorPickerWindow extends JFrame {
                 return new Color(rgba, true);
             }),
         new GradientSliderPanel("Alpha",
-            (c) -> c.getAlpha(),
+            c -> c.getAlpha(),
             (c, y) -> new Color(c.getRed(), c.getGreen(), c.getBlue(), y)),
     };
 

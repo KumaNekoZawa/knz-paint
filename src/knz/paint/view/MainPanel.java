@@ -275,61 +275,61 @@ public class MainPanel extends JPanel {
         setImageAndGraphics(image, image.createGraphics());
     }
 
-    public void setImageAndGraphics(BufferedImage image, Graphics2D g2d) {
-        if (this.g2d != null) {
-            this.g2d.dispose();
+    public void setImageAndGraphics(BufferedImage imageNew, Graphics2D g2dNew) {
+        if (g2d != null) {
+            g2d.dispose();
         }
-        this.image = image;
-        this.g2d = g2d;
+        image = imageNew;
+        g2d = g2dNew;
         updatePanelSize();
         repaint();
     }
 
     public void newImage(int width, int height, Color fillColor) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = image.createGraphics();
+        BufferedImage imageNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2dNew = imageNew.createGraphics();
         if (fillColor != null) {
-            g2d.setColor(fillColor);
-            g2d.fillRect(0, 0, width, height);
+            g2dNew.setColor(fillColor);
+            g2dNew.fillRect(0, 0, width, height);
         }
-        setImageAndGraphics(image, g2d);
+        setImageAndGraphics(imageNew, g2dNew);
     }
 
     public BufferedImage getImageWithoutAlpha() {
         final int width = image.getWidth();
         final int height = image.getHeight();
         BufferedImage imageNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2d = imageNew.createGraphics();
-        g2d.setColor(colorSecondary);
-        g2d.fillRect(0, 0, width, height);
-        g2d.drawImage(image, 0, 0, null);
-        g2d.dispose();
+        Graphics2D g2dNew = imageNew.createGraphics();
+        g2dNew.setColor(colorSecondary);
+        g2dNew.fillRect(0, 0, width, height);
+        g2dNew.drawImage(image, 0, 0, null);
+        g2dNew.dispose();
         return imageNew;
     }
 
-    public void setImageWithOrWithoutAlpha(BufferedImage image) {
-        if (image.getType() == BufferedImage.TYPE_INT_ARGB) {
-            setImage(image);
-        } else {
-            BufferedImage imageNew = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = imageNew.createGraphics();
-            g2d.drawImage(image, 0, 0, null);
-            g2d.dispose();
+    public void setImageWithOrWithoutAlpha(BufferedImage imageNew) {
+        if (imageNew.getType() == BufferedImage.TYPE_INT_ARGB) {
             setImage(imageNew);
+        } else {
+            BufferedImage imageNewer = new BufferedImage(imageNew.getWidth(), imageNew.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2dNewer = imageNewer.createGraphics();
+            g2dNewer.drawImage(imageNew, 0, 0, null);
+            g2dNewer.dispose();
+            setImage(imageNewer);
         }
     }
 
-    public void setImageTemp(BufferedImage imageTemp, int imageTempX, int imageTempY) {
-        this.imageTemp = imageTemp;
-        this.imageTempX = imageTempX;
-        this.imageTempY = imageTempY;
+    public void setImageTemp(BufferedImage imageTempNew, int imageTempNewX, int imageTempNewY) {
+        imageTemp = imageTempNew;
+        imageTempX = imageTempNewX;
+        imageTempY = imageTempNewY;
         repaint();
     }
 
     public void setImageTempReset(boolean repaint) {
-        this.imageTemp = null;
-        this.imageTempX = 0;
-        this.imageTempY = 0;
+        imageTemp = null;
+        imageTempX = 0;
+        imageTempY = 0;
         if (repaint) {
             repaint();
         }
@@ -384,13 +384,13 @@ public class MainPanel extends JPanel {
         Transferable t = CLIPBOARD.getContents(null);
         if (t != null && t.isDataFlavorSupported(DataFlavor.imageFlavor)) {
             try {
-                Image image = (Image) t.getTransferData(DataFlavor.imageFlavor);
-                g2d.drawImage(image, 0, 0, null);
+                Image imageNew = (Image) t.getTransferData(DataFlavor.imageFlavor);
+                g2d.drawImage(imageNew, 0, 0, null);
                 selectedTool = Tool.SELECT_RECTANGLE;
                 AbstractTool toolObject = selectedTool.getToolObject();
                 if (toolObject instanceof SelectRectangleTool) {
                     SelectRectangleTool srt = (SelectRectangleTool) toolObject;
-                    srt.selectRectangle(0, 0, image.getWidth(null), image.getHeight(null));
+                    srt.selectRectangle(0, 0, imageNew.getWidth(null), imageNew.getHeight(null));
                 } else {
                     throw new AssertionError();
                 }
