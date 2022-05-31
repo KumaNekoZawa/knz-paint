@@ -3,7 +3,7 @@ package knz.paint.model.effects.rgba;
 import knz.paint.model.effects.BooleanParameter;
 import knz.paint.model.effects.IntegerParameter;
 
-public class BitShiftEffect extends RGBAEffect {
+public class BitShiftEffect extends AbstractRGBAEffect {
 
     private BooleanParameter paramRotate = new BooleanParameter("Rotate", false);
     private IntegerParameter paramAmount = new IntegerParameter("Amount", -8, 0, 8);

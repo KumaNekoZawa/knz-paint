@@ -4,7 +4,7 @@ import knz.paint.model.effects.DoubleParameter;
 import knz.paint.model.effects.Preset;
 import knz.paint.model.effects.PresetParameter;
 
-public class GrayscaleEffect extends RGBAEffect {
+public class GrayscaleEffect extends AbstractRGBAEffect {
 
     private PresetParameter paramPresets = new PresetParameter(
         new String[] { "Red", "Green", "Blue" },

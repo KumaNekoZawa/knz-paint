@@ -13,8 +13,11 @@ import javax.swing.border.EmptyBorder;
 
 public class AboutWindow extends JDialog {
 
+    private static final String TITLE = "About...";
+    private static final String COPYRIGHT = "©2022 熊猫沢";
+
     public AboutWindow(MainWindow parentElement) {
-        super(parentElement, "About...", true);
+        super(parentElement, TITLE, true);
 
         JPanel panel = new JPanel();
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -24,7 +27,7 @@ public class AboutWindow extends JDialog {
         labelTop.setFont(labelTop.getFont().deriveFont(32f));
         panel.add(labelTop);
         panel.add(Box.createVerticalStrut(10));
-        JLabel labelBottom = new JLabel("©2022 熊猫沢");
+        JLabel labelBottom = new JLabel(COPYRIGHT);
         labelBottom.setAlignmentX(Component.CENTER_ALIGNMENT);
         labelBottom.setFont(labelTop.getFont().deriveFont(24f));
         panel.add(labelBottom);

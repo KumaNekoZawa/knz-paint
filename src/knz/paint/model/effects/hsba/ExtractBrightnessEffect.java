@@ -1,6 +1,6 @@
 package knz.paint.model.effects.hsba;
 
-public class ExtractBrightnessEffect extends HSBAEffect {
+public class ExtractBrightnessEffect extends AbstractHSBAEffect {
 
     public ExtractBrightnessEffect() {
         super("Extract brightness");

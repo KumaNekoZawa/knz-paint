@@ -2,7 +2,7 @@ package knz.paint.model.effects.positional;
 
 import knz.paint.model.effects.BooleanParameter;
 
-public class PolarCoordinatesEffect extends PositionalEffect {
+public class PolarCoordinatesEffect extends AbstractPositionalEffect {
 
     private BooleanParameter paramSwap = new BooleanParameter("Swap x/y", false);
 

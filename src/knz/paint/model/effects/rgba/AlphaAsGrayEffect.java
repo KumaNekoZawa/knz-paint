@@ -1,6 +1,6 @@
 package knz.paint.model.effects.rgba;
 
-public class AlphaAsGrayEffect extends RGBAEffect {
+public class AlphaAsGrayEffect extends AbstractRGBAEffect {
 
     public AlphaAsGrayEffect() {
         super("Alpha as gray", false, true);

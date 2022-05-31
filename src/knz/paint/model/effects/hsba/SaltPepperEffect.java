@@ -3,11 +3,11 @@ package knz.paint.model.effects.hsba;
 import knz.paint.model.effects.BooleanParameter;
 import knz.paint.model.effects.DoubleParameter;
 
-public class SaltPepperEffect extends HSBAEffect {
+public class SaltPepperEffect extends AbstractHSBAEffect {
 
-    private BooleanParameter paramAlpha = new BooleanParameter("Affect alpha", false);
-    private DoubleParameter paramAmount = new DoubleParameter("Amount", 0, 0, 1);
-    private DoubleParameter paramRatio = new DoubleParameter("Ratio", 0, 0.5, 1);
+    private BooleanParameter paramAlpha  = new BooleanParameter("Affect alpha", false);
+    private DoubleParameter  paramAmount = new DoubleParameter("Amount", 0, 0, 1);
+    private DoubleParameter  paramRatio  = new DoubleParameter("Ratio", 0, 0.5, 1);
 
     public SaltPepperEffect() {
         super("Salt & Pepper");
@@ -18,9 +18,9 @@ public class SaltPepperEffect extends HSBAEffect {
 
     @Override
     public void filter(int x, int y, float in_h, float in_s, float in_b, int in_a) {
-        final boolean alpha = paramAlpha.getValue();
-        final double amount = paramAmount.getValue();
-        final double ratio = paramRatio.getValue();
+        final boolean alpha  = paramAlpha.getValue();
+        final double  amount = paramAmount.getValue();
+        final double  ratio  = paramRatio.getValue();
         if (Math.random() < amount) {
             out_h = 0;
             out_s = 0;

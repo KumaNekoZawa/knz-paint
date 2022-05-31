@@ -232,7 +232,7 @@ public class MainPanel extends JPanel {
             g2d.drawImage(image,
                           0,
                           0,
-                          zoomFactor * imageWidth / zoomDivisor,
+                          zoomFactor * imageWidth  / zoomDivisor,
                           zoomFactor * imageHeight / zoomDivisor,
                           null);
             AbstractTool toolObject = selectedTool.getToolObject();
@@ -242,7 +242,7 @@ public class MainPanel extends JPanel {
                 g2d.drawImage(canvas,
                               0,
                               0,
-                              zoomFactor * imageWidth / zoomDivisor,
+                              zoomFactor * imageWidth  / zoomDivisor,
                               zoomFactor * imageHeight / zoomDivisor,
                               null);
             }
@@ -250,9 +250,9 @@ public class MainPanel extends JPanel {
             final int imageTempWidth = imageTemp.getWidth();
             final int imageTempHeight = imageTemp.getHeight();
             g2d.drawImage(imageTemp,
-                          zoomFactor * imageTempX / zoomDivisor,
-                          zoomFactor * imageTempY / zoomDivisor,
-                          zoomFactor * imageTempWidth / zoomDivisor,
+                          zoomFactor * imageTempX      / zoomDivisor,
+                          zoomFactor * imageTempY      / zoomDivisor,
+                          zoomFactor * imageTempWidth  / zoomDivisor,
                           zoomFactor * imageTempHeight / zoomDivisor,
                           null);
         }

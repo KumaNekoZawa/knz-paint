@@ -95,7 +95,6 @@ public class GradientSliderPanel extends JPanel {
         return gradientSliderSubPanel.getSelectedValue();
     }
 
-
     public Function<Color, Integer> getValueFunction() {
         return valueFunction;
     }

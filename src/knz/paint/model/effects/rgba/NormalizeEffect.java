@@ -2,7 +2,7 @@ package knz.paint.model.effects.rgba;
 
 import knz.paint.model.effects.DoubleParameter;
 
-public class NormalizeEffect extends RGBAEffect {
+public class NormalizeEffect extends AbstractRGBAEffect {
 
     private DoubleParameter paramMin = new DoubleParameter("Min", 0, 0, 1);
     private DoubleParameter paramMax = new DoubleParameter("Max", 0, 1, 1);

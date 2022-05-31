@@ -9,8 +9,10 @@ import knz.paint.view.MainWindow;
 public class Main {
 
     public static void main(String[] args) {
-        for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
-            System.err.println(lafi.getName() + ": " + lafi.getClassName());
+        if (Config.getConfig().printLookAndFeelInfo()) {
+            for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
+                System.err.println(lafi.getName() + ": " + lafi.getClassName());
+            }
         }
         final String lookAndFeel = Config.getConfig().getLookAndFeel();
         if (lookAndFeel != null && !lookAndFeel.isEmpty()) {

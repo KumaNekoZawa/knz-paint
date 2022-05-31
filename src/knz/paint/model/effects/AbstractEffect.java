@@ -4,12 +4,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Effect {
+public abstract class AbstractEffect {
 
     private String name;
     protected List<AbstractParameter> parameters = new ArrayList<>();
 
-    public Effect(String name) {
+    public AbstractEffect(String name) {
         super();
         this.name = name;
     }

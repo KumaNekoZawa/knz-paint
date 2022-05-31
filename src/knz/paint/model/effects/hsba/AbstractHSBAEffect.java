@@ -3,14 +3,14 @@ package knz.paint.model.effects.hsba;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import knz.paint.model.effects.Effect;
+import knz.paint.model.effects.AbstractEffect;
 
-public abstract class HSBAEffect extends Effect {
+public abstract class AbstractHSBAEffect extends AbstractEffect {
 
     protected float out_h, out_s, out_b;
     protected int out_a;
 
-    public HSBAEffect(String name) {
+    public AbstractHSBAEffect(String name) {
         super(name);
     }
 

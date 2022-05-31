@@ -2,7 +2,7 @@ package knz.paint.model.effects.rgba;
 
 import knz.paint.model.effects.DoubleParameter;
 
-public class AdjustContrastEffect extends RGBAEffect {
+public class AdjustContrastEffect extends AbstractRGBAEffect {
 
     private DoubleParameter paramFactor = new DoubleParameter("Factor", 0, 1, 2);
 

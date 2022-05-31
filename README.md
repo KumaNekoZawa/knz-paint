@@ -13,4 +13,4 @@ If you want to build this without using checkstyle, just change the `depends` at
 
 This program requires Java JRE 11 to be run.
 Run via command line: `java -jar KNZ-Paint.jar`.
-It will print all available Look & Feels to the command line. Copy & paste the one you want to use into the `config.properties` file under `look-and-feel` (you might have to uncomment the line).
+You can set `print-look-and-feel-info=true` in the `config.properties` file. This will print all available Look & Feels to the command line. Copy & paste the one you want to use into the `config.properties` file under `look-and-feel` (you might have to uncomment the line).

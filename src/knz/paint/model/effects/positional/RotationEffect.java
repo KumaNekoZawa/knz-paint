@@ -2,7 +2,7 @@ package knz.paint.model.effects.positional;
 
 import knz.paint.model.effects.DoubleParameter;
 
-public class RotationEffect extends PositionalEffect {
+public class RotationEffect extends AbstractPositionalEffect {
 
     private DoubleParameter paramAngle = new DoubleParameter("Angle", -180, 0, 180);
 

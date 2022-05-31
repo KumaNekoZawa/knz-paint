@@ -3,14 +3,14 @@ package knz.paint.model.effects.rgba;
 import knz.paint.model.effects.BooleanParameter;
 import knz.paint.model.effects.DoubleParameter;
 
-public class AdjustRGBAEffect extends RGBAEffect {
+public class AdjustRGBAEffect extends AbstractRGBAEffect {
 
-    private BooleanParameter paramInvertRGB = new BooleanParameter("Invert RGB controls", true);
-    private DoubleParameter paramRed   = new DoubleParameter("Red",   0, 1, 2);
-    private DoubleParameter paramGreen = new DoubleParameter("Green", 0, 1, 2);
-    private DoubleParameter paramBlue  = new DoubleParameter("Blue",  0, 1, 2);
+    private BooleanParameter paramInvertRGB   = new BooleanParameter("Invert RGB controls", true);
+    private DoubleParameter  paramRed         = new DoubleParameter("Red",   0, 1, 2);
+    private DoubleParameter  paramGreen       = new DoubleParameter("Green", 0, 1, 2);
+    private DoubleParameter  paramBlue        = new DoubleParameter("Blue",  0, 1, 2);
     private BooleanParameter paramInvertAlpha = new BooleanParameter("Invert Alpha control", false);
-    private DoubleParameter paramAlpha = new DoubleParameter("Alpha", 0, 1, 2);
+    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha", 0, 1, 2);
 
     public AdjustRGBAEffect() {
         super("Adjust RGBA", false, true);
@@ -24,12 +24,12 @@ public class AdjustRGBAEffect extends RGBAEffect {
 
     @Override
     public void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
-        final boolean invertRGB = paramInvertRGB.getValue();
-        final double red   = paramRed.getValue();
-        final double green = paramGreen.getValue();
-        final double blue  = paramBlue.getValue();
+        final boolean invertRGB   = paramInvertRGB.getValue();
+        final double  red         = paramRed.getValue();
+        final double  green       = paramGreen.getValue();
+        final double  blue        = paramBlue.getValue();
         final boolean invertAlpha = paramInvertAlpha.getValue();
-        final double alpha = paramAlpha.getValue();
+        final double  alpha       = paramAlpha.getValue();
         if (paramRed.isSet()) {
             out_r = (int) (0xFF * (float) Math.pow(in_r / (double) 0xFF, invertRGB   ? 1 / red   : red));
         }

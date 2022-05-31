@@ -1,6 +1,6 @@
 package knz.paint.model.effects.rgba;
 
-public class ReduceContrastEffect extends RGBAEffect {
+public class ReduceContrastEffect extends AbstractRGBAEffect {
 
     // FIXME make this a preset of SepiaEffect
 

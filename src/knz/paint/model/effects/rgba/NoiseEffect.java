@@ -2,7 +2,7 @@ package knz.paint.model.effects.rgba;
 
 import knz.paint.model.effects.DoubleParameter;
 
-public class NoiseEffect extends RGBAEffect {
+public class NoiseEffect extends AbstractRGBAEffect {
 
     private DoubleParameter paramAmount = new DoubleParameter("Amount", 0, 0, 1);
 

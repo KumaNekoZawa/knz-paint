@@ -2,10 +2,10 @@ package knz.paint.model.effects.rgba;
 
 import java.awt.image.BufferedImage;
 
+import knz.paint.model.effects.AbstractEffect;
 import knz.paint.model.effects.BooleanParameter;
-import knz.paint.model.effects.Effect;
 
-public abstract class RGBAEffect extends Effect {
+public abstract class AbstractRGBAEffect extends AbstractEffect {
 
     private boolean showDefaultParameters;
     private boolean affectsAlpha;
@@ -16,7 +16,7 @@ public abstract class RGBAEffect extends Effect {
 
     protected int out_r, out_g, out_b, out_a;
 
-    public RGBAEffect(String name, boolean showDefaultParameters, boolean affectsAlpha) {
+    public AbstractRGBAEffect(String name, boolean showDefaultParameters, boolean affectsAlpha) {
         super(name);
         this.showDefaultParameters = showDefaultParameters;
         this.affectsAlpha = affectsAlpha;

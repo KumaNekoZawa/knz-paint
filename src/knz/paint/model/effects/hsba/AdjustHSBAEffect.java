@@ -3,14 +3,14 @@ package knz.paint.model.effects.hsba;
 import knz.paint.model.effects.BooleanParameter;
 import knz.paint.model.effects.DoubleParameter;
 
-public class AdjustHSBAEffect extends HSBAEffect {
+public class AdjustHSBAEffect extends AbstractHSBAEffect {
 
-    private DoubleParameter paramHuePhase   = new DoubleParameter("Hue phase", -180, 0, 180);
-    private BooleanParameter paramInvertSB = new BooleanParameter("Invert Sat./Br. controls", true);
-    private DoubleParameter paramSaturation = new DoubleParameter("Saturation", 0, 1, 2);
-    private DoubleParameter paramBrightness = new DoubleParameter("Brightness", 0, 1, 2);
+    private DoubleParameter  paramHuePhase    = new DoubleParameter("Hue phase", -180, 0, 180);
+    private BooleanParameter paramInvertSB    = new BooleanParameter("Invert Sat./Br. controls", true);
+    private DoubleParameter  paramSaturation  = new DoubleParameter("Saturation", 0, 1, 2);
+    private DoubleParameter  paramBrightness  = new DoubleParameter("Brightness", 0, 1, 2);
     private BooleanParameter paramInvertAlpha = new BooleanParameter("Invert Alpha control", false);
-    private DoubleParameter paramAlpha      = new DoubleParameter("Alpha", 0, 1, 2);
+    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha", 0, 1, 2);
 
     public AdjustHSBAEffect() {
         super("Adjust HSBA");
@@ -24,12 +24,12 @@ public class AdjustHSBAEffect extends HSBAEffect {
 
     @Override
     public void filter(int x, int y, float in_h, float in_s, float in_b, int in_a) {
-        final double huePhase = paramHuePhase.getValue() / 360;
-        final boolean invertSB = paramInvertSB.getValue();
-        final double saturation = paramSaturation.getValue();
-        final double brightness = paramBrightness.getValue();
+        final double  huePhase    = paramHuePhase.getValue() / 360;
+        final boolean invertSB    = paramInvertSB.getValue();
+        final double  saturation  = paramSaturation.getValue();
+        final double  brightness  = paramBrightness.getValue();
         final boolean invertAlpha = paramInvertAlpha.getValue();
-        final double alpha = paramAlpha.getValue();
+        final double  alpha       = paramAlpha.getValue();
         if (paramHuePhase.isSet()) {
             out_h = in_h + (float) huePhase;
         }

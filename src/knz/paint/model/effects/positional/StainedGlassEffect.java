@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import knz.paint.model.effects.IntegerParameter;
 
-public class StainedGlassEffect extends PositionalEffect {
+public class StainedGlassEffect extends AbstractPositionalEffect {
 
     private IntegerParameter paramAmount = new IntegerParameter("Amount", 1, 100, 1000);
 

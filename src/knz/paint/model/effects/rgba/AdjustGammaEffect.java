@@ -3,7 +3,7 @@ package knz.paint.model.effects.rgba;
 import knz.paint.model.effects.DoubleParameter;
 
 // XXX this is a special case of the AdjustRGBAEffect where RGBA are linked and the controls not inverted
-public class AdjustGammaEffect extends RGBAEffect {
+public class AdjustGammaEffect extends AbstractRGBAEffect {
 
     private DoubleParameter paramExponent = new DoubleParameter("Exponent", 0, 1, 2);
 

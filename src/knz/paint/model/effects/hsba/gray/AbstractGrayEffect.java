@@ -1,10 +1,10 @@
 package knz.paint.model.effects.hsba.gray;
 
-import knz.paint.model.effects.hsba.HSBAEffect;
+import knz.paint.model.effects.hsba.AbstractHSBAEffect;
 
-public abstract class GrayEffect extends HSBAEffect {
+public abstract class AbstractGrayEffect extends AbstractHSBAEffect {
 
-    public GrayEffect(String name) {
+    public AbstractGrayEffect(String name) {
         super(name);
     }
 

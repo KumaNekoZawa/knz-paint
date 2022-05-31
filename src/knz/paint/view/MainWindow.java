@@ -36,7 +36,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import knz.paint.model.Config;
-import knz.paint.model.effects.Effect;
+import knz.paint.model.effects.AbstractEffect;
 import knz.paint.model.effects.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.hsba.ExtractSaturationEffect;
@@ -67,6 +67,8 @@ import knz.paint.view.plainpanels.PalettePanel;
 
 public class MainWindow extends JFrame {
 
+    private static final String TITLE = "熊猫沢ペイント";
+
     private static final FileFilter FILTER_BMP = createFileFilter("Microsoft Windows Bitmap", "bmp", "dib");
     private static final FileFilter FILTER_GIF = createFileFilter("Graphics Interchange Format", "gif");
     private static final FileFilter FILTER_JPG = createFileFilter("Joint Photographic Experts Group", "jpg", "jpeg");
@@ -81,7 +83,7 @@ public class MainWindow extends JFrame {
     private static final int[] ROUNDED_RECTANGLE_RADII = { 5, 10, 15, 20, 25, 50, 75, 100 };
     private static final int[] AIRBRUSH_SIZES = { 5, 10, 15, 20, 25 };
 
-    private static final Effect[] EFFECTS = {
+    private static final AbstractEffect[] EFFECTS = {
         new ExplosionEffect(),
         new FlipEffect(),
         new MosaicEffect(),
@@ -171,7 +173,7 @@ public class MainWindow extends JFrame {
     private boolean changedTillLastSave = false;
 
     public MainWindow() {
-        super("熊猫沢ペイント");
+        super(TITLE);
         mainPanel.setParentElement(this);
 
         addWindowListener(new WindowAdapter() {
@@ -484,7 +486,7 @@ public class MainWindow extends JFrame {
         menuOptions.add(menuOptionsAirbrush);
         menuBar.add(menuOptions);
 
-        for (Effect effect : EFFECTS) {
+        for (AbstractEffect effect : EFFECTS) {
             if (effect == null) {
                 menuEffects.addSeparator();
                 continue;
@@ -554,7 +556,8 @@ public class MainWindow extends JFrame {
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setIconImage(new ImageIcon("icons" + File.separator + "icon.png").getImage());
-        setSize(800, 600);
+        setSize(Config.getConfig().getMainWindowWidth(),
+                Config.getConfig().getMainWindowHeight());
         setLocationRelativeTo(null);
         mainPanel.newImage(Config.getConfig().getNewImageWidth(),
                            Config.getConfig().getNewImageHeight(),

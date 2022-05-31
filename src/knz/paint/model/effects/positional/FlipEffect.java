@@ -2,7 +2,7 @@ package knz.paint.model.effects.positional;
 
 import knz.paint.model.effects.BooleanParameter;
 
-public class FlipEffect extends PositionalEffect {
+public class FlipEffect extends AbstractPositionalEffect {
 
     private BooleanParameter paramFlipX = new BooleanParameter("Flip horizontally", false);
     private BooleanParameter paramFlipY = new BooleanParameter("Flip vertically",   false);

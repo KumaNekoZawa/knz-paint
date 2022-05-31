@@ -1,6 +1,6 @@
 package knz.paint.model.effects.rgba;
 
-public class ExtractRGBAEffect extends RGBAEffect {
+public class ExtractRGBAEffect extends AbstractRGBAEffect {
 
     public ExtractRGBAEffect() {
         super("Extract RGBA", true, true);

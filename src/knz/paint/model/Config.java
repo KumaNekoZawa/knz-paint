@@ -16,11 +16,15 @@ public class Config {
 
     private Properties properties = new Properties();
 
+    private boolean printLookAndFeelInfo = false;
     private String lookAndFeel = null;
     private Color backgroundColor = Color.GRAY;
 
     private int colorBarSize = 16 * 3;
     private List<File> colorPaletteFiles = new ArrayList<>();
+
+    private int mainWindowWidth = 800;
+    private int mainWindowHeight = 600;
 
     private int newImageWidth = 400;
     private int newImageHeight = 300;
@@ -34,6 +38,7 @@ public class Config {
         super();
         try (FileInputStream fis = new FileInputStream("config.properties")) {
             properties.load(fis);
+            printLookAndFeelInfo = Boolean.parseBoolean(properties.getProperty("print-look-and-feel-info"));
             lookAndFeel = properties.getProperty("look-and-feel");
             backgroundColor = parseColor(properties.getProperty("background-color"));
             colorBarSize = Integer.parseInt(properties.getProperty("color-bar-size"));
@@ -43,6 +48,8 @@ public class Config {
                     colorPaletteFiles.add(new File(filename));
                 }
             }
+            mainWindowWidth = Integer.parseInt(properties.getProperty("main-window.width"));
+            mainWindowHeight = Integer.parseInt(properties.getProperty("main-window.height"));
             newImageWidth = Integer.parseInt(properties.getProperty("new-image.width"));
             newImageHeight = Integer.parseInt(properties.getProperty("new-image.height"));
             newImageColor = parseColor(properties.getProperty("new-image.color"));
@@ -78,6 +85,10 @@ public class Config {
         return config;
     }
 
+    public boolean printLookAndFeelInfo() {
+        return printLookAndFeelInfo;
+    }
+
     public String getLookAndFeel() {
         return lookAndFeel;
     }
@@ -92,6 +103,14 @@ public class Config {
 
     public List<File> getColorPaletteFiles() {
         return colorPaletteFiles;
+    }
+
+    public int getMainWindowWidth() {
+        return mainWindowWidth;
+    }
+
+    public int getMainWindowHeight() {
+        return mainWindowHeight;
     }
 
     public int getNewImageWidth() {

@@ -2,7 +2,7 @@ package knz.paint.model.effects.positional;
 
 import knz.paint.model.effects.IntegerParameter;
 
-public class ExplosionEffect extends PositionalEffect {
+public class ExplosionEffect extends AbstractPositionalEffect {
 
     private IntegerParameter paramRadius = new IntegerParameter("Radius", 1, 1, 100);
 

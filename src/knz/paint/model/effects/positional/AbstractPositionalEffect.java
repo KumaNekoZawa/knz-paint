@@ -2,13 +2,13 @@ package knz.paint.model.effects.positional;
 
 import java.awt.image.BufferedImage;
 
-import knz.paint.model.effects.Effect;
+import knz.paint.model.effects.AbstractEffect;
 
-public abstract class PositionalEffect extends Effect {
+public abstract class AbstractPositionalEffect extends AbstractEffect {
 
     protected int fromX, fromY;
 
-    public PositionalEffect(String name) {
+    public AbstractPositionalEffect(String name) {
         super(name);
     }
 

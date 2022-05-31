@@ -48,7 +48,7 @@ public class GradientSliderSubPanel extends JPanel {
         });
         setBackground(Config.getConfig().getBackgroundColor());
 
-        Dimension d = new Dimension(50, 256);
+        Dimension d = new Dimension(50, 0x100);
         setMaximumSize(d);
         setMinimumSize(d);
         setPreferredSize(d);
@@ -56,11 +56,8 @@ public class GradientSliderSubPanel extends JPanel {
     }
 
     private void update(MouseEvent e) {
-        final int y = e.getY();
-        if (!(0 <= y && y < 256)) {
-            return;
-        }
-        selectedValue = 255 - e.getY();
+        final int y = Math.max(0x00, Math.min(0xFF, e.getY()));
+        selectedValue = 0xFF - y;
         repaint(); // only needed if used stand-alone
         for (ActionListener listener : listeners) {
             listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, GradientSliderSubPanel.class.getSimpleName()));
@@ -72,12 +69,12 @@ public class GradientSliderSubPanel extends JPanel {
         super.paint(g);
         final int width = getWidth();
         Graphics2D g2d = (Graphics2D) g;
-        for (int y = 0; y < 256; y++) {
-            final int value = 255 - y;
+        for (int y = 0x00; y <= 0xFF; y++) {
+            final int value = 0xFF - y;
             g2d.setColor(baseColor == null || value == selectedValue ? Color.BLACK : colorFunction.apply(baseColor, value));
             g2d.drawLine(0, y, width, y);
         }
-        final int y = 255 - selectedValue;
+        final int y = 0xFF - selectedValue;
 
         /* left-hand arrow */
         polygon.addPoint(0, y - 5);

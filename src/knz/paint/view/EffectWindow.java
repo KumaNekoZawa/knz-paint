@@ -23,10 +23,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import knz.paint.model.effects.AbstractEffect;
 import knz.paint.model.effects.AbstractParameter;
 import knz.paint.model.effects.BooleanParameter;
 import knz.paint.model.effects.DoubleParameter;
-import knz.paint.model.effects.Effect;
 import knz.paint.model.effects.IntegerParameter;
 import knz.paint.model.effects.PresetParameter;
 
@@ -35,7 +35,7 @@ public class EffectWindow extends JDialog {
     private Map<String, AbstractParameter> parameters = new HashMap<>();
     private Map<String, JComponent> parameterElements = new HashMap<>();
 
-    public EffectWindow(MainWindow parent, JScrollPane scrollPane, MainPanel mainPanel, Effect effect, String title) {
+    public EffectWindow(MainWindow parent, JScrollPane scrollPane, MainPanel mainPanel, AbstractEffect effect, String title) {
         super(parent, title, true);
 
         for (AbstractParameter parameter : effect.getParameters()) {
@@ -45,10 +45,12 @@ public class EffectWindow extends JDialog {
 
         final BufferedImage image = mainPanel.getImage();
         final Rectangle rect = scrollPane.getViewport().getViewRect();
-        rect.x /= mainPanel.getZoomFactor();
-        rect.y /= mainPanel.getZoomFactor();
-        rect.width /= mainPanel.getZoomFactor();
-        rect.height /= mainPanel.getZoomFactor();
+        final int zoomDivisor = mainPanel.getZoomDivisor();
+        final int zoomFactor = mainPanel.getZoomFactor();
+        rect.x      = zoomDivisor * rect.x      / zoomFactor;
+        rect.y      = zoomDivisor * rect.y      / zoomFactor;
+        rect.width  = zoomDivisor * rect.width  / zoomFactor;
+        rect.height = zoomDivisor * rect.height / zoomFactor;
         final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth() - 1));
         final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
         final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
