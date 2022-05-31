@@ -12,9 +12,9 @@ import knz.paint.model.Config;
 
 public class AirbrushTool extends AbstractTool {
 
-    private final boolean USE_TIMER = Config.getConfig().getToolsAirbrushUseTimer();
-    private final int TICK_DELAY = Config.getConfig().getToolsAirbrushTickDelay();
-    private final int PIXELS_PER_TICK = Config.getConfig().getToolsAirbrushPixelsPerTick();
+    private static final boolean USE_TIMER = Config.getConfig().getToolsAirbrushUseTimer();
+    private static final int TICK_DELAY = Config.getConfig().getToolsAirbrushTickDelay();
+    private static final int PIXELS_PER_TICK = Config.getConfig().getToolsAirbrushPixelsPerTick();
 
     private Timer timer = new Timer(TICK_DELAY, new ActionListener() {
         @Override

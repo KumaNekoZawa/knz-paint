@@ -16,7 +16,7 @@ public class ColorPickerWindow extends JFrame {
     public enum ColorPickerMode {
         PRIMARY,
         SECONDARY,
-    };
+    }
 
     private MainWindow parentElement;
 

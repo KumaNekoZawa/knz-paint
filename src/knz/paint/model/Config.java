@@ -12,7 +12,7 @@ public class Config {
 
     private static final int MAX_NUMBER_OF_COLOR_PALETTES = 25;
 
-    private static final Config config = new Config();
+    private static final Config CONFIG = new Config();
 
     private Properties properties = new Properties();
 
@@ -82,7 +82,7 @@ public class Config {
     }
 
     public static Config getConfig() {
-        return config;
+        return CONFIG;
     }
 
     public boolean printLookAndFeelInfo() {
