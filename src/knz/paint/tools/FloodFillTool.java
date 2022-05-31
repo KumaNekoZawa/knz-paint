@@ -8,13 +8,23 @@ import java.util.Stack;
 public class FloodFillTool extends AbstractTool {
 
     private static class Pair {
-        public int x, y;
+
+        private int x, y;
 
         Pair(int x, int y) {
             super();
             this.x = x;
             this.y = y;
         }
+
+        private int getX() {
+            return x;
+        }
+
+        private int getY() {
+            return y;
+        }
+
     }
 
     private BufferedImage image;
@@ -52,8 +62,8 @@ public class FloodFillTool extends AbstractTool {
         s.push(new Pair(x, y));
         while (!s.isEmpty()) {
             Pair p = s.pop();
-            x = p.x;
-            y = p.y;
+            x = p.getX();
+            y = p.getY();
             int lx = x;
             while (inside(lx - 1, y)) {
                 image.setRGB(lx - 1, y, rgbTo);

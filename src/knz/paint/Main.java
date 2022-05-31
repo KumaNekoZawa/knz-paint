@@ -8,6 +8,10 @@ import knz.paint.view.MainWindow;
 
 public class Main {
 
+    private Main() {
+        super();
+    }
+
     public static void main(String[] args) {
         if (Config.getConfig().printLookAndFeelInfo()) {
             for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
