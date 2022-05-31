@@ -22,7 +22,7 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 final int in = image.getRGB(x, y);
-                final float in_hsb[] = Color.RGBtoHSB(
+                final float[] in_hsb = Color.RGBtoHSB(
                     (in >> 16) & 0xFF,
                     (in >> 8) & 0xFF,
                     in & 0xFF, null);

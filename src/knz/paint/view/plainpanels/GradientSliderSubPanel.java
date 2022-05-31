@@ -58,7 +58,8 @@ public class GradientSliderSubPanel extends JPanel {
     private void update(MouseEvent e) {
         final int y = Math.max(0x00, Math.min(0xFF, e.getY()));
         selectedValue = 0xFF - y;
-        repaint(); // only needed if used stand-alone
+        /* repaint() only needed if panel used stand-alone: */
+        repaint();
         for (ActionListener listener : listeners) {
             listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, GradientSliderSubPanel.class.getSimpleName()));
         }

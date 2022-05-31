@@ -6,7 +6,7 @@ This project started as a MS Paint clone but soon got out of hand. This program 
 
 Requires `ant 1.10.7` and Java JDK 11 to be built. Using `checkstyle 10.2` is also recommended.
 Build via command line: `ant package`. This will generate the file `KNZ-Paint.jar`.
-To run checkstyle via command line: `ant checkstyle`. You will need `checkstyle-10.2-all.jar` and `knz-style.xml` in the parent directory of this directory.
+To run Checkstyle via command line: `ant checkstyle`. You will need `checkstyle-10.2-all.jar` and `knz-style.xml` in the parent directory of this directory.
 
 # How to run
 

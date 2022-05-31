@@ -24,7 +24,8 @@ public class StainedGlassEffect extends AbstractPositionalEffect {
             pixelsX[i] = (int) (Math.random() * width);
             pixelsY[i] = (int) (Math.random() * height);
         }
-        Arrays.sort(pixelsX); // only x, do not sort y!
+        Arrays.sort(pixelsX);
+        /* only sort x, do not sort y! */
     }
 
     @Override
