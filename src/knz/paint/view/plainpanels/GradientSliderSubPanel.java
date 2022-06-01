@@ -21,6 +21,11 @@ public class GradientSliderSubPanel extends JPanel {
 
     public static final int ACTION_LISTENER_ID = 2003;
 
+    private static final int MIN = 0x00;
+    private static final int MAX = 0xFF;
+    private static final int WIDTH = 50;
+    private static final int HEIGHT = MAX - MIN + 1;
+
     private List<ActionListener> listeners = new ArrayList<>();
 
     private BiFunction<Color, Integer, Color> colorFunction;
@@ -48,7 +53,7 @@ public class GradientSliderSubPanel extends JPanel {
         });
         setBackground(Config.getConfig().getBackgroundColor());
 
-        Dimension d = new Dimension(50, 0x100);
+        Dimension d = new Dimension(WIDTH, HEIGHT);
         setMaximumSize(d);
         setMinimumSize(d);
         setPreferredSize(d);
@@ -56,8 +61,8 @@ public class GradientSliderSubPanel extends JPanel {
     }
 
     private void update(MouseEvent e) {
-        final int y = Math.max(0x00, Math.min(0xFF, e.getY()));
-        selectedValue = 0xFF - y;
+        final int y = Math.max(MIN, Math.min(MAX, e.getY()));
+        selectedValue = MAX - y;
         /* repaint() only needed if panel used stand-alone: */
         repaint();
         for (ActionListener listener : listeners) {
@@ -68,14 +73,13 @@ public class GradientSliderSubPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        final int width = getWidth();
         Graphics2D g2d = (Graphics2D) g;
-        for (int y = 0x00; y <= 0xFF; y++) {
-            final int value = 0xFF - y;
+        for (int y = MIN; y <= MAX; y++) {
+            final int value = MAX - y;
             g2d.setColor(baseColor == null || value == selectedValue ? Color.BLACK : colorFunction.apply(baseColor, value));
-            g2d.drawLine(0, y, width, y);
+            g2d.drawLine(0, y, WIDTH, y);
         }
-        final int y = 0xFF - selectedValue;
+        final int y = MAX - selectedValue;
 
         /* left-hand arrow */
         polygon.addPoint(0, y - 5);
@@ -88,9 +92,9 @@ public class GradientSliderSubPanel extends JPanel {
         polygon.reset();
 
         /* right-hand arrow */
-        polygon.addPoint(width - 1, y - 5);
-        polygon.addPoint(width - 6, y);
-        polygon.addPoint(width - 1, y + 5);
+        polygon.addPoint(WIDTH - 1, y - 5);
+        polygon.addPoint(WIDTH - 6, y);
+        polygon.addPoint(WIDTH - 1, y + 5);
         g2d.setColor(Color.WHITE);
         g2d.fillPolygon(polygon);
         g2d.setColor(Color.BLACK);
