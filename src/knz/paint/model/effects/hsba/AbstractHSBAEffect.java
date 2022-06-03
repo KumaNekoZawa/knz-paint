@@ -16,16 +16,17 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
 
     @Override
     public BufferedImage applyHelper(BufferedImage image) {
-        final int width = image.getWidth();
+        final int width  = image.getWidth();
         final int height = image.getHeight();
-        BufferedImage result = new BufferedImage(width, height, image.getType());
+        final BufferedImage result = new BufferedImage(width, height, image.getType());
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 final int in = image.getRGB(x, y);
                 final float[] in_hsb = Color.RGBtoHSB(
                     (in >> 16) & 0xFF,
-                    (in >> 8) & 0xFF,
-                    in & 0xFF, null);
+                    (in >> 8)  & 0xFF,
+                     in        & 0xFF,
+                null);
                 final float in_h = in_hsb[0];
                 final float in_s = in_hsb[1];
                 final float in_b = in_hsb[2];

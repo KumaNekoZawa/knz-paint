@@ -16,23 +16,23 @@ public class SelectPolygonTool extends AbstractSelectionTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        super.mousePressed(g2d, e);
+    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+        super.mousePressed(graphics2d, e);
         if (polygon.npoints == 0) {
             polygon.addPoint(x, y);
         }
     }
 
     @Override
-    public void mouseReleased(Graphics2D g2d, MouseEvent e) {
-        super.mouseReleased(g2d, e);
+    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseReleased(graphics2d, e);
         polygon.addPoint(x, y);
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
-        super.paint(g2d);
-        drawSelection(g2d, true);
+    public void paint(Graphics2D graphics2d) {
+        super.paint(graphics2d);
+        drawSelection(graphics2d, true);
     }
 
 }

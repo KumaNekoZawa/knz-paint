@@ -17,35 +17,35 @@ public class PolygonTool extends AbstractPolygonTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        super.mousePressed(g2d, e);
+    public boolean doesChangeCanvas() {
+        return polygon.npoints > 0;
+    }
+
+    @Override
+    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+        super.mousePressed(graphics2d, e);
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (polygon.npoints == 0) {
                 polygon.addPoint(x, y);
             }
         } else if (SwingUtilities.isRightMouseButton(e)) {
-            drawPolygon(g2d, false);
+            drawPolygon(graphics2d, false);
             polygon.reset();
         }
     }
 
     @Override
-    public void mouseReleased(Graphics2D g2d, MouseEvent e) {
-        super.mouseReleased(g2d, e);
+    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseReleased(graphics2d, e);
         if (SwingUtilities.isLeftMouseButton(e)) {
             polygon.addPoint(x, y);
         }
     }
 
     @Override
-    public boolean needsRepaint() {
-        return polygon.npoints > 0;
-    }
-
-    @Override
-    public void paint(Graphics2D g2d) {
-        super.paint(g2d);
-        drawPolygon(g2d, true);
+    public void paint(Graphics2D graphics2d) {
+        super.paint(graphics2d);
+        drawPolygon(graphics2d, true);
     }
 
 }

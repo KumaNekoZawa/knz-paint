@@ -7,18 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 
-import knz.paint.view.MainPanel;
-import knz.paint.view.MainWindow;
+import knz.paint.model.ToolState;
 import knz.paint.view.plainpanels.GradientSliderPanel;
 
 public class ColorPickerWindow extends JFrame {
 
-    public enum ColorPickerMode {
+    private enum ColorPickerMode {
         PRIMARY,
         SECONDARY,
     }
-
-    private MainWindow parentElement;
 
     private ColorPickerTopPanel colorPickerTopPanel = new ColorPickerTopPanel();
     private GradientSliderPanel[] gradientSliderPanels = new GradientSliderPanel[] {
@@ -39,7 +36,7 @@ public class ColorPickerWindow extends JFrame {
                 final int r = c.getRed();
                 final int g = c.getGreen();
                 final int b = c.getBlue();
-                float[] hsb = Color.RGBtoHSB(r, g, b, null);
+                final float[] hsb = Color.RGBtoHSB(r, g, b, null);
                 return (int) (0xFF * hsb[0]);
             },
             (c, y) -> {
@@ -47,7 +44,7 @@ public class ColorPickerWindow extends JFrame {
                 final int g = c.getGreen();
                 final int b = c.getBlue();
                 final int a = c.getAlpha();
-                float[] hsb = Color.RGBtoHSB(r, g, b, null);
+                final float[] hsb = Color.RGBtoHSB(r, g, b, null);
                 final float hsb_h = y / 255f;
                 final int rgb = Color.HSBtoRGB(hsb_h, hsb[1], hsb[2]);
                 final int rgba = (a << 24) | (rgb & 0xFFFFFF);
@@ -58,7 +55,7 @@ public class ColorPickerWindow extends JFrame {
                 final int r = c.getRed();
                 final int g = c.getGreen();
                 final int b = c.getBlue();
-                float[] hsb = Color.RGBtoHSB(r, g, b, null);
+                final float[] hsb = Color.RGBtoHSB(r, g, b, null);
                 return (int) (0xFF * hsb[1]);
             },
             (c, y) -> {
@@ -66,7 +63,7 @@ public class ColorPickerWindow extends JFrame {
                 final int g = c.getGreen();
                 final int b = c.getBlue();
                 final int a = c.getAlpha();
-                float[] hsb = Color.RGBtoHSB(r, g, b, null);
+                final float[] hsb = Color.RGBtoHSB(r, g, b, null);
                 final float hsb_s = y / 255f;
                 final int rgb = Color.HSBtoRGB(hsb[0], hsb_s, hsb[2]);
                 final int rgba = (a << 24) | (rgb & 0xFFFFFF);
@@ -77,7 +74,7 @@ public class ColorPickerWindow extends JFrame {
                 final int r = c.getRed();
                 final int g = c.getGreen();
                 final int b = c.getBlue();
-                float[] hsb = Color.RGBtoHSB(r, g, b, null);
+                final float[] hsb = Color.RGBtoHSB(r, g, b, null);
                 return (int) (0xFF * hsb[2]);
             },
             (c, y) -> {
@@ -85,7 +82,7 @@ public class ColorPickerWindow extends JFrame {
                 final int g = c.getGreen();
                 final int b = c.getBlue();
                 final int a = c.getAlpha();
-                float[] hsb = Color.RGBtoHSB(r, g, b, null);
+                final float[] hsb = Color.RGBtoHSB(r, g, b, null);
                 final float hsb_b = y / 255f;
                 final int rgb = Color.HSBtoRGB(hsb[0], hsb[1], hsb_b);
                 final int rgba = (a << 24) | (rgb & 0xFFFFFF);
@@ -98,9 +95,11 @@ public class ColorPickerWindow extends JFrame {
 
     private ColorPickerMode mode = ColorPickerMode.PRIMARY;
 
-    public ColorPickerWindow(MainWindow parentElement) {
+    private ToolState toolState;
+
+    public ColorPickerWindow(ToolState toolState) {
         super("Color picker...");
-        this.parentElement = parentElement;
+        this.toolState = toolState;
 
         colorPickerTopPanel.addColorPickerTopListener(new ColorPickerTopListener() {
             @Override
@@ -111,7 +110,7 @@ public class ColorPickerWindow extends JFrame {
 
             @Override
             public void clickedSwap(ColorPickerTopEvent e) {
-                parentElement.getMainPanel().swapColors();
+                toolState.swapColors();
                 updateAll();
             }
 
@@ -124,7 +123,7 @@ public class ColorPickerWindow extends JFrame {
 
         setLayout(new GridBagLayout());
 
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = gradientSliderPanels.length;
         c.gridx = 0;
@@ -136,29 +135,28 @@ public class ColorPickerWindow extends JFrame {
         c.gridx = 0;
         c.gridy = 1;
         c.weightx = 0;
-        for (GradientSliderPanel gsp : gradientSliderPanels) {
-            gsp.addActionListener(new ActionListener() {
+        for (final GradientSliderPanel gradientSliderPanel : gradientSliderPanels) {
+            gradientSliderPanel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    MainPanel mainPanel = parentElement.getMainPanel();
-                    Color colorOld;
+                    final Color colorOld;
                     switch (mode) {
                     case PRIMARY:
-                        colorOld = mainPanel.getColorPrimary();
+                        colorOld = toolState.getColorPrimary();
                         break;
                     case SECONDARY:
-                        colorOld = mainPanel.getColorSecondary();
+                        colorOld = toolState.getColorSecondary();
                         break;
                     default:
                         throw new AssertionError();
                     }
-                    Color colorNew = gsp.getColorFunction().apply(colorOld, gsp.getSelectedValue());
+                    final Color colorNew = gradientSliderPanel.getColorFunction().apply(colorOld, gradientSliderPanel.getSelectedValue());
                     switch (mode) {
                     case PRIMARY:
-                        mainPanel.setColorPrimary(colorNew);
+                        toolState.setColorPrimary(colorNew);
                         break;
                     case SECONDARY:
-                        mainPanel.setColorSecondary(colorNew);
+                        toolState.setColorSecondary(colorNew);
                         break;
                     default:
                         throw new AssertionError();
@@ -166,7 +164,7 @@ public class ColorPickerWindow extends JFrame {
                     updateAll();
                 }
             });
-            add(gsp, c);
+            add(gradientSliderPanel, c);
             c.gridx++;
         }
 
@@ -182,32 +180,28 @@ public class ColorPickerWindow extends JFrame {
     }
 
     public void updateAll() {
-        Color color;
+        final Color color;
         switch (mode) {
         case PRIMARY:
-            color = parentElement.getMainPanel().getColorPrimary();
+            color = toolState.getColorPrimary();
             colorPickerTopPanel.setHighlightLeft(true);
             colorPickerTopPanel.setHighlightRight(false);
             break;
         case SECONDARY:
-            color = parentElement.getMainPanel().getColorSecondary();
+            color = toolState.getColorSecondary();
             colorPickerTopPanel.setHighlightLeft(false);
             colorPickerTopPanel.setHighlightRight(true);
             break;
         default:
             throw new AssertionError();
         }
-        colorPickerTopPanel.setColorLeft(parentElement.getMainPanel().getColorPrimary());
-        colorPickerTopPanel.setColorRight(parentElement.getMainPanel().getColorSecondary());
+        colorPickerTopPanel.setColorLeft(toolState.getColorPrimary());
+        colorPickerTopPanel.setColorRight(toolState.getColorSecondary());
         colorPickerTopPanel.repaint();
-        for (GradientSliderPanel gsp : gradientSliderPanels) {
-            gsp.update(color);
-            gsp.repaint();
+        for (final GradientSliderPanel gradientSliderPanel : gradientSliderPanels) {
+            gradientSliderPanel.update(color);
+            gradientSliderPanel.repaint();
         }
-    }
-
-    public MainWindow getParentElement() {
-        return parentElement;
     }
 
 }

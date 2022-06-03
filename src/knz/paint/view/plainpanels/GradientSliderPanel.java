@@ -41,7 +41,7 @@ public class GradientSliderPanel extends JPanel {
         gradientSliderSubPanel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (ActionListener listener : listeners) {
+                for (final ActionListener listener : listeners) {
                     listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, GradientSliderPanel.class.getSimpleName()));
                 }
             }
@@ -60,7 +60,7 @@ public class GradientSliderPanel extends JPanel {
             @Override
             public void focusLost(FocusEvent e) {
                 gradientSliderSubPanel.setSelectedValue(Integer.parseInt(textField.getText(), 16));
-                for (ActionListener listener : listeners) {
+                for (final ActionListener listener : listeners) {
                     listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, GradientSliderPanel.class.getSimpleName()));
                 }
             }

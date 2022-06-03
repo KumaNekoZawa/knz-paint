@@ -35,9 +35,9 @@ public class PalettePanel extends JPanel {
             throw new IllegalArgumentException();
         }
 
-        String name = paletteFile.getName();
-        String ext = name.contains(".") ? name.substring(name.lastIndexOf(".")).toLowerCase() : "";
-        switch (ext) {
+        final String name = paletteFile.getName();
+        final String extension = name.contains(".") ? name.substring(name.lastIndexOf(".")).toLowerCase() : "";
+        switch (extension) {
         case ".gif":
         case ".jpeg":
         case ".jpg":
@@ -49,7 +49,7 @@ public class PalettePanel extends JPanel {
             }
             break;
         case ".txt":
-            List<String[]> colors = new ArrayList<>();
+            final List<String[]> colors = new ArrayList<>();
             try (BufferedReader br = new BufferedReader(new FileReader(paletteFile))) {
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -60,7 +60,7 @@ public class PalettePanel extends JPanel {
                     if (line.isEmpty()) {
                         continue;
                     }
-                    colors.add(line.split(";"));
+                    colors.add(line.split(";", -1));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -73,8 +73,13 @@ public class PalettePanel extends JPanel {
                     for (int x = 0; x < size; x++) {
                         final int lx = Math.min(x / (size / countX), countX - 1);
                         final int ly = Math.min(y / (size / countY), countY - 1);
-                        String color = colors.get(ly)[lx];
+                        final String color = colors.get(ly)[lx];
                         switch (color.length()) {
+                        case 2: {
+                            /* Gray */
+                            final int gray = Integer.parseInt(color, 16);
+                            image.setRGB(x, y, new Color(gray, gray, gray).getRGB());
+                        }   break;
                         case 6: {
                             /* RGB */
                             final int r = Integer.parseInt(color.substring(0, 2), 16);
@@ -102,10 +107,11 @@ public class PalettePanel extends JPanel {
             System.err.println("Unknown file extension: " + name);
             break;
         }
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                for (ActionListener listener : listeners) {
+                for (final ActionListener listener : listeners) {
                     listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, PalettePanel.class.getSimpleName()));
                 }
             }
@@ -118,7 +124,7 @@ public class PalettePanel extends JPanel {
         });
         setBackground(Config.getConfig().getBackgroundColor());
 
-        Dimension d = new Dimension(size, size);
+        final Dimension d = new Dimension(size, size);
         setMaximumSize(d);
         setMinimumSize(d);
         setPreferredSize(d);
@@ -128,8 +134,8 @@ public class PalettePanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(image, 0, 0, null);
+        final Graphics2D graphics2d = (Graphics2D) g;
+        graphics2d.drawImage(image, 0, 0, null);
     }
 
     public void addActionListener(ActionListener listener) {

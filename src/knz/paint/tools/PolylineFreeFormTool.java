@@ -17,8 +17,13 @@ public class PolylineFreeFormTool extends AbstractPolylineTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        super.mousePressed(g2d, e);
+    public boolean doesChangeCanvas() {
+        return mousePressed;
+    }
+
+    @Override
+    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+        super.mousePressed(graphics2d, e);
         polygon.reset();
         if (SwingUtilities.isLeftMouseButton(e)) {
             polygon.addPoint(x, y);
@@ -28,27 +33,22 @@ public class PolylineFreeFormTool extends AbstractPolylineTool {
     }
 
     @Override
-    public void mouseDragged(Graphics2D g2d, MouseEvent e) {
-        super.mouseDragged(g2d, e);
+    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseDragged(graphics2d, e);
         polygon.addPoint(x, y);
     }
 
     @Override
-    public void mouseReleased(Graphics2D g2d, MouseEvent e) {
-        super.mouseReleased(g2d, e);
-        drawPolyline(g2d, false);
+    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseReleased(graphics2d, e);
+        drawPolyline(graphics2d, false);
         polygon.reset();
     }
 
     @Override
-    public boolean needsRepaint() {
-        return mousePressed;
-    }
-
-    @Override
-    public void paint(Graphics2D g2d) {
-        super.paint(g2d);
-        drawPolyline(g2d, false);
+    public void paint(Graphics2D graphics2d) {
+        super.paint(graphics2d);
+        drawPolyline(graphics2d, false);
     }
 
 }

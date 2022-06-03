@@ -1,13 +1,12 @@
 delete old backup files?
 
 all FIXMEs/TODOs/XXXs: `grep -EIir 'FIXME|TODO|XXX' .`
-go throw all // and /* comments
+go through all // and /* comments
+fix all checkstyle warnings
 
 move icons to resources
 
 redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
-
-Refactor: MainPanel should not know about MainWindow (and maybe move all Options from MainPanel into some .model. package)
 
 transparency support
     clear selection could use transparent

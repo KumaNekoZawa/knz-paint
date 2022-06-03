@@ -23,15 +23,14 @@ public class Config {
     private int colorBarSize = 16 * 3;
     private List<File> colorPaletteFiles = new ArrayList<>();
 
-    private int mainWindowWidth = 800;
+    private int mainWindowWidth  = 800;
     private int mainWindowHeight = 600;
 
-    private int newImageWidth = 400;
+    private int newImageWidth  = 400;
     private int newImageHeight = 300;
     private Color newImageColor = Color.WHITE;
 
     private boolean toolsAirbrushUseTimer = true;
-    private int toolsAirbrushTickDelay = 100;
     private int toolsAirbrushPixelsPerTick = 10;
 
     private Config() {
@@ -48,13 +47,12 @@ public class Config {
                     colorPaletteFiles.add(new File(filename));
                 }
             }
-            mainWindowWidth = Integer.parseInt(properties.getProperty("main-window.width"));
+            mainWindowWidth  = Integer.parseInt(properties.getProperty("main-window.width"));
             mainWindowHeight = Integer.parseInt(properties.getProperty("main-window.height"));
-            newImageWidth = Integer.parseInt(properties.getProperty("new-image.width"));
+            newImageWidth  = Integer.parseInt(properties.getProperty("new-image.width"));
             newImageHeight = Integer.parseInt(properties.getProperty("new-image.height"));
             newImageColor = parseColor(properties.getProperty("new-image.color"));
             toolsAirbrushUseTimer = Boolean.parseBoolean(properties.getProperty("tools.airbrush.use-timer"));
-            toolsAirbrushTickDelay = Integer.parseInt(properties.getProperty("tools.airbrush.tick-delay"));
             toolsAirbrushPixelsPerTick = Integer.parseInt(properties.getProperty("tools.airbrush.pixels-per-tick"));
         } catch (IOException e) {
             e.printStackTrace();
@@ -127,10 +125,6 @@ public class Config {
 
     public boolean getToolsAirbrushUseTimer() {
         return toolsAirbrushUseTimer;
-    }
-
-    public int getToolsAirbrushTickDelay() {
-        return toolsAirbrushTickDelay;
     }
 
     public int getToolsAirbrushPixelsPerTick() {

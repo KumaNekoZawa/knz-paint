@@ -25,7 +25,7 @@ public class ColorPickerTopPanel extends JPanel {
         colorPanelLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (ColorPickerTopListener listener : listeners) {
+                for (final ColorPickerTopListener listener : listeners) {
                     listener.clickedLeft(new ColorPickerTopEvent(e));
                 }
             }
@@ -33,7 +33,7 @@ public class ColorPickerTopPanel extends JPanel {
         buttonSwapColors.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (ColorPickerTopListener listener : listeners) {
+                for (final ColorPickerTopListener listener : listeners) {
                     listener.clickedSwap(new ColorPickerTopEvent(e));
                 }
             }
@@ -41,14 +41,14 @@ public class ColorPickerTopPanel extends JPanel {
         colorPanelRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (ColorPickerTopListener listener : listeners) {
+                for (final ColorPickerTopListener listener : listeners) {
                     listener.clickedRight(new ColorPickerTopEvent(e));
                 }
             }
         });
 
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;

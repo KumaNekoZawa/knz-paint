@@ -17,46 +17,46 @@ public class EllipseTool extends AbstractTool {
     }
 
     @Override
-    public void mouseReleased(Graphics2D g2d, MouseEvent e) {
-        super.mouseReleased(g2d, e);
-        drawOval(g2d);
-    }
-
-    @Override
-    public boolean needsRepaint() {
+    public boolean doesChangeCanvas() {
         return mousePressed;
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
-        super.paint(g2d);
-        drawOval(g2d);
+    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseReleased(graphics2d, e);
+        drawOval(graphics2d);
     }
 
-    private void drawOval(Graphics2D g2d) {
+    @Override
+    public void paint(Graphics2D graphics2d) {
+        super.paint(graphics2d);
+        drawOval(graphics2d);
+    }
+
+    private void drawOval(Graphics2D graphics2d) {
         final int fromX = Math.min(startX, x);
         final int fromY = Math.min(startY, y);
         final int toX = Math.max(startX, x);
         final int toY = Math.max(startY, y);
-        final int width = toX - fromX;
+        final int width  = toX - fromX;
         final int height = toY - fromY;
-        Color colorPrimary = mainPanel.getColorPrimary();
-        Color colorSecondary = mainPanel.getColorSecondary();
-        g2d.setStroke(mainPanel.getStroke());
-        switch (mainPanel.getFillStyle()) {
+        final Color colorPrimary   = toolState.getColorPrimary();
+        final Color colorSecondary = toolState.getColorSecondary();
+        graphics2d.setStroke(toolState.getStroke());
+        switch (toolState.getFillStyle()) {
         case NONE:
-            g2d.setColor(colorPrimary);
-            g2d.drawOval(fromX, fromY, width, height);
+            graphics2d.setColor(colorPrimary);
+            graphics2d.drawOval(fromX, fromY, width, height);
             break;
         case PRIMARY:
-            g2d.setColor(colorPrimary);
-            g2d.fillOval(fromX, fromY, width, height);
+            graphics2d.setColor(colorPrimary);
+            graphics2d.fillOval(fromX, fromY, width, height);
             break;
         case SECONDARY:
-            g2d.setColor(colorSecondary);
-            g2d.fillOval(fromX, fromY, width, height);
-            g2d.setColor(colorPrimary);
-            g2d.drawOval(fromX, fromY, width, height);
+            graphics2d.setColor(colorSecondary);
+            graphics2d.fillOval(fromX, fromY, width, height);
+            graphics2d.setColor(colorPrimary);
+            graphics2d.drawOval(fromX, fromY, width, height);
             break;
         default:
             throw new AssertionError();

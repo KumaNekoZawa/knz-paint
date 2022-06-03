@@ -3,30 +3,15 @@ package knz.paint.tools;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import javax.swing.Timer;
 
 import knz.paint.model.Config;
 
 public class AirbrushTool extends AbstractTool {
 
     private static final boolean USE_TIMER = Config.getConfig().getToolsAirbrushUseTimer();
-    private static final int TICK_DELAY = Config.getConfig().getToolsAirbrushTickDelay();
     private static final int PIXELS_PER_TICK = Config.getConfig().getToolsAirbrushPixelsPerTick();
-
-    private Timer timer = new Timer(TICK_DELAY, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            for (int i = 0; i < PIXELS_PER_TICK; i++) {
-                drawAirbrush();
-            }
-            mainPanel.repaint();
-        }
-    });
-
-    private int radius = 15;
 
     @Override
     public String getName() {
@@ -39,46 +24,53 @@ public class AirbrushTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        super.mousePressed(g2d, e);
-        radius = mainPanel.getAirbrushSize();
-        if (USE_TIMER) {
-            timer.start();
-        } else {
-            drawAirbrush();
-        }
+    public boolean usesTimer() {
+        return USE_TIMER;
     }
 
     @Override
-    public void mouseDragged(Graphics2D g2d, MouseEvent e) {
-        super.mouseDragged(g2d, e);
+    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+        super.mousePressed(graphics2d, e);
         if (!USE_TIMER) {
             drawAirbrush();
         }
     }
 
     @Override
-    public void mouseReleased(Graphics2D g2d, MouseEvent e) {
-        super.mouseReleased(g2d, e);
-        if (USE_TIMER) {
-            timer.stop();
-        } else {
+    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseDragged(graphics2d, e);
+        if (!USE_TIMER) {
+            drawAirbrush();
+        }
+    }
+
+    @Override
+    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseReleased(graphics2d, e);
+        if (!USE_TIMER) {
+            drawAirbrush();
+        }
+    }
+
+    @Override
+    public void timerEvent(Graphics2D graphics2d, ActionEvent e) {
+        for (int i = 0; i < PIXELS_PER_TICK; i++) {
             drawAirbrush();
         }
     }
 
     private void drawAirbrush() {
-        final double r = radius * Math.random();
+        final double r = toolState.getAirbrushSize() * Math.random();
         final double a = 2 * Math.PI * Math.random();
         final int lx = x + (int) (r * Math.sin(a));
         final int ly = y + (int) (r * Math.cos(a));
-        BufferedImage image = mainPanel.getImage();
+        final BufferedImage image = imageState.getImage();
         if (0 <= lx && lx < image.getWidth()
          && 0 <= ly && ly < image.getHeight()) {
-            int rgb;
-            switch (mainPanel.getAirbrushType()) {
+            final int rgb;
+            switch (toolState.getAirbrushType()) {
             case NORMAL:
-                rgb = mainPanel.getColorPrimary().getRGB();
+                rgb = toolState.getColorPrimary().getRGB();
                 break;
             case RANDOM_COLOR:
                 rgb = new Color((int) (0xFF * Math.random()),

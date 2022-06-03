@@ -5,27 +5,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
 
+import knz.paint.model.IntegerPair;
+
 public class FloodFillTool extends AbstractTool {
-
-    private static class Pair {
-
-        private int x, y;
-
-        Pair(int x, int y) {
-            super();
-            this.x = x;
-            this.y = y;
-        }
-
-        private int getX() {
-            return x;
-        }
-
-        private int getY() {
-            return y;
-        }
-
-    }
 
     private BufferedImage image;
     private int rgbFrom = 0;
@@ -42,15 +24,15 @@ public class FloodFillTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        super.mousePressed(g2d, e);
-        image = mainPanel.getImage();
+    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+        super.mousePressed(graphics2d, e);
+        image = imageState.getImage();
         if (!(0 <= x && x < image.getWidth()
            && 0 <= y && y < image.getHeight())) {
             return;
         }
         rgbFrom = image.getRGB(x, y);
-        rgbTo = mainPanel.getColorPrimary().getRGB();
+        rgbTo = toolState.getColorPrimary().getRGB();
         if (rgbFrom == rgbTo) {
             return;
         }
@@ -58,33 +40,32 @@ public class FloodFillTool extends AbstractTool {
     }
 
     private void floodFill(int x, int y) {
-        Stack<Pair> s = new Stack<>();
-        s.push(new Pair(x, y));
+        final Stack<IntegerPair> s = new Stack<>();
+        s.push(new IntegerPair(x, y));
         while (!s.isEmpty()) {
-            Pair p = s.pop();
-            x = p.getX();
-            y = p.getY();
-            int lx = x;
-            while (inside(lx - 1, y)) {
-                image.setRGB(lx - 1, y, rgbTo);
-                lx--;
+            final IntegerPair p = s.pop();
+            final int px = p.getX();
+            final int py = p.getY();
+            int lx = px;
+            while (inside(lx - 1, py)) {
+                image.setRGB(--lx, py, rgbTo);
             }
-            while (inside(x, y)) {
-                image.setRGB(x, y, rgbTo);
-                x++;
+            int rx = px;
+            while (inside(rx, py)) {
+                image.setRGB(rx++, py, rgbTo);
             }
-            scan(s, lx, x - 1, y + 1);
-            scan(s, lx, x - 1, y - 1);
+            scan(s, lx, rx - 1, py + 1);
+            scan(s, lx, rx - 1, py - 1);
         }
     }
 
-    private void scan(Stack<Pair> s, int lx, int rx, int y) {
+    private void scan(Stack<IntegerPair> s, int lx, int rx, int y) {
         boolean added = false;
         for (int x = lx; x <= rx; x++) {
             if (!inside(x, y)) {
                 added = false;
             } else if (!added) {
-                s.push(new Pair(x, y));
+                s.push(new IntegerPair(x, y));
                 added = true;
             }
         }

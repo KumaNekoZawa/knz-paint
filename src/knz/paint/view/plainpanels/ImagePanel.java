@@ -37,14 +37,14 @@ public class ImagePanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                for (ActionListener listener : listeners) {
+                for (final ActionListener listener : listeners) {
                     listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, ImagePanel.class.getSimpleName()));
                 }
             }
         });
         setBackground(Config.getConfig().getBackgroundColor());
 
-        Dimension d = new Dimension(image.getWidth(), image.getHeight());
+        final Dimension d = new Dimension(image.getWidth(), image.getHeight());
         setMaximumSize(d);
         setMinimumSize(d);
         setPreferredSize(d);
@@ -54,8 +54,8 @@ public class ImagePanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(image, 0, 0, null);
+        final Graphics2D graphics2d = (Graphics2D) g;
+        graphics2d.drawImage(image, 0, 0, null);
     }
 
     public void addActionListener(ActionListener listener) {

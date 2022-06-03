@@ -14,11 +14,11 @@ public class RotationEffect extends AbstractPositionalEffect {
     @Override
     public void filter(int width, int height, int toX, int toY) {
         final double angle = Math.PI * paramAngle.getValue() / 180;
-        final int x = toX - width / 2;
+        final int x = toX - width  / 2;
         final int y = toY - height / 2;
         final double r = Math.sqrt(x * x + y * y);
         final double a = Math.atan2(x, y) + angle;
-        fromX = (int) (r * Math.sin(a)) + width / 2;
+        fromX = (int) (r * Math.sin(a)) + width  / 2;
         fromY = (int) (r * Math.cos(a)) + height / 2;
     }
 

@@ -25,7 +25,7 @@ public abstract class AbstractSelectionTool extends AbstractTool {
     }
 
     @Override
-    public boolean needsRepaint() {
+    public boolean doesChangeCanvas() {
         return true;
     }
 
@@ -35,29 +35,29 @@ public abstract class AbstractSelectionTool extends AbstractTool {
 
     public void clearSelection() {
         if (polygon.npoints > 2) {
-            Graphics2D g2d = mainPanel.getG2D();
-            g2d.setColor(mainPanel.getColorSecondary());
-            g2d.fillPolygon(polygon);
+            final Graphics2D graphics2d = imageState.getGraphics2D();
+            graphics2d.setColor(toolState.getColorSecondary());
+            graphics2d.fillPolygon(polygon);
             polygon.reset();
         }
     }
 
-    protected void drawSelection(Graphics2D g2d, boolean includeCurrentPixel) {
+    protected void drawSelection(Graphics2D graphics2d, boolean includeCurrentPixel) {
         if (polygon.npoints < 1) {
             return;
         }
-        Polygon polygon2;
+        final Polygon polygon2;
         if (includeCurrentPixel) {
             polygon2 = new Polygon(polygon.xpoints, polygon.ypoints, polygon.npoints);
             polygon2.addPoint(x, y);
         } else {
             polygon2 = polygon;
         }
-        Stroke stroke = g2d.getStroke();
-        g2d.setColor(COLOR);
-        g2d.setStroke(STROKE);
-        g2d.drawPolygon(polygon2);
-        g2d.setStroke(stroke);
+        final Stroke stroke = graphics2d.getStroke();
+        graphics2d.setColor(COLOR);
+        graphics2d.setStroke(STROKE);
+        graphics2d.drawPolygon(polygon2);
+        graphics2d.setStroke(stroke);
     }
 
 }

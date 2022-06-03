@@ -28,7 +28,7 @@ public class ColorPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                for (ActionListener listener : listeners) {
+                for (final ActionListener listener : listeners) {
                     listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, ColorPanel.class.getSimpleName()));
                 }
             }
@@ -39,17 +39,17 @@ public class ColorPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        final int width = getWidth();
+        final int width  = getWidth();
         final int height = getHeight();
-        Graphics2D g2d = (Graphics2D) g;
+        final Graphics2D graphics2d = (Graphics2D) g;
         if (color != null) {
-            g2d.setColor(color);
-            g2d.fillRect(0, 0, width, height);
+            graphics2d.setColor(color);
+            graphics2d.fillRect(0, 0, width, height);
         }
         if (highlighted) {
-            g2d.setColor(Color.BLACK);
-            g2d.setStroke(new BasicStroke(3f));
-            g2d.drawRect(1, 1, width - 2, height - 2);
+            graphics2d.setColor(Color.BLACK);
+            graphics2d.setStroke(new BasicStroke(3f));
+            graphics2d.drawRect(1, 1, width - 2, height - 2);
         }
     }
 

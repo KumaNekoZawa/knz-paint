@@ -17,12 +17,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import knz.paint.model.ImageState;
 import knz.paint.model.effects.AbstractEffect;
 import knz.paint.model.effects.AbstractParameter;
 import knz.paint.model.effects.BooleanParameter;
@@ -35,18 +37,19 @@ public class EffectWindow extends JDialog {
     private Map<String, AbstractParameter> parameters = new HashMap<>();
     private Map<String, JComponent> parameterElements = new HashMap<>();
 
-    public EffectWindow(MainWindow parent, JScrollPane scrollPane, MainPanel mainPanel, AbstractEffect effect, String title) {
+    public EffectWindow(JFrame parent, JScrollPane scrollPane, MainPanel mainPanel, AbstractEffect effect, String title) {
         super(parent, title, true);
 
-        for (AbstractParameter parameter : effect.getParameters()) {
+        for (final AbstractParameter parameter : effect.getParameters()) {
             parameter.reset();
             parameters.put(parameter.getName(), parameter);
         }
 
-        final BufferedImage image = mainPanel.getImage();
+        final ImageState imageState = mainPanel.getImageState();
+        final BufferedImage image = imageState.getImage();
         final Rectangle rect = scrollPane.getViewport().getViewRect();
-        final int zoomDivisor = mainPanel.getZoomDivisor();
-        final int zoomFactor = mainPanel.getZoomFactor();
+        final int zoomDivisor = imageState.getZoomDivisor();
+        final int zoomFactor  = imageState.getZoomFactor();
         rect.x      = zoomDivisor * rect.x      / zoomFactor;
         rect.y      = zoomDivisor * rect.y      / zoomFactor;
         rect.width  = zoomDivisor * rect.width  / zoomFactor;
@@ -55,29 +58,31 @@ public class EffectWindow extends JDialog {
         final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
         final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
         final int imageTempHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
-        BufferedImage imageTemp = image.getSubimage(imageTempX, imageTempY, imageTempWidth, imageTempHeight);
+        final BufferedImage imageTemp = image.getSubimage(imageTempX, imageTempY, imageTempWidth, imageTempHeight);
         /* initially draw the image with the effect once */
-        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+        mainPanel.repaint();
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                mainPanel.setImageTempReset(true);
+                imageState.setImageTempReset();
+                mainPanel.repaint();
                 EffectWindow.this.dispose();
             }
         });
 
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets(5, 5, 5, 5);
         c.gridx = 0;
         c.gridy = 0;
-        for (AbstractParameter parameter : effect.getParameters()) {
+        for (final AbstractParameter parameter : effect.getParameters()) {
             final String parameterName = parameter.getName();
             if (parameter instanceof PresetParameter) {
                 final PresetParameter presetParameter = (PresetParameter) parameter;
-                JComboBox<String> comboBox = new JComboBox<>(presetParameter.getPresetNames());
+                final JComboBox<String> comboBox = new JComboBox<>(presetParameter.getPresetNames());
                 comboBox.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -110,7 +115,8 @@ public class EffectWindow extends JDialog {
                                 throw new AssertionError();
                             }
                         }
-                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        mainPanel.repaint();
                     }
                 });
                 parameterElements.put(parameterName, comboBox);
@@ -118,26 +124,27 @@ public class EffectWindow extends JDialog {
                 c.gridy++;
             } else if (parameter instanceof BooleanParameter) {
                 final BooleanParameter booleanParameter = (BooleanParameter) parameter;
-                JCheckBox checkBox = new JCheckBox(parameterName);
+                final JCheckBox checkBox = new JCheckBox(parameterName);
                 checkBox.setSelected(booleanParameter.getDef());
                 checkBox.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         booleanParameter.setValue(checkBox.isSelected());
-                        mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        mainPanel.repaint();
                     }
                 });
                 parameterElements.put(parameterName, checkBox);
                 add(checkBox, c);
                 c.gridy++;
             } else {
-                JLabel label = new JLabel(parameter.getLabelText());
+                final JLabel label = new JLabel(parameter.getLabelText());
                 label.setAlignmentX(Component.LEFT_ALIGNMENT);
                 add(label, c);
                 c.gridy++;
                 if (parameter instanceof IntegerParameter) {
                     final IntegerParameter integerParameter = (IntegerParameter) parameter;
-                    JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                    final JSlider slider = new JSlider(JSlider.HORIZONTAL,
                         integerParameter.getMin(),
                         integerParameter.getMax(),
                         integerParameter.getDef());
@@ -146,7 +153,8 @@ public class EffectWindow extends JDialog {
                         public void stateChanged(ChangeEvent e) {
                             integerParameter.setValue(slider.getValue());
                             label.setText(parameter.getLabelText());
-                            mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
                         }
                     });
                     parameterElements.put(parameterName, slider);
@@ -154,7 +162,7 @@ public class EffectWindow extends JDialog {
                     c.gridy++;
                 } else if (parameter instanceof DoubleParameter) {
                     final DoubleParameter doubleParameter = (DoubleParameter) parameter;
-                    JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                    final JSlider slider = new JSlider(JSlider.HORIZONTAL,
                         (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
                         (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
                         (int) (doubleParameter.getResolution() * doubleParameter.getDef()));
@@ -163,7 +171,8 @@ public class EffectWindow extends JDialog {
                         public void stateChanged(ChangeEvent e) {
                             doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
                             label.setText(parameter.getLabelText());
-                            mainPanel.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
                         }
                     });
                     parameterElements.put(parameterName, slider);
@@ -174,12 +183,13 @@ public class EffectWindow extends JDialog {
                 }
             }
         }
-        JButton buttonOkay = new JButton("Okay");
+        final JButton buttonOkay = new JButton("Okay");
         buttonOkay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainPanel.setImageTempReset(false);
-                mainPanel.setImage(effect.apply(image));
+                imageState.setImageTempReset();
+                imageState.setImage(effect.apply(image));
+                mainPanel.repaint();
                 EffectWindow.this.dispose();
             }
         });

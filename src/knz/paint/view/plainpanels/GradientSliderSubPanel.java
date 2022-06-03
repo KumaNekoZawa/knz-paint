@@ -53,7 +53,7 @@ public class GradientSliderSubPanel extends JPanel {
         });
         setBackground(Config.getConfig().getBackgroundColor());
 
-        Dimension d = new Dimension(WIDTH, HEIGHT);
+        final Dimension d = new Dimension(WIDTH, HEIGHT);
         setMaximumSize(d);
         setMinimumSize(d);
         setPreferredSize(d);
@@ -65,7 +65,7 @@ public class GradientSliderSubPanel extends JPanel {
         selectedValue = MAX - y;
         /* repaint() only needed if panel used stand-alone: */
         repaint();
-        for (ActionListener listener : listeners) {
+        for (final ActionListener listener : listeners) {
             listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, GradientSliderSubPanel.class.getSimpleName()));
         }
     }
@@ -73,11 +73,11 @@ public class GradientSliderSubPanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Graphics2D g2d = (Graphics2D) g;
+        final Graphics2D graphics2d = (Graphics2D) g;
         for (int y = MIN; y <= MAX; y++) {
             final int value = MAX - y;
-            g2d.setColor(baseColor == null || value == selectedValue ? Color.BLACK : colorFunction.apply(baseColor, value));
-            g2d.drawLine(0, y, WIDTH, y);
+            graphics2d.setColor(baseColor == null || value == selectedValue ? Color.BLACK : colorFunction.apply(baseColor, value));
+            graphics2d.drawLine(0, y, WIDTH, y);
         }
         final int y = MAX - selectedValue;
 
@@ -85,20 +85,20 @@ public class GradientSliderSubPanel extends JPanel {
         polygon.addPoint(0, y - 5);
         polygon.addPoint(5, y);
         polygon.addPoint(0, y + 5);
-        g2d.setColor(Color.WHITE);
-        g2d.fillPolygon(polygon);
-        g2d.setColor(Color.BLACK);
-        g2d.drawPolygon(polygon);
+        graphics2d.setColor(Color.WHITE);
+        graphics2d.fillPolygon(polygon);
+        graphics2d.setColor(Color.BLACK);
+        graphics2d.drawPolygon(polygon);
         polygon.reset();
 
         /* right-hand arrow */
         polygon.addPoint(WIDTH - 1, y - 5);
         polygon.addPoint(WIDTH - 6, y);
         polygon.addPoint(WIDTH - 1, y + 5);
-        g2d.setColor(Color.WHITE);
-        g2d.fillPolygon(polygon);
-        g2d.setColor(Color.BLACK);
-        g2d.drawPolygon(polygon);
+        graphics2d.setColor(Color.WHITE);
+        graphics2d.fillPolygon(polygon);
+        graphics2d.setColor(Color.BLACK);
+        graphics2d.drawPolygon(polygon);
         polygon.reset();
     }
 

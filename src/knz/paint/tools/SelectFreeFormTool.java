@@ -16,22 +16,22 @@ public class SelectFreeFormTool extends AbstractSelectionTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        super.mousePressed(g2d, e);
+    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+        super.mousePressed(graphics2d, e);
         polygon.reset();
         polygon.addPoint(x, y);
     }
 
     @Override
-    public void mouseDragged(Graphics2D g2d, MouseEvent e) {
-        super.mouseDragged(g2d, e);
+    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseDragged(graphics2d, e);
         polygon.addPoint(x, y);
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
-        super.paint(g2d);
-        drawSelection(g2d, false);
+    public void paint(Graphics2D graphics2d) {
+        super.paint(graphics2d);
+        drawSelection(graphics2d, false);
     }
 
 }

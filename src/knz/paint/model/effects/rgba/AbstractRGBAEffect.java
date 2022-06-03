@@ -32,9 +32,13 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
 
     @Override
     public BufferedImage applyHelper(BufferedImage image) {
-        final int width = image.getWidth();
+        final int width  = image.getWidth();
         final int height = image.getHeight();
-        BufferedImage result = new BufferedImage(width, height, image.getType());
+        final BufferedImage result = new BufferedImage(width, height, image.getType());
+        final boolean red   = paramRed.getValue();
+        final boolean green = paramGreen.getValue();
+        final boolean blue  = paramBlue.getValue();
+        final boolean alpha = paramAlpha.getValue();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 final int in = image.getRGB(x, y);
@@ -47,10 +51,10 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
                 out_b = in_b;
                 out_a = in_a;
                 filter(x, y, in_r, in_g, in_b, in_a);
-                out_r =                  !showDefaultParameters || paramRed.getValue()    ? Math.max(0x00, Math.min(0xFF, out_r)) : in_r;
-                out_g =                  !showDefaultParameters || paramGreen.getValue()  ? Math.max(0x00, Math.min(0xFF, out_g)) : in_g;
-                out_b =                  !showDefaultParameters || paramBlue.getValue()   ? Math.max(0x00, Math.min(0xFF, out_b)) : in_b;
-                out_a = affectsAlpha && (!showDefaultParameters || paramAlpha.getValue()) ? Math.max(0x00, Math.min(0xFF, out_a)) : in_a;
+                out_r =                  !showDefaultParameters || red    ? Math.max(0x00, Math.min(0xFF, out_r)) : in_r;
+                out_g =                  !showDefaultParameters || green  ? Math.max(0x00, Math.min(0xFF, out_g)) : in_g;
+                out_b =                  !showDefaultParameters || blue   ? Math.max(0x00, Math.min(0xFF, out_b)) : in_b;
+                out_a = affectsAlpha && (!showDefaultParameters || alpha) ? Math.max(0x00, Math.min(0xFF, out_a)) : in_a;
                 final int out = (out_a << 24)
                               | (out_r << 16)
                               | (out_g << 8)

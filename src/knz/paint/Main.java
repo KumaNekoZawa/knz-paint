@@ -15,8 +15,8 @@ public class Main {
 
     public static void main(String[] args) {
         if (Config.getConfig().printLookAndFeelInfo()) {
-            for (final LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
-                System.err.println(lafi.getName() + ": " + lafi.getClassName());
+            for (final LookAndFeelInfo lookAndFeelInfo : UIManager.getInstalledLookAndFeels()) {
+                System.err.println(lookAndFeelInfo.getName() + ": " + lookAndFeelInfo.getClassName());
             }
         }
         final String lookAndFeel = Config.getConfig().getLookAndFeel();

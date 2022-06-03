@@ -25,13 +25,13 @@ public class TransferableImage implements Transferable {
     }
 
     public DataFlavor[] getTransferDataFlavors() {
-        DataFlavor[] flavors = new DataFlavor[1];
+        final DataFlavor[] flavors = new DataFlavor[1];
         flavors[0] = DataFlavor.imageFlavor;
         return flavors;
     }
 
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        DataFlavor[] flavors = getTransferDataFlavors();
+        final DataFlavor[] flavors = getTransferDataFlavors();
         for (int i = 0; i < flavors.length; i++) {
             if (flavor.equals(flavors[i])) {
                 return true;

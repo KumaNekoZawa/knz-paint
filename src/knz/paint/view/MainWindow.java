@@ -36,7 +36,13 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
+import knz.paint.model.AirbrushType;
 import knz.paint.model.Config;
+import knz.paint.model.FillStyle;
+import knz.paint.model.ImageState;
+import knz.paint.model.StrokeDash;
+import knz.paint.model.Tool;
+import knz.paint.model.ToolState;
 import knz.paint.model.effects.AbstractEffect;
 import knz.paint.model.effects.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.hsba.ExtractBrightnessEffect;
@@ -74,15 +80,6 @@ public class MainWindow extends JFrame {
     private static final FileFilter FILTER_GIF = createFileFilter("Graphics Interchange Format", "gif");
     private static final FileFilter FILTER_JPG = createFileFilter("Joint Photographic Experts Group", "jpg", "jpeg");
     private static final FileFilter FILTER_PNG = createFileFilter("Portable Network Graphics", "png");
-
-    private static final int[] ZOOM_DIVISORS = { 32, 16, 8, 4, 2, 1, 1, 1, 1,  1,  1 };
-    private static final int[] ZOOM_FACTORS  = {  1,  1, 1, 1, 1, 1, 2, 4, 8, 16, 32 };
-    private static final int ZOOM_LEVELS = ZOOM_FACTORS.length;
-    private static final int ZOOM_DEFAULT_LEVEL = 5;
-
-    private static final int[] STOKE_WIDTHS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50 };
-    private static final int[] ROUNDED_RECTANGLE_RADII = { 5, 10, 15, 20, 25, 50, 75, 100 };
-    private static final int[] AIRBRUSH_SIZES = { 5, 10, 15, 20, 25 };
 
     private static final AbstractEffect[] EFFECTS = {
         new ExplosionEffect(),
@@ -147,7 +144,7 @@ public class MainWindow extends JFrame {
     private JMenu menuOptionsStrokeWidth = new JMenu("Stroke width");
     private JMenu menuOptionsStrokeDash = new JMenu("Stroke dash");
     private JMenu menuOptionsRoundedRectangle = new JMenu("Rounded rectangle");
-    private JMenu menuOptionsRoundedRectangleArcWidth = new JMenu("Arc width");
+    private JMenu menuOptionsRoundedRectangleArcWidth  = new JMenu("Arc width");
     private JMenu menuOptionsRoundedRectangleArcHeight = new JMenu("Arc height");
     private JMenu menuOptionsAirbrush = new JMenu("Airbrush");
     private JMenu menuOptionsAirbrushType = new JMenu("Type");
@@ -156,26 +153,27 @@ public class MainWindow extends JFrame {
     private JMenu menuEffects = new JMenu("Effects");
 
     private JScrollPane scrollPane;
-    private MainPanel mainPanel = new MainPanel();
+    private MainPanel mainPanel;
     private JToolBar toolBar = new JToolBar();
     private JToolBar colorBar = new JToolBar();
     private JLabel statusBar = new JLabel();
 
-    private File lastPath = null;
+    private ToolState toolState = new ToolState();
 
-    private int zoomLevel = ZOOM_DEFAULT_LEVEL;
+    private File lastPath;
 
-    private int statusBarWidth = 0;
-    private int statusBarHeight = 0;
-    private int statusBarCurrentX = 0;
-    private int statusBarCurrentY = 0;
-    private int statusBarCurrentRGBA = 0;
-
-    private boolean changedTillLastSave = false;
+    private int statusBarWidth;
+    private int statusBarHeight;
+    private int statusBarCurrentX;
+    private int statusBarCurrentY;
+    private int statusBarCurrentRGBA;
 
     public MainWindow() {
         super(TITLE);
-        mainPanel.setParentElement(this);
+
+        for (final Tool tool : Tool.values()) {
+            tool.getToolObject().setToolState(toolState);
+        }
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -240,7 +238,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainPanel.cut();
-                changedTillLastSave = true;
+                mainPanel.getImageState().setChangedTillLastSave(true);
             }
         });
         menuEditCut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
@@ -266,7 +264,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainPanel.clearSelection();
-                changedTillLastSave = true;
+                mainPanel.getImageState().setChangedTillLastSave(true);
             }
         });
         menuEditClearSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
@@ -275,7 +273,7 @@ public class MainWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainPanel.cropToSelection();
-                changedTillLastSave = true;
+                mainPanel.getImageState().setChangedTillLastSave(true);
             }
         });
         menuEditCropToSelection.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ActionEvent.CTRL_MASK));
@@ -310,10 +308,8 @@ public class MainWindow extends JFrame {
         menuViewZoomIn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (zoomLevel < ZOOM_LEVELS - 1) {
-                    zoomLevel++;
-                    menuViewZoomLevels.get(zoomLevel).setSelected(true);
-                    mainPanel.setZoom(ZOOM_DIVISORS[zoomLevel], ZOOM_FACTORS[zoomLevel]);
+                if (mainPanel.getImageState().increaseZoomLevel()) {
+                    updateZoomLevel();
                 }
             }
         });
@@ -322,32 +318,30 @@ public class MainWindow extends JFrame {
         menuViewZoomOut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (zoomLevel > 0) {
-                    zoomLevel--;
-                    menuViewZoomLevels.get(zoomLevel).setSelected(true);
-                    mainPanel.setZoom(ZOOM_DIVISORS[zoomLevel], ZOOM_FACTORS[zoomLevel]);
+                if (mainPanel.getImageState().decreaseZoomLevel()) {
+                    updateZoomLevel();
                 }
             }
         });
         menuViewZoomOut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0));
         menuViewZoom.add(menuViewZoomOut);
         menuViewZoom.addSeparator();
-        ButtonGroup bgZoomLevels = new ButtonGroup();
-        for (int i = 0; i < ZOOM_LEVELS; i++) {
-            final int zoomLevelFinal = i;
-            final int zoomDivisor = ZOOM_DIVISORS[zoomLevelFinal];
-            final int zoomFactor = ZOOM_FACTORS[zoomLevelFinal];
-            JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem(
+        final ButtonGroup bgZoomLevels = new ButtonGroup();
+        for (int zoomLevel = 0; zoomLevel < ImageState.ZOOM_LEVELS; zoomLevel++) {
+            final int zoomLevelFinal = zoomLevel;
+            final int zoomDivisor = ImageState.ZOOM_DIVISORS[zoomLevel];
+            final int zoomFactor  = ImageState.ZOOM_FACTORS[zoomLevel];
+            final JRadioButtonMenuItem menuViewZoomLevel = new JRadioButtonMenuItem(
                 zoomDivisor == 1 && zoomFactor == 1 ? "100 %" : ((zoomFactor > 1 ? "×" + zoomFactor : "") + (zoomDivisor > 1 ? "/" + zoomDivisor : ""))
             );
             menuViewZoomLevel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    zoomLevel = zoomLevelFinal;
-                    mainPanel.setZoom(zoomDivisor, zoomFactor);
+                    mainPanel.getImageState().setZoomLevel(zoomLevelFinal);
+                    updateZoomLevel();
                 }
             });
-            if (zoomLevelFinal == ZOOM_DEFAULT_LEVEL) {
+            if (zoomLevel == ImageState.DEFAULT_ZOOM_LEVEL) {
                 menuViewZoomLevel.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_0, ActionEvent.CTRL_MASK));
                 menuViewZoomLevel.setSelected(true);
             }
@@ -365,53 +359,53 @@ public class MainWindow extends JFrame {
                     if (colorPickerWindow != null) {
                         colorPickerWindow.dispose();
                     }
-                    colorPickerWindow = new ColorPickerWindow(MainWindow.this);
+                    colorPickerWindow = new ColorPickerWindow(toolState);
                 }
             }
         });
         menuOptions.add(menuOptionsColorPicker);
-        ButtonGroup bgFillStyle = new ButtonGroup();
-        for (MainPanel.FillStyle fillStyle : MainPanel.FillStyle.values()) {
-            JRadioButtonMenuItem menuOptionsFillStyleChild = new JRadioButtonMenuItem(fillStyle.getTitle());
+        final ButtonGroup bgFillStyle = new ButtonGroup();
+        for (final FillStyle fillStyle : FillStyle.values()) {
+            final JRadioButtonMenuItem menuOptionsFillStyleChild = new JRadioButtonMenuItem(fillStyle.getTitle());
             menuOptionsFillStyleChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setFillStyle(fillStyle);
+                    toolState.setFillStyle(fillStyle);
                 }
             });
-            if (fillStyle == MainPanel.FillStyle.NONE) {
+            if (fillStyle == ToolState.DEFAULT_FILL_STYLE) {
                 menuOptionsFillStyleChild.setSelected(true);
             }
             bgFillStyle.add(menuOptionsFillStyleChild);
             menuOptionsFillStyle.add(menuOptionsFillStyleChild);
         }
         menuOptions.add(menuOptionsFillStyle);
-        ButtonGroup bgStrokeWidth = new ButtonGroup();
-        for (int strokeWidth : STOKE_WIDTHS) {
-            JRadioButtonMenuItem menuOptionsStrokeWidthChild = new JRadioButtonMenuItem(strokeWidth + " px");
+        final ButtonGroup bgStrokeWidth = new ButtonGroup();
+        for (final int strokeWidth : ToolState.STOKE_WIDTHS) {
+            final JRadioButtonMenuItem menuOptionsStrokeWidthChild = new JRadioButtonMenuItem(strokeWidth + " px");
             menuOptionsStrokeWidthChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setStrokeWidth(strokeWidth);
+                    toolState.setStrokeWidth(strokeWidth);
                 }
             });
-            if (strokeWidth == 1) {
+            if (strokeWidth == ToolState.DEFAULT_STROKE_WIDTH) {
                 menuOptionsStrokeWidthChild.setSelected(true);
             }
             bgStrokeWidth.add(menuOptionsStrokeWidthChild);
             menuOptionsStrokeWidth.add(menuOptionsStrokeWidthChild);
         }
         menuOptions.add(menuOptionsStrokeWidth);
-        ButtonGroup bgStrokeDash = new ButtonGroup();
-        for (MainPanel.StrokeDash strokeDash : MainPanel.StrokeDash.values()) {
-            JRadioButtonMenuItem menuOptionsStrokeDashChild = new JRadioButtonMenuItem(strokeDash.getTitle());
+        final ButtonGroup bgStrokeDash = new ButtonGroup();
+        for (final StrokeDash strokeDash : StrokeDash.values()) {
+            final JRadioButtonMenuItem menuOptionsStrokeDashChild = new JRadioButtonMenuItem(strokeDash.getTitle());
             menuOptionsStrokeDashChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setStrokeDash(strokeDash);
+                    toolState.setStrokeDash(strokeDash);
                 }
             });
-            if (strokeDash == MainPanel.StrokeDash.NORMAL) {
+            if (strokeDash == ToolState.DEFAULT_STROKE_DASH) {
                 menuOptionsStrokeDashChild.setSelected(true);
             }
             bgStrokeDash.add(menuOptionsStrokeDashChild);
@@ -419,32 +413,32 @@ public class MainWindow extends JFrame {
         }
         menuOptions.add(menuOptionsStrokeDash);
         menuOptions.addSeparator();
-        ButtonGroup bgRoundedRectangleArcWidth = new ButtonGroup();
-        for (int arcWidth : ROUNDED_RECTANGLE_RADII) {
-            JRadioButtonMenuItem menuOptionsRoundedRectangleArcWidthChild = new JRadioButtonMenuItem(arcWidth + " px");
+        final ButtonGroup bgRoundedRectangleArcWidth = new ButtonGroup();
+        for (final int arcWidth : ToolState.ROUNDED_RECTANGLE_RADII) {
+            final JRadioButtonMenuItem menuOptionsRoundedRectangleArcWidthChild = new JRadioButtonMenuItem(arcWidth + " px");
             menuOptionsRoundedRectangleArcWidthChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setRoundedRectangleArcWidth(arcWidth);
+                    toolState.setRoundedRectangleArcWidth(arcWidth);
                 }
             });
-            if (arcWidth == 20) {
+            if (arcWidth == ToolState.DEFAULT_ROUNDED_RECTANGLE_ARC_WIDTH) {
                 menuOptionsRoundedRectangleArcWidthChild.setSelected(true);
             }
             bgRoundedRectangleArcWidth.add(menuOptionsRoundedRectangleArcWidthChild);
             menuOptionsRoundedRectangleArcWidth.add(menuOptionsRoundedRectangleArcWidthChild);
         }
         menuOptionsRoundedRectangle.add(menuOptionsRoundedRectangleArcWidth);
-        ButtonGroup bgRoundedRectangleArcHeight = new ButtonGroup();
-        for (int arcHeight : ROUNDED_RECTANGLE_RADII) {
-            JRadioButtonMenuItem menuOptionsRoundedRectangleArcHeightChild = new JRadioButtonMenuItem(arcHeight + " px");
+        final ButtonGroup bgRoundedRectangleArcHeight = new ButtonGroup();
+        for (final int arcHeight : ToolState.ROUNDED_RECTANGLE_RADII) {
+            final JRadioButtonMenuItem menuOptionsRoundedRectangleArcHeightChild = new JRadioButtonMenuItem(arcHeight + " px");
             menuOptionsRoundedRectangleArcHeightChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setRoundedRectangleArcHeight(arcHeight);
+                    toolState.setRoundedRectangleArcHeight(arcHeight);
                 }
             });
-            if (arcHeight == 20) {
+            if (arcHeight == ToolState.DEFAULT_ROUNDED_RECTANGLE_ARC_HEIGHT) {
                 menuOptionsRoundedRectangleArcHeightChild.setSelected(true);
             }
             bgRoundedRectangleArcHeight.add(menuOptionsRoundedRectangleArcHeightChild);
@@ -452,32 +446,32 @@ public class MainWindow extends JFrame {
         }
         menuOptionsRoundedRectangle.add(menuOptionsRoundedRectangleArcHeight);
         menuOptions.add(menuOptionsRoundedRectangle);
-        ButtonGroup bgAirbrushType = new ButtonGroup();
-        for (MainPanel.AirbrushType airbrushType : MainPanel.AirbrushType.values()) {
-            JRadioButtonMenuItem menuOptionsAirbrushTypeChild = new JRadioButtonMenuItem(airbrushType.getTitle());
+        final ButtonGroup bgAirbrushType = new ButtonGroup();
+        for (final AirbrushType airbrushType : AirbrushType.values()) {
+            final JRadioButtonMenuItem menuOptionsAirbrushTypeChild = new JRadioButtonMenuItem(airbrushType.getTitle());
             menuOptionsAirbrushTypeChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setAirbrushType(airbrushType);
+                    toolState.setAirbrushType(airbrushType);
                 }
             });
-            if (airbrushType == MainPanel.AirbrushType.NORMAL) {
+            if (airbrushType == ToolState.DEFAULT_AIRBRUSH_TYPE) {
                 menuOptionsAirbrushTypeChild.setSelected(true);
             }
             bgAirbrushType.add(menuOptionsAirbrushTypeChild);
             menuOptionsAirbrushType.add(menuOptionsAirbrushTypeChild);
         }
         menuOptionsAirbrush.add(menuOptionsAirbrushType);
-        ButtonGroup bgAirbrushSize = new ButtonGroup();
-        for (int airbrushSize : AIRBRUSH_SIZES) {
-            JRadioButtonMenuItem menuOptionsAirbrushSizeChild = new JRadioButtonMenuItem(airbrushSize + " px");
+        final ButtonGroup bgAirbrushSize = new ButtonGroup();
+        for (final int airbrushSize : ToolState.AIRBRUSH_SIZES) {
+            final JRadioButtonMenuItem menuOptionsAirbrushSizeChild = new JRadioButtonMenuItem(airbrushSize + " px");
             menuOptionsAirbrushSizeChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setAirbrushSize(airbrushSize);
+                    toolState.setAirbrushSize(airbrushSize);
                 }
             });
-            if (airbrushSize == 15) {
+            if (airbrushSize == ToolState.DEFAULT_AIRBRUSH_SIZE) {
                 menuOptionsAirbrushSizeChild.setSelected(true);
             }
             bgAirbrushSize.add(menuOptionsAirbrushSizeChild);
@@ -487,18 +481,20 @@ public class MainWindow extends JFrame {
         menuOptions.add(menuOptionsAirbrush);
         menuBar.add(menuOptions);
 
-        for (AbstractEffect effect : EFFECTS) {
+        for (final AbstractEffect effect : EFFECTS) {
             if (effect == null) {
                 menuEffects.addSeparator();
                 continue;
             }
             final String title = effect.getName() + (effect.getParameters().isEmpty() ? "" : "...");
-            JMenuItem menuEffectsEffect = new JMenuItem(title);
+            final JMenuItem menuEffectsEffect = new JMenuItem(title);
             menuEffectsEffect.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (effect.getParameters().isEmpty()) {
-                        mainPanel.setImage(effect.apply(mainPanel.getImage()));
+                        final ImageState imageState = mainPanel.getImageState();
+                        imageState.setImage(effect.apply(imageState.getImage()));
+                        mainPanel.repaint();
                     } else {
                         new EffectWindow(MainWindow.this, scrollPane, mainPanel, effect, title);
                     }
@@ -526,14 +522,36 @@ public class MainWindow extends JFrame {
         addToolBarButtons();
         add(toolBar, BorderLayout.LINE_START);
 
+        mainPanel = new MainPanel(toolState);
+        mainPanel.addMainPanelListener(new MainPanelListener() {
+            @Override
+            public void mouseMoved(MainPanelMouseMovedEvent e) {
+                statusBarCurrentX = e.getX();
+                statusBarCurrentY = e.getY();
+                statusBarCurrentRGBA = e.getRGBA();
+                updateStatusBar();
+            }
+
+            @Override
+            public void sizeChanged(MainPanelSizeChangedEvent e) {
+                statusBarWidth = e.getWidth();
+                statusBarHeight = e.getHeight();
+                updateStatusBar();
+            }
+
+            @Override
+            public void toolStateChanged(MainPanelToolStateChangedEvent e) {
+                updateChildWindows();
+            }
+        });
         scrollPane = new JScrollPane(mainPanel);
         add(scrollPane, BorderLayout.CENTER);
 
         colorBar.setOrientation(SwingConstants.VERTICAL);
         final int colorBarSize = Config.getConfig().getColorBarSize();
-        List<File> colorPaletteFiles = Config.getConfig().getColorPaletteFiles();
+        final List<File> colorPaletteFiles = Config.getConfig().getColorPaletteFiles();
         for (int i = 0; i < colorPaletteFiles.size(); i++) {
-            PalettePanel palettePanel = new PalettePanel(colorBarSize, colorPaletteFiles.get(i));
+            final PalettePanel palettePanel = new PalettePanel(colorBarSize, colorPaletteFiles.get(i));
             palettePanel.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -542,9 +560,9 @@ public class MainWindow extends JFrame {
                     final int y = source.getY();
                     final Color c = palettePanel.getColorAt(x, y);
                     if (SwingUtilities.isLeftMouseButton(source)) {
-                        mainPanel.setColorPrimary(c);
+                        toolState.setColorPrimary(c);
                     } else if (SwingUtilities.isRightMouseButton(source)) {
-                        mainPanel.setColorSecondary(c);
+                        toolState.setColorSecondary(c);
                     }
                     updateChildWindows();
                 }
@@ -560,30 +578,38 @@ public class MainWindow extends JFrame {
         setSize(Config.getConfig().getMainWindowWidth(),
                 Config.getConfig().getMainWindowHeight());
         setLocationRelativeTo(null);
-        mainPanel.newImage(Config.getConfig().getNewImageWidth(),
-                           Config.getConfig().getNewImageHeight(),
-                           Config.getConfig().getNewImageColor());
+        mainPanel.getImageState().newImage(
+            Config.getConfig().getNewImageWidth(),
+            Config.getConfig().getNewImageHeight(),
+            Config.getConfig().getNewImageColor()
+        );
 
         setVisible(true);
     }
 
+    private void updateZoomLevel() {
+        menuViewZoomLevels.get(mainPanel.getImageState().getZoomLevel()).setSelected(true);
+        mainPanel.updatePanelSize();
+        mainPanel.repaint();
+    }
+
     private void addToolBarButtons() {
-        final int numberOfTools = MainPanel.Tool.values().length;
+        final int numberOfTools = Tool.values().length;
         final int orient = toolBar.getOrientation();
-        GridBagConstraints c = new GridBagConstraints();
+        final GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.NORTHWEST;
-        for (MainPanel.Tool tool : MainPanel.Tool.values()) {
-            AbstractTool toolObject = tool.getToolObject();
-            String title = toolObject.getName();
-            String icon = toolObject.getIcon();
-            JButton button = icon.isEmpty()
+        for (final Tool tool : Tool.values()) {
+            final AbstractTool toolObject = tool.getToolObject();
+            final String title = toolObject.getName();
+            final String icon = toolObject.getIcon();
+            final JButton button = icon.isEmpty()
                 ? new JButton(title.substring(0, 2))
                 : new JButton(new ImageIcon("icons" + File.separator + icon));
             button.setToolTipText(title);
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mainPanel.setSelectedTool(tool);
+                    toolState.setSelectedTool(tool);
                 }
             });
             final int j = tool.ordinal();
@@ -620,23 +646,10 @@ public class MainWindow extends JFrame {
         }
     }
 
-    public void updateChildWindows() {
+    private void updateChildWindows() {
         if (colorPickerWindow != null) {
             colorPickerWindow.updateAll();
         }
-    }
-
-    public void updateStatusBarSize(int width, int height) {
-        statusBarWidth = width;
-        statusBarHeight = height;
-        updateStatusBar();
-    }
-
-    public void updateStatusBarCurrentPixel(int x, int y, int rgba) {
-        statusBarCurrentX = x;
-        statusBarCurrentY = y;
-        statusBarCurrentRGBA = rgba;
-        updateStatusBar();
     }
 
     private void updateStatusBar() {
@@ -647,19 +660,18 @@ public class MainWindow extends JFrame {
         statusBar.setText(text);
     }
 
-    public void changedTillLastSave() {
-        this.changedTillLastSave = true;
-    }
-
     private void load() {
-        JFileChooser fc = new JFileChooser(lastPath);
-        addFilters(fc);
-        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
+        final JFileChooser fileChooser = new JFileChooser(lastPath);
+        addFilters(fileChooser);
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            final File file = fileChooser.getSelectedFile();
             if (file.isFile()) {
                 try {
-                    mainPanel.setImageWithOrWithoutAlpha(ImageIO.read(file));
-                    changedTillLastSave = false;
+                    final ImageState imageState = mainPanel.getImageState();
+                    imageState.setImage(ImageIO.read(file));
+                    imageState.setChangedTillLastSave(false);
+                    mainPanel.updatePanelSize();
+                    mainPanel.repaint();
                     lastPath = file.getParentFile();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -669,38 +681,39 @@ public class MainWindow extends JFrame {
     }
 
     private void save() {
-        JFileChooser fc = new JFileChooser(lastPath);
-        fc.setAcceptAllFileFilterUsed(false);
-        addFilters(fc);
-        if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            FileFilter ff = fc.getFileFilter();
-            String formatString;
-            boolean supportsAlpha;
-            if (ff == FILTER_BMP) {
+        final JFileChooser fileChooser = new JFileChooser(lastPath);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        addFilters(fileChooser);
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            final File file = fileChooser.getSelectedFile();
+            final FileFilter fileFilter = fileChooser.getFileFilter();
+            final String formatString;
+            final boolean supportsAlpha;
+            if (fileFilter == FILTER_BMP) {
                 formatString = "BMP";
                 supportsAlpha = false;
-            } else if (ff == FILTER_GIF) {
+            } else if (fileFilter == FILTER_GIF) {
                 formatString = "GIF";
                 supportsAlpha = true;
-            } else if (ff == FILTER_JPG) {
+            } else if (fileFilter == FILTER_JPG) {
                 formatString = "JPG";
                 supportsAlpha = false;
-            } else if (ff == FILTER_PNG) {
+            } else if (fileFilter == FILTER_PNG) {
                 formatString = "PNG";
                 supportsAlpha = true;
             } else {
                 throw new AssertionError();
             }
-            BufferedImage image = supportsAlpha
-                ? mainPanel.getImage()
-                : mainPanel.getImageWithoutAlpha();
+            final ImageState imageState = mainPanel.getImageState();
+            final BufferedImage image = supportsAlpha
+                ? imageState.getImage()
+                : imageState.getImageWithoutAlpha(toolState.getColorSecondary());
             if (file.exists()) {
                 file.delete();
             }
             try {
                 ImageIO.write(image, formatString, file);
-                changedTillLastSave = false;
+                imageState.setChangedTillLastSave(false);
                 lastPath = file.getParentFile();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -708,11 +721,11 @@ public class MainWindow extends JFrame {
         }
     }
 
-    private void addFilters(JFileChooser fc) {
-        fc.addChoosableFileFilter(FILTER_PNG);
-        fc.addChoosableFileFilter(FILTER_BMP);
-        fc.addChoosableFileFilter(FILTER_GIF);
-        fc.addChoosableFileFilter(FILTER_JPG);
+    private void addFilters(JFileChooser fileChooser) {
+        fileChooser.addChoosableFileFilter(FILTER_PNG);
+        fileChooser.addChoosableFileFilter(FILTER_BMP);
+        fileChooser.addChoosableFileFilter(FILTER_GIF);
+        fileChooser.addChoosableFileFilter(FILTER_JPG);
     }
 
     private static FileFilter createFileFilter(String name, String... extensions) {
@@ -723,15 +736,15 @@ public class MainWindow extends JFrame {
             }
 
             @Override
-            public boolean accept(File f) {
-                final String lc = f.getName().toLowerCase();
-                return (f.isFile() && Arrays.stream(extensions).anyMatch(extension -> lc.endsWith("." + extension))) || f.isDirectory();
+            public boolean accept(File file) {
+                final String lc = file.getName().toLowerCase();
+                return (file.isFile() && Arrays.stream(extensions).anyMatch(extension -> lc.endsWith("." + extension))) || file.isDirectory();
             }
         };
     }
 
     private void quit() {
-        if (changedTillLastSave) {
+        if (mainPanel.getImageState().hasChangedTillLastSave()) {
             switch (JOptionPane.showConfirmDialog(this, "Do you want to save your image first?", getTitle(), JOptionPane.YES_NO_CANCEL_OPTION)) {
             case JOptionPane.YES_OPTION:
                 save();

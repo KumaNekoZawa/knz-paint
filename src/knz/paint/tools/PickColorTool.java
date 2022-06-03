@@ -23,15 +23,19 @@ public class PickColorTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D g2d, MouseEvent e) {
-        super.mousePressed(g2d, e);
-        final Color c = new Color(mainPanel.getImage().getRGB(x, y), true);
+    public boolean doesChangeToolState() {
+        return true;
+    }
+
+    @Override
+    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+        super.mousePressed(graphics2d, e);
+        final Color c = new Color(imageState.getImage().getRGB(x, y), true);
         if (SwingUtilities.isLeftMouseButton(e)) {
-            mainPanel.setColorPrimary(c);
+            toolState.setColorPrimary(c);
         } else if (SwingUtilities.isRightMouseButton(e)) {
-            mainPanel.setColorSecondary(c);
+            toolState.setColorSecondary(c);
         }
-        mainPanel.getParentElement().updateChildWindows();
     }
 
 }

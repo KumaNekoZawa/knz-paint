@@ -8,36 +8,36 @@ public abstract class AbstractPolygonTool extends AbstractTool {
 
     protected Polygon polygon = new Polygon();
 
-    protected void drawPolygon(Graphics2D g2d, boolean includeCurrentPixel) {
+    protected void drawPolygon(Graphics2D graphics2d, boolean includeCurrentPixel) {
         if (polygon.npoints < 1) {
             return;
         }
-        Polygon polygon2;
+        final Polygon polygon2;
         if (includeCurrentPixel) {
             polygon2 = new Polygon(polygon.xpoints, polygon.ypoints, polygon.npoints);
             polygon2.addPoint(x, y);
         } else {
             polygon2 = polygon;
         }
-        Color colorPrimary = mainPanel.getColorPrimary();
-        Color colorSecondary = mainPanel.getColorSecondary();
-        g2d.setStroke(mainPanel.getStroke());
-        switch (mainPanel.getFillStyle()) {
+        final Color colorPrimary   = toolState.getColorPrimary();
+        final Color colorSecondary = toolState.getColorSecondary();
+        graphics2d.setStroke(toolState.getStroke());
+        switch (toolState.getFillStyle()) {
         case NONE:
-            g2d.setColor(colorPrimary);
-            g2d.drawPolygon(polygon2);
+            graphics2d.setColor(colorPrimary);
+            graphics2d.drawPolygon(polygon2);
             break;
         case PRIMARY:
-            g2d.setColor(colorPrimary);
-            g2d.fillPolygon(polygon2);
+            graphics2d.setColor(colorPrimary);
+            graphics2d.fillPolygon(polygon2);
             /* workaround: otherwise there would be nothing drawn for npoints <= 3 */
-            g2d.drawPolygon(polygon2);
+            graphics2d.drawPolygon(polygon2);
             break;
         case SECONDARY:
-            g2d.setColor(colorSecondary);
-            g2d.fillPolygon(polygon2);
-            g2d.setColor(colorPrimary);
-            g2d.drawPolygon(polygon2);
+            graphics2d.setColor(colorSecondary);
+            graphics2d.fillPolygon(polygon2);
+            graphics2d.setColor(colorPrimary);
+            graphics2d.drawPolygon(polygon2);
             break;
         default:
             throw new AssertionError();

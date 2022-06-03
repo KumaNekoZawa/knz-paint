@@ -16,26 +16,26 @@ public class LineTool extends AbstractTool {
     }
 
     @Override
-    public void mouseReleased(Graphics2D g2d, MouseEvent e) {
-        super.mouseReleased(g2d, e);
-        drawLine(g2d);
-    }
-
-    @Override
-    public boolean needsRepaint() {
+    public boolean doesChangeCanvas() {
         return mousePressed;
     }
 
     @Override
-    public void paint(Graphics2D g2d) {
-        super.paint(g2d);
-        drawLine(g2d);
+    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseReleased(graphics2d, e);
+        drawLine(graphics2d);
     }
 
-    private void drawLine(Graphics2D g2d) {
-        g2d.setColor(mainPanel.getColorPrimary());
-        g2d.setStroke(mainPanel.getStroke());
-        g2d.drawLine(startX, startY, x, y);
+    @Override
+    public void paint(Graphics2D graphics2d) {
+        super.paint(graphics2d);
+        drawLine(graphics2d);
+    }
+
+    private void drawLine(Graphics2D graphics2d) {
+        graphics2d.setColor(toolState.getColorPrimary());
+        graphics2d.setStroke(toolState.getStroke());
+        graphics2d.drawLine(startX, startY, x, y);
     }
 
 }

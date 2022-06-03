@@ -21,7 +21,6 @@ public abstract class AbstractEffect {
 
     protected abstract BufferedImage applyHelper(BufferedImage image);
 
-    /* override me */
     public void init(int width, int height) {
     }
 
