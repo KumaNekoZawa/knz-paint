@@ -5,7 +5,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import knz.paint.model.Config;
-import knz.paint.view.MainWindow;
+import knz.paint.view.mainwindow.MainWindow;
 
 public class Main {
 
