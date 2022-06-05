@@ -4,7 +4,7 @@ import knz.paint.model.effects.DoubleParameter;
 
 public class AdjustPolarEffect extends AbstractPolarEffect {
 
-    private DoubleParameter paramFactorR   = new DoubleParameter("Factor r", 0, 1, 20);
+    private DoubleParameter paramFactorR   = new DoubleParameter("Factor r", 0, 1, 2);
     private DoubleParameter paramExponentR = new DoubleParameter("Exponent r", 0, 1, 2);
     private DoubleParameter paramFactorA   = new DoubleParameter("Factor a", 0, 1, 2);
     private DoubleParameter paramShiftA    = new DoubleParameter("Shift a", -180, 0, 180);

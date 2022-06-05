@@ -44,6 +44,7 @@ import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
 import knz.paint.model.effects.specific.hsba.SaltPepperEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
+import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
 import knz.paint.model.effects.specific.positional.ExplosionEffect;
 import knz.paint.model.effects.specific.positional.FlipEffect;
 import knz.paint.model.effects.specific.positional.MosaicEffect;
@@ -51,6 +52,7 @@ import knz.paint.model.effects.specific.positional.StainedGlassEffect;
 import knz.paint.model.effects.specific.positional.ZoomEffect;
 import knz.paint.model.effects.specific.positional.polar.AdjustPolarEffect;
 import knz.paint.model.effects.specific.positional.polar.PolarCoordinatesEffect;
+import knz.paint.model.effects.specific.positional.polar.PolarMosaicEffect;
 import knz.paint.model.effects.specific.positional.polar.RotationEffect;
 import knz.paint.model.effects.specific.positional.polar.SwirlEffect;
 import knz.paint.model.effects.specific.rgba.AdjustContrastEffect;
@@ -88,6 +90,7 @@ public class MainWindow extends JFrame {
 
     private static final AbstractEffect[] EFFECTS = {
         /* positional */
+        new AdjustCartesianEffect(),
         new ExplosionEffect(),
         new FlipEffect(),
         new MosaicEffect(),
@@ -97,6 +100,7 @@ public class MainWindow extends JFrame {
         /* positional/polar */
         new AdjustPolarEffect(),
         new PolarCoordinatesEffect(),
+        new PolarMosaicEffect(),
         new RotationEffect(),
         new SwirlEffect(),
         null,

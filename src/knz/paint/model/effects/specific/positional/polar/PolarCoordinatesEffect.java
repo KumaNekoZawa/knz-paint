@@ -14,10 +14,10 @@ public class PolarCoordinatesEffect extends AbstractPolarEffect {
     @Override
     protected void filter(int width, int height, int toX, int toY, double toR, double toA) {
         final boolean swap = paramSwap.getValue();
-        final double x = toX / (double) width;
+        final double x =           toX      / (double) width;
         final double y = (height - toY - 1) / (double) height;
-        fromR = (swap ? x : y) * (Math.max(width, height) / 2);
-        fromA = (swap ? y : x) * (2 * Math.PI);
+        fromR =                swap ? x : y;
+        fromA = 2 * Math.PI * (swap ? y : x) - Math.PI;
     }
 
 }

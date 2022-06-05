@@ -24,15 +24,16 @@ public abstract class AbstractPolarEffect extends AbstractPositionalEffect {
     protected void filter(int width, int height, int toX, int toY) {
         final int shiftX = (int) (paramShiftX.getValue() * width);
         final int shiftY = (int) (paramShiftY.getValue() * height);
-        final int x = toX - shiftX;
-        final int y = toY - shiftY;
+        final int size = Math.min(width, height);
+        final double x = (toX - shiftX) / (double) size;
+        final double y = (toY - shiftY) / (double) size;
         final double toR = Math.sqrt(x * x + y * y);
         final double toA = Math.atan2(x, y);
         fromR = toR;
         fromA = toA;
         filter(width, height, toX, toY, toR, toA);
-        fromX = (int) (fromR * Math.sin(fromA)) + shiftX;
-        fromY = (int) (fromR * Math.cos(fromA)) + shiftY;
+        fromX = (int) (fromR * Math.sin(fromA) * size) + shiftX;
+        fromY = (int) (fromR * Math.cos(fromA) * size) + shiftY;
     }
 
     protected abstract void filter(int width, int height, int toX, int toY, double toR, double toA);

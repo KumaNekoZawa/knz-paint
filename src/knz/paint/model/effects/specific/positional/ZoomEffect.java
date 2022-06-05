@@ -2,6 +2,7 @@ package knz.paint.model.effects.specific.positional;
 
 import knz.paint.model.effects.DoubleParameter;
 
+// XXX this is a special case of the AdjustCartesianEffect (the two factors being linked and inverted)
 public class ZoomEffect extends AbstractPositionalEffect {
 
     private DoubleParameter paramFactor = new DoubleParameter("Factor", 0, 1, 10);
