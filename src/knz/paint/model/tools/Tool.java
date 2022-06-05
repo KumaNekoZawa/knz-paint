@@ -8,15 +8,15 @@ import knz.paint.model.tools.specific.EllipseTool;
 import knz.paint.model.tools.specific.FloodFillTool;
 import knz.paint.model.tools.specific.LineTool;
 import knz.paint.model.tools.specific.PickColorTool;
-import knz.paint.model.tools.specific.PolygonFreeFormTool;
-import knz.paint.model.tools.specific.PolygonTool;
-import knz.paint.model.tools.specific.PolylineFreeFormTool;
-import knz.paint.model.tools.specific.PolylineTool;
 import knz.paint.model.tools.specific.RectangleTool;
 import knz.paint.model.tools.specific.RoundedRectangleTool;
-import knz.paint.model.tools.specific.SelectFreeFormTool;
-import knz.paint.model.tools.specific.SelectPolygonTool;
-import knz.paint.model.tools.specific.SelectRectangleTool;
+import knz.paint.model.tools.specific.polygon.PolygonFreeFormTool;
+import knz.paint.model.tools.specific.polygon.PolygonTool;
+import knz.paint.model.tools.specific.polyline.PolylineFreeFormTool;
+import knz.paint.model.tools.specific.polyline.PolylineTool;
+import knz.paint.model.tools.specific.selection.SelectFreeFormTool;
+import knz.paint.model.tools.specific.selection.SelectPolygonTool;
+import knz.paint.model.tools.specific.selection.SelectRectangleTool;
 
 public enum Tool {
 

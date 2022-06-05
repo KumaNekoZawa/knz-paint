@@ -29,7 +29,7 @@ public class StainedGlassEffect extends AbstractPositionalEffect {
     }
 
     @Override
-    public void filter(int width, int height, int toX, int toY) {
+    protected void filter(int width, int height, int toX, int toY) {
         int closestPixel = 0;
         double closestDistance = Double.MAX_VALUE;
         int maxX = width;

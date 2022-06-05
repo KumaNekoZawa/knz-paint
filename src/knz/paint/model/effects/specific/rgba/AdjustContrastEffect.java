@@ -12,7 +12,7 @@ public class AdjustContrastEffect extends AbstractRGBAEffect {
     }
 
     @Override
-    public void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+    protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
         final double factor = paramFactor.getValue();
         out_r = (int) (factor * (in_r - 0x80)) + 0x80;
         out_g = (int) (factor * (in_g - 0x80)) + 0x80;

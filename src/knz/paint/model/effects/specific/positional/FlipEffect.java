@@ -14,7 +14,7 @@ public class FlipEffect extends AbstractPositionalEffect {
     }
 
     @Override
-    public void filter(int width, int height, int toX, int toY) {
+    protected void filter(int width, int height, int toX, int toY) {
         final boolean flipX = paramFlipX.getValue();
         final boolean flipY = paramFlipY.getValue();
         fromX = flipX ? width  - toX - 1 : toX;

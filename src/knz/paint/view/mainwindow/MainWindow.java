@@ -47,9 +47,12 @@ import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.positional.ExplosionEffect;
 import knz.paint.model.effects.specific.positional.FlipEffect;
 import knz.paint.model.effects.specific.positional.MosaicEffect;
-import knz.paint.model.effects.specific.positional.PolarCoordinatesEffect;
-import knz.paint.model.effects.specific.positional.RotationEffect;
 import knz.paint.model.effects.specific.positional.StainedGlassEffect;
+import knz.paint.model.effects.specific.positional.ZoomEffect;
+import knz.paint.model.effects.specific.positional.polar.AdjustPolarEffect;
+import knz.paint.model.effects.specific.positional.polar.PolarCoordinatesEffect;
+import knz.paint.model.effects.specific.positional.polar.RotationEffect;
+import knz.paint.model.effects.specific.positional.polar.SwirlEffect;
 import knz.paint.model.effects.specific.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
 import knz.paint.model.effects.specific.rgba.AdjustRGBAEffect;
@@ -59,7 +62,7 @@ import knz.paint.model.effects.specific.rgba.ExtractRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
 import knz.paint.model.effects.specific.rgba.NegateEffect;
 import knz.paint.model.effects.specific.rgba.NoiseEffect;
-import knz.paint.model.effects.specific.rgba.NormalizeEffect;
+import knz.paint.model.effects.specific.rgba.NormalizationEffect;
 import knz.paint.model.effects.specific.rgba.ReduceContrastEffect;
 import knz.paint.model.effects.specific.rgba.SepiaEffect;
 import knz.paint.model.effects.specific.rgba.SolarizationEffect;
@@ -84,13 +87,20 @@ public class MainWindow extends JFrame {
     private static final FileFilter FILTER_PNG = createFileFilter("Portable Network Graphics", "png");
 
     private static final AbstractEffect[] EFFECTS = {
+        /* positional */
         new ExplosionEffect(),
         new FlipEffect(),
         new MosaicEffect(),
+        new StainedGlassEffect(),
+        new ZoomEffect(),
+        null,
+        /* positional/polar */
+        new AdjustPolarEffect(),
         new PolarCoordinatesEffect(),
         new RotationEffect(),
-        new StainedGlassEffect(),
+        new SwirlEffect(),
         null,
+        /* rgba */
         new AdjustContrastEffect(),
         new AdjustGammaEffect(),
         new AdjustRGBAEffect(),
@@ -100,16 +110,18 @@ public class MainWindow extends JFrame {
         new GrayscaleEffect(),
         new NegateEffect(),
         new NoiseEffect(),
-        new NormalizeEffect(),
+        new NormalizationEffect(),
         new ReduceContrastEffect(),
         new SepiaEffect(),
         new SolarizationEffect(),
         null,
+        /* hsba */
         new AdjustHSBAEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
         new SaltPepperEffect(),
         null,
+        /* hsba/gray */
         new BlackWhiteEffect(),
     };
 

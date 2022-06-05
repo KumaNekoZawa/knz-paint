@@ -12,7 +12,7 @@ public class ExplosionEffect extends AbstractPositionalEffect {
     }
 
     @Override
-    public void filter(int width, int height, int toX, int toY) {
+    protected void filter(int width, int height, int toX, int toY) {
         final double radius = paramRadius.getValue();
         final double r = radius * Math.random();
         final double a = 2 * Math.PI * Math.random();

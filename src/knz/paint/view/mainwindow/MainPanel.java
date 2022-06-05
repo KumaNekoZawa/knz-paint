@@ -25,9 +25,9 @@ import knz.paint.model.Config;
 import knz.paint.model.ImageState;
 import knz.paint.model.tools.Tool;
 import knz.paint.model.tools.ToolState;
-import knz.paint.model.tools.specific.AbstractSelectionTool;
 import knz.paint.model.tools.specific.AbstractTool;
-import knz.paint.model.tools.specific.SelectRectangleTool;
+import knz.paint.model.tools.specific.selection.AbstractSelectionTool;
+import knz.paint.model.tools.specific.selection.SelectRectangleTool;
 import knz.paint.view.TransferableImage;
 
 public class MainPanel extends JPanel {

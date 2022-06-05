@@ -1,4 +1,4 @@
-package knz.paint.model.tools.specific;
+package knz.paint.model.tools.specific.polygon;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;

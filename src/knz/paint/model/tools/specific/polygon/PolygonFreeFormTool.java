@@ -1,51 +1,52 @@
-package knz.paint.model.tools.specific;
+package knz.paint.model.tools.specific.polygon;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
-public class PolylineTool extends AbstractPolylineTool {
+public class PolygonFreeFormTool extends AbstractPolygonTool {
 
     @Override
     public String getName() {
-        return "Polyline";
+        return "Polygon free-form";
     }
 
     @Override
     public String getIcon() {
-        return "tool_13b.png";
+        return "tool_0b.png";
     }
 
     @Override
     public boolean doesChangeCanvas() {
-        return polygon.npoints > 0;
+        return mousePressed;
     }
 
     @Override
     public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
         super.mousePressed(graphics2d, e);
-        if (SwingUtilities.isLeftMouseButton(e)) {
-            if (polygon.npoints == 0) {
-                polygon.addPoint(x, y);
-            }
-        } else if (SwingUtilities.isRightMouseButton(e)) {
-            drawPolyline(graphics2d, false);
-            polygon.reset();
-        }
-    }
-
-    @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
-        super.mouseReleased(graphics2d, e);
+        polygon.reset();
         if (SwingUtilities.isLeftMouseButton(e)) {
             polygon.addPoint(x, y);
         }
     }
 
     @Override
+    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseDragged(graphics2d, e);
+        polygon.addPoint(x, y);
+    }
+
+    @Override
+    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+        super.mouseReleased(graphics2d, e);
+        drawPolygon(graphics2d, false);
+        polygon.reset();
+    }
+
+    @Override
     public void paint(Graphics2D graphics2d) {
         super.paint(graphics2d);
-        drawPolyline(graphics2d, true);
+        drawPolygon(graphics2d, false);
     }
 
 }

@@ -1,0 +1,21 @@
+package knz.paint.model.effects.specific.positional;
+
+import knz.paint.model.effects.DoubleParameter;
+
+public class ZoomEffect extends AbstractPositionalEffect {
+
+    private DoubleParameter paramFactor = new DoubleParameter("Factor", 0, 1, 10);
+
+    public ZoomEffect() {
+        super("Zoom");
+        this.parameters.add(paramFactor);
+    }
+
+    @Override
+    protected void filter(int width, int height, int toX, int toY) {
+        final double factor = 1 / paramFactor.getValue();
+        fromX = (int) (factor * toX);
+        fromY = (int) (factor * toY);
+    }
+
+}

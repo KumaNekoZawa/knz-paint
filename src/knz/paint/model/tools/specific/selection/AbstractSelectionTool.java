@@ -1,4 +1,4 @@
-package knz.paint.model.tools.specific;
+package knz.paint.model.tools.specific.selection;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -6,6 +6,8 @@ import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Stroke;
+
+import knz.paint.model.tools.specific.AbstractTool;
 
 public abstract class AbstractSelectionTool extends AbstractTool {
 

@@ -1,8 +1,10 @@
-package knz.paint.model.tools.specific;
+package knz.paint.model.tools.specific.polygon;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+
+import knz.paint.model.tools.specific.AbstractTool;
 
 public abstract class AbstractPolygonTool extends AbstractTool {
 
