@@ -49,6 +49,7 @@ import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
 import knz.paint.model.effects.specific.positional.ExplosionEffect;
 import knz.paint.model.effects.specific.positional.FlipEffect;
+import knz.paint.model.effects.specific.positional.MirrorEffect;
 import knz.paint.model.effects.specific.positional.MosaicEffect;
 import knz.paint.model.effects.specific.positional.StainedGlassEffect;
 import knz.paint.model.effects.specific.positional.ZoomEffect;
@@ -95,6 +96,7 @@ public class MainWindow extends JFrame {
         new AdjustCartesianEffect(),
         new ExplosionEffect(),
         new FlipEffect(),
+        new MirrorEffect(),
         new MosaicEffect(),
         new StainedGlassEffect(),
         new ZoomEffect(),
