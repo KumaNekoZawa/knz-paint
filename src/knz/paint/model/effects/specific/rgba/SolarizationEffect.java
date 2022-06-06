@@ -4,7 +4,7 @@ import knz.paint.model.effects.DoubleParameter;
 
 public class SolarizationEffect extends AbstractRGBAEffect {
 
-    private DoubleParameter paramThreshold = new DoubleParameter("Threshold", 0, 0.5, 1);
+    private DoubleParameter paramThreshold = new DoubleParameter("Threshold", 0, 0, 1);
 
     public SolarizationEffect() {
         super("Solarization", true, true);

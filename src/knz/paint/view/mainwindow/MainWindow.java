@@ -39,6 +39,8 @@ import javax.swing.filechooser.FileFilter;
 import knz.paint.model.Config;
 import knz.paint.model.ImageState;
 import knz.paint.model.effects.specific.AbstractEffect;
+import knz.paint.model.effects.specific.BentleyEffect;
+import knz.paint.model.effects.specific.PolarBentleyEffect;
 import knz.paint.model.effects.specific.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
@@ -127,6 +129,10 @@ public class MainWindow extends JFrame {
         null,
         /* hsba/gray */
         new BlackWhiteEffect(),
+        null,
+        /* misc. */
+        new BentleyEffect(),
+        new PolarBentleyEffect(),
     };
 
     private ColorPickerWindow colorPickerWindow = null;
