@@ -2,8 +2,8 @@ package knz.paint.model.tools.specific;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingUtilities;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class PickColorTool extends AbstractTool {
 
@@ -28,12 +28,12 @@ public class PickColorTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         final Color c = new Color(imageState.getImage().getRGB(x, y), true);
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if (e.isLeftButton()) {
             toolState.setColorPrimary(c);
-        } else if (SwingUtilities.isRightMouseButton(e)) {
+        } else if (e.isRightButton()) {
             toolState.setColorSecondary(c);
         }
     }

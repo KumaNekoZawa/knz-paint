@@ -2,10 +2,9 @@ package knz.paint.model.tools.specific;
 
 import java.awt.Cursor;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 
 import knz.paint.model.ImageState;
+import knz.paint.model.tools.MouseInfo;
 import knz.paint.model.tools.ToolState;
 
 public abstract class AbstractTool {
@@ -76,28 +75,28 @@ public abstract class AbstractTool {
         return false;
     }
 
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         updateXY(e);
         startX = x;
         startY = y;
         mousePressed = true;
     }
 
-    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseDragged(Graphics2D graphics2d, MouseInfo e) {
         updateXY(e);
     }
 
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         mousePressed = false;
         updateXY(e);
     }
 
-    private void updateXY(MouseEvent e) {
+    private void updateXY(MouseInfo e) {
         x = imageState.getZoomDivisor() * e.getX() / imageState.getZoomFactor();
         y = imageState.getZoomDivisor() * e.getY() / imageState.getZoomFactor();
     }
 
-    public void timerEvent(Graphics2D graphics2d, ActionEvent e) {
+    public void timerEvent(Graphics2D graphics2d) {
     }
 
     public void paint(Graphics2D graphics2d) {

@@ -2,7 +2,8 @@ package knz.paint.model.tools.specific;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class RectangleTool extends AbstractTool {
 
@@ -22,7 +23,7 @@ public class RectangleTool extends AbstractTool {
     }
 
     @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         super.mouseReleased(graphics2d, e);
         drawRectangle(graphics2d);
     }

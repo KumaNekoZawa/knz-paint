@@ -1,7 +1,8 @@
 package knz.paint.model.tools.specific.selection;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class SelectFreeFormTool extends AbstractSelectionTool {
 
@@ -16,14 +17,14 @@ public class SelectFreeFormTool extends AbstractSelectionTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         polygon.reset();
         polygon.addPoint(x, y);
     }
 
     @Override
-    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseDragged(Graphics2D graphics2d, MouseInfo e) {
         super.mouseDragged(graphics2d, e);
         polygon.addPoint(x, y);
     }

@@ -1,8 +1,9 @@
 package knz.paint.model.tools.specific.selection;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class SelectRectangleTool extends AbstractSelectionTool {
 
@@ -17,13 +18,13 @@ public class SelectRectangleTool extends AbstractSelectionTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         polygon.reset();
     }
 
     @Override
-    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseDragged(Graphics2D graphics2d, MouseInfo e) {
         super.mouseDragged(graphics2d, e);
         final int minX = Math.min(startX, x);
         final int minY = Math.min(startY, y);

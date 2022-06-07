@@ -19,10 +19,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import knz.paint.model.Config;
 import knz.paint.model.ImageState;
+import knz.paint.model.tools.MouseInfo;
 import knz.paint.model.tools.Tool;
 import knz.paint.model.tools.ToolState;
 import knz.paint.model.tools.specific.AbstractTool;
@@ -40,7 +42,7 @@ public class MainPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-            toolObject.timerEvent(imageState.getGraphics2D(), e);
+            toolObject.timerEvent(imageState.getGraphics2D());
             postEvent(toolObject);
         }
     });
@@ -71,7 +73,7 @@ public class MainPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-                toolObject.mousePressed(imageState.getGraphics2D(), e);
+                toolObject.mousePressed(imageState.getGraphics2D(), getMouseInfo(e));
                 postEvent(toolObject);
                 if (toolObject.usesTimer()) {
                     timer.start();
@@ -84,7 +86,7 @@ public class MainPanel extends JPanel {
                 if (toolObject.usesTimer()) {
                     timer.stop();
                 }
-                toolObject.mouseReleased(imageState.getGraphics2D(), e);
+                toolObject.mouseReleased(imageState.getGraphics2D(), getMouseInfo(e));
                 postEvent(toolObject);
                 if (toolObject.doesChangeImage()) {
                     imageState.setChangedTillLastSave(true);
@@ -95,7 +97,7 @@ public class MainPanel extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-                toolObject.mouseDragged(imageState.getGraphics2D(), e);
+                toolObject.mouseDragged(imageState.getGraphics2D(), getMouseInfo(e));
                 postEvent(toolObject);
                 updateStatusBar(e);
             }
@@ -122,6 +124,15 @@ public class MainPanel extends JPanel {
         });
 
         setBackground(Config.getConfig().getBackgroundColor());
+    }
+
+    private MouseInfo getMouseInfo(MouseEvent e) {
+        return new MouseInfo(
+            e.getX(),
+            e.getY(),
+            SwingUtilities.isLeftMouseButton(e),
+            SwingUtilities.isRightMouseButton(e)
+        );
     }
 
     private void postEvent(AbstractTool toolObject) {

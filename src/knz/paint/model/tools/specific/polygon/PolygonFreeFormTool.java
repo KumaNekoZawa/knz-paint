@@ -1,8 +1,8 @@
 package knz.paint.model.tools.specific.polygon;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingUtilities;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class PolygonFreeFormTool extends AbstractPolygonTool {
 
@@ -22,22 +22,22 @@ public class PolygonFreeFormTool extends AbstractPolygonTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         polygon.reset();
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if (e.isLeftButton()) {
             polygon.addPoint(x, y);
         }
     }
 
     @Override
-    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseDragged(Graphics2D graphics2d, MouseInfo e) {
         super.mouseDragged(graphics2d, e);
         polygon.addPoint(x, y);
     }
 
     @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         super.mouseReleased(graphics2d, e);
         drawPolygon(graphics2d, false);
         polygon.reset();

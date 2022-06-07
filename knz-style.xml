@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+          "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+          "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <!-- REGEXP -->
+    <!-- XXX add RegexpSingleline here if needed -->
+
+    <module name="TreeWalker">
+
+        <!-- CODING -->
+        <!-- XXX add MatchXpath here if needed -->
+
+        <!-- IMPORTS -->
+        <module name="ImportControl">
+            <property name="file" value="import-control.xml" />
+        </module>
+
+    </module>
+
+</module>

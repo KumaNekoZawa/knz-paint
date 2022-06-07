@@ -1,6 +1,6 @@
 <project name="KNZ-Paint" basedir="." default="package">
 
-    <property name="main.class" value="knz.paint.Main" />
+    <property name="main.class" value="knz.paint.view.Main" />
     <property name="bin.dir"    value="bin" />
     <property name="src.dir"    value="src" />
     <property name="jar.file"   value="${ant.project.name}.jar" />
@@ -42,6 +42,9 @@
     <target name="checkstyle">
         <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="../checkstyle-10.3-all.jar" />
         <checkstyle config="../knz-style.xml">
+            <fileset dir="${src.dir}" includes="**/*.java" />
+        </checkstyle>
+        <checkstyle config="knz-style.xml">
             <fileset dir="${src.dir}" includes="**/*.java" />
         </checkstyle>
     </target>

@@ -1,4 +1,4 @@
-package knz.paint;
+package knz.paint.view;
 
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;

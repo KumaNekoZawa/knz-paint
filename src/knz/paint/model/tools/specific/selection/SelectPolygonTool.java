@@ -1,7 +1,8 @@
 package knz.paint.model.tools.specific.selection;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class SelectPolygonTool extends AbstractSelectionTool {
 
@@ -16,7 +17,7 @@ public class SelectPolygonTool extends AbstractSelectionTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         if (polygon.npoints == 0) {
             polygon.addPoint(x, y);
@@ -24,7 +25,7 @@ public class SelectPolygonTool extends AbstractSelectionTool {
     }
 
     @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         super.mouseReleased(graphics2d, e);
         polygon.addPoint(x, y);
     }

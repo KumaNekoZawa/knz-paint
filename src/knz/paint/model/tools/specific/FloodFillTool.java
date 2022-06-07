@@ -1,11 +1,11 @@
 package knz.paint.model.tools.specific;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Stack;
 
 import knz.paint.model.IntegerPair;
+import knz.paint.model.tools.MouseInfo;
 
 public class FloodFillTool extends AbstractTool {
 
@@ -24,7 +24,7 @@ public class FloodFillTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         image = imageState.getImage();
         if (!(0 <= x && x < image.getWidth()

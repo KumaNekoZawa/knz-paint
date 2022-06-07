@@ -1,8 +1,8 @@
 package knz.paint.model.tools.specific.polyline;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingUtilities;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class PolylineFreeFormTool extends AbstractPolylineTool {
 
@@ -22,10 +22,10 @@ public class PolylineFreeFormTool extends AbstractPolylineTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         polygon.reset();
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if (e.isLeftButton()) {
             polygon.addPoint(x, y);
             /* twice, so that the first pixel gets drawn no matter what */
             polygon.addPoint(x, y);
@@ -33,13 +33,13 @@ public class PolylineFreeFormTool extends AbstractPolylineTool {
     }
 
     @Override
-    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseDragged(Graphics2D graphics2d, MouseInfo e) {
         super.mouseDragged(graphics2d, e);
         polygon.addPoint(x, y);
     }
 
     @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         super.mouseReleased(graphics2d, e);
         drawPolyline(graphics2d, false);
         polygon.reset();

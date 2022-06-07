@@ -2,9 +2,9 @@ package knz.paint.model.tools.specific;
 
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-import java.awt.event.MouseEvent;
 import java.util.Arrays;
-import javax.swing.SwingUtilities;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class BezierCurveTool extends AbstractTool {
 
@@ -26,22 +26,22 @@ public class BezierCurveTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if (e.isLeftButton()) {
             if (polygon.npoints == 0) {
                 polygon.addPoint(x, y);
             }
-        } else if (SwingUtilities.isRightMouseButton(e)) {
+        } else if (e.isRightButton()) {
             drawBezierCurve(graphics2d, false);
             polygon.reset();
         }
     }
 
     @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         super.mouseReleased(graphics2d, e);
-        if (SwingUtilities.isLeftMouseButton(e)) {
+        if (e.isLeftButton()) {
             polygon.addPoint(x, y);
         }
     }

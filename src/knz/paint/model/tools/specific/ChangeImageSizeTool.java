@@ -1,8 +1,9 @@
 package knz.paint.model.tools.specific;
 
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+
+import knz.paint.model.tools.MouseInfo;
 
 public class ChangeImageSizeTool extends AbstractTool {
 
@@ -22,19 +23,19 @@ public class ChangeImageSizeTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         changeSize();
     }
 
     @Override
-    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseDragged(Graphics2D graphics2d, MouseInfo e) {
         super.mouseDragged(graphics2d, e);
         changeSize();
     }
 
     @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         super.mouseReleased(graphics2d, e);
         changeSize();
     }

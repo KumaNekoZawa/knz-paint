@@ -2,11 +2,10 @@ package knz.paint.model.tools.specific;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import knz.paint.model.Config;
+import knz.paint.model.tools.MouseInfo;
 
 public class AirbrushTool extends AbstractTool {
 
@@ -29,7 +28,7 @@ public class AirbrushTool extends AbstractTool {
     }
 
     @Override
-    public void mousePressed(Graphics2D graphics2d, MouseEvent e) {
+    public void mousePressed(Graphics2D graphics2d, MouseInfo e) {
         super.mousePressed(graphics2d, e);
         if (!USE_TIMER) {
             drawAirbrush();
@@ -37,7 +36,7 @@ public class AirbrushTool extends AbstractTool {
     }
 
     @Override
-    public void mouseDragged(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseDragged(Graphics2D graphics2d, MouseInfo e) {
         super.mouseDragged(graphics2d, e);
         if (!USE_TIMER) {
             drawAirbrush();
@@ -45,7 +44,7 @@ public class AirbrushTool extends AbstractTool {
     }
 
     @Override
-    public void mouseReleased(Graphics2D graphics2d, MouseEvent e) {
+    public void mouseReleased(Graphics2D graphics2d, MouseInfo e) {
         super.mouseReleased(graphics2d, e);
         if (!USE_TIMER) {
             drawAirbrush();
@@ -53,7 +52,7 @@ public class AirbrushTool extends AbstractTool {
     }
 
     @Override
-    public void timerEvent(Graphics2D graphics2d, ActionEvent e) {
+    public void timerEvent(Graphics2D graphics2d) {
         for (int i = 0; i < PIXELS_PER_TICK; i++) {
             drawAirbrush();
         }
