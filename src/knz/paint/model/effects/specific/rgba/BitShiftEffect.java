@@ -1,7 +1,7 @@
 package knz.paint.model.effects.specific.rgba;
 
-import knz.paint.model.effects.BooleanParameter;
-import knz.paint.model.effects.IntegerParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
+import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class BitShiftEffect extends AbstractRGBAEffect {
 

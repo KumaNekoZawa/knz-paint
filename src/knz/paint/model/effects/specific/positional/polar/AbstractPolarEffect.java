@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.positional.polar;
 
-import knz.paint.model.effects.DoubleParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.specific.positional.AbstractPositionalEffect;
 
 public abstract class AbstractPolarEffect extends AbstractPositionalEffect {

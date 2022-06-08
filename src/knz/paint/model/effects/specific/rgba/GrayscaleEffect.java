@@ -1,8 +1,8 @@
 package knz.paint.model.effects.specific.rgba;
 
-import knz.paint.model.effects.DoubleParameter;
-import knz.paint.model.effects.Preset;
-import knz.paint.model.effects.PresetParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
+import knz.paint.model.effects.parameter.Preset;
+import knz.paint.model.effects.parameter.PresetParameter;
 
 public class GrayscaleEffect extends AbstractRGBAEffect {
 

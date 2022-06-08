@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.rgba;
 
-import knz.paint.model.effects.DoubleParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 
 // XXX this is a special case of the AdjustRGBAEffect where RGBA are linked and the controls not inverted
 public class AdjustGammaEffect extends AbstractRGBAEffect {

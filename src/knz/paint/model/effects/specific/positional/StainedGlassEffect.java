@@ -2,7 +2,7 @@ package knz.paint.model.effects.specific.positional;
 
 import java.util.Arrays;
 
-import knz.paint.model.effects.IntegerParameter;
+import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class StainedGlassEffect extends AbstractPositionalEffect {
 

@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.positional.polar;
 
-import knz.paint.model.effects.DoubleParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class PolarMosaicEffect extends AbstractPolarEffect {
 

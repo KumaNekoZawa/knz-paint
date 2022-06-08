@@ -1,4 +1,4 @@
-package knz.paint.model.effects;
+package knz.paint.model.effects.parameter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

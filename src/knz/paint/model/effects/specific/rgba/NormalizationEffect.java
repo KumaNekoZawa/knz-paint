@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.rgba;
 
-import knz.paint.model.effects.DoubleParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class NormalizationEffect extends AbstractRGBAEffect {
 

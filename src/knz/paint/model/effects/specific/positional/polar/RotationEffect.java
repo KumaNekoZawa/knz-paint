@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.positional.polar;
 
-import knz.paint.model.effects.DoubleParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 
 // XXX this is just a special case of the AdjustPolarEffect
 public class RotationEffect extends AbstractPolarEffect {

@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.positional.polar;
 
-import knz.paint.model.effects.BooleanParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
 
 public class PolarCoordinatesEffect extends AbstractPolarEffect {
 

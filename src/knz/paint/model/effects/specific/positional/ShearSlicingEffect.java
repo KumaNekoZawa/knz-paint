@@ -1,9 +1,9 @@
 package knz.paint.model.effects.specific.positional;
 
-import knz.paint.model.effects.BooleanParameter;
-import knz.paint.model.effects.IntegerParameter;
-import knz.paint.model.effects.Preset;
-import knz.paint.model.effects.PresetParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
+import knz.paint.model.effects.parameter.IntegerParameter;
+import knz.paint.model.effects.parameter.Preset;
+import knz.paint.model.effects.parameter.PresetParameter;
 
 public class ShearSlicingEffect extends AbstractPositionalEffect {
 

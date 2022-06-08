@@ -1,7 +1,7 @@
 package knz.paint.model.effects.specific.hsba.gray;
 
-import knz.paint.model.effects.BooleanParameter;
-import knz.paint.model.effects.DoubleParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class BlackWhiteEffect extends AbstractGrayEffect {
 

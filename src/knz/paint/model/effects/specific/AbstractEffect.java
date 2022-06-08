@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import knz.paint.model.effects.AbstractParameter;
+import knz.paint.model.effects.parameter.AbstractParameter;
 
 public abstract class AbstractEffect {
 

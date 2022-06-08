@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.positional;
 
-import knz.paint.model.effects.BooleanParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
 
 public class FlipEffect extends AbstractPositionalEffect {
 

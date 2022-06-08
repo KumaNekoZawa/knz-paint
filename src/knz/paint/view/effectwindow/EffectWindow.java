@@ -25,11 +25,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import knz.paint.model.ImageState;
-import knz.paint.model.effects.AbstractParameter;
-import knz.paint.model.effects.BooleanParameter;
-import knz.paint.model.effects.DoubleParameter;
-import knz.paint.model.effects.IntegerParameter;
-import knz.paint.model.effects.PresetParameter;
+import knz.paint.model.effects.parameter.AbstractParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
+import knz.paint.model.effects.parameter.IntegerParameter;
+import knz.paint.model.effects.parameter.PresetParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
 import knz.paint.view.mainwindow.MainPanel;
 

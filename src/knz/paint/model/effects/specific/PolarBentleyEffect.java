@@ -3,8 +3,8 @@ package knz.paint.model.effects.specific;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-import knz.paint.model.effects.BooleanParameter;
-import knz.paint.model.effects.DoubleParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class PolarBentleyEffect extends AbstractEffect {
 

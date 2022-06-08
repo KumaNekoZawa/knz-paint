@@ -2,7 +2,7 @@ package knz.paint.model.effects.specific.rgba;
 
 import java.awt.image.BufferedImage;
 
-import knz.paint.model.effects.BooleanParameter;
+import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
 
 public abstract class AbstractRGBAEffect extends AbstractEffect {

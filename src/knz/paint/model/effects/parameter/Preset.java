@@ -1,4 +1,4 @@
-package knz.paint.model.effects;
+package knz.paint.model.effects.parameter;
 
 public class Preset {
 

@@ -1,6 +1,6 @@
 package knz.paint.model.effects.specific.positional;
 
-import knz.paint.model.effects.IntegerParameter;
+import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class ExplosionEffect extends AbstractPositionalEffect {
 
