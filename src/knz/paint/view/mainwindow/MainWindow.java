@@ -163,6 +163,7 @@ public class MainWindow extends JFrame {
     private JMenuItem menuViewZoomIn = new JMenuItem("Zoom in");
     private JMenuItem menuViewZoomOut = new JMenuItem("Zoom out");
     private List<JMenuItem> menuViewZoomLevels = new ArrayList<>();
+    private JMenuItem menuViewPackAndCenter = new JMenuItem("Pack & center");
 
     private JMenu menuOptions = new JMenu("Options");
     private JMenuItem menuOptionsColorPicker = new JMenuItem("Color picker...");
@@ -376,6 +377,15 @@ public class MainWindow extends JFrame {
             menuViewZoom.add(menuViewZoomLevel);
         }
         menuView.add(menuViewZoom);
+        menuView.addSeparator();
+        menuViewPackAndCenter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pack();
+                setLocationRelativeTo(null);
+            }
+        });
+        menuView.add(menuViewPackAndCenter);
         menuBar.add(menuView);
 
         menuOptionsColorPicker.addActionListener(new ActionListener() {
