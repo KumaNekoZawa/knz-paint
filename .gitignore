@@ -1,5 +1,5 @@
 /bin/
+/etc/
 /icons/tool*.png
-/effects.txt
 *.class
 *.jar

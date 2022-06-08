@@ -55,7 +55,7 @@ public class EffectWindow extends JDialog {
         rect.y      = zoomDivisor * rect.y      / zoomFactor;
         rect.width  = zoomDivisor * rect.width  / zoomFactor;
         rect.height = zoomDivisor * rect.height / zoomFactor;
-        final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth() - 1));
+        final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth()  - 1));
         final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
         final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
         final int imageTempHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
@@ -148,7 +148,8 @@ public class EffectWindow extends JDialog {
                     final JSlider slider = new JSlider(JSlider.HORIZONTAL,
                         integerParameter.getMin(),
                         integerParameter.getMax(),
-                        integerParameter.getDef());
+                        integerParameter.getDef()
+                    );
                     slider.addChangeListener(new ChangeListener() {
                         @Override
                         public void stateChanged(ChangeEvent e) {
@@ -166,7 +167,8 @@ public class EffectWindow extends JDialog {
                     final JSlider slider = new JSlider(JSlider.HORIZONTAL,
                         (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
                         (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
-                        (int) (doubleParameter.getResolution() * doubleParameter.getDef()));
+                        (int) (doubleParameter.getResolution() * doubleParameter.getDef())
+                    );
                     slider.addChangeListener(new ChangeListener() {
                         @Override
                         public void stateChanged(ChangeEvent e) {

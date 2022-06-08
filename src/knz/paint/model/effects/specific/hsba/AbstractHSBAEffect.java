@@ -8,14 +8,22 @@ import knz.paint.model.effects.specific.AbstractEffect;
 public abstract class AbstractHSBAEffect extends AbstractEffect {
 
     protected float out_h, out_s, out_b;
-    protected int out_a;
+    protected int   out_a;
 
     public AbstractHSBAEffect(String name) {
         super(name);
     }
 
     @Override
-    public BufferedImage applyHelper(BufferedImage image) {
+    protected final void applyHead(BufferedImage image) {
+        applyHead();
+    }
+
+    protected void applyHead() {
+    }
+
+    @Override
+    protected final BufferedImage applyBody(BufferedImage image) {
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());
@@ -30,7 +38,7 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
                 final float in_h = in_hsb[0];
                 final float in_s = in_hsb[1];
                 final float in_b = in_hsb[2];
-                final int in_a = (in >> 24) & 0xFF;
+                final int   in_a = (in >> 24) & 0xFF;
                 out_h = in_h;
                 out_s = in_s;
                 out_b = in_b;
@@ -42,6 +50,14 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
             }
         }
         return result;
+    }
+
+    @Override
+    protected final void applyFoot(BufferedImage image) {
+        applyFoot();
+    }
+
+    protected void applyFoot() {
     }
 
     protected abstract void filter(int x, int y, float in_h, float in_s, float in_b, int in_a);

@@ -17,7 +17,7 @@ public class BitShiftEffect extends AbstractRGBAEffect {
     @Override
     protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
         final boolean rotate = paramRotate.getValue();
-              int     amount = paramAmount.getValue();
+        int amount = paramAmount.getValue();
         if (amount > 0) {
             out_r = shiftOfRotateRight(rotate, in_r, amount);
             out_g = shiftOfRotateRight(rotate, in_g, amount);

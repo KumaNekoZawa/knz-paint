@@ -18,7 +18,7 @@ public class BentleyEffect extends AbstractEffect {
     }
 
     @Override
-    public BufferedImage applyHelper(BufferedImage image) {
+    protected final BufferedImage applyBody(BufferedImage image) {
         final boolean sat    = paramSat.getValue();
         final double  factor = paramFactor.getValue();
         final int width  = image.getWidth();

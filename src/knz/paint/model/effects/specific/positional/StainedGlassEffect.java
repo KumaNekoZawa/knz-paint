@@ -16,7 +16,7 @@ public class StainedGlassEffect extends AbstractPositionalEffect {
     }
 
     @Override
-    public void init(int width, int height) {
+    protected void applyHead(int width, int height) {
         final int amount = paramAmount.getValue();
         pixelsX = new int[amount];
         pixelsY = new int[amount];

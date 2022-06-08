@@ -17,8 +17,8 @@ public class PolarMosaicEffect extends AbstractPolarEffect {
     protected void filter(int width, int height, int toX, int toY, double toR, double toA) {
         final double sizeR = 10 / paramSizeR.getValue();
         final double sizeA = 10 / paramSizeA.getValue();
-        fromR = ((int) (sizeR * toR)) / sizeR;
-        fromA = Math.PI * (int) (sizeA * toA / Math.PI) / sizeA;
+        fromR =           ((int) (sizeR * toR          )) / sizeR;
+        fromA = Math.PI * ((int) (sizeA * toA / Math.PI)) / sizeA;
     }
 
 }

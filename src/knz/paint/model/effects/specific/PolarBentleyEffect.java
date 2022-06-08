@@ -20,7 +20,7 @@ public class PolarBentleyEffect extends AbstractEffect {
     }
 
     @Override
-    public BufferedImage applyHelper(BufferedImage image) {
+    protected final BufferedImage applyBody(BufferedImage image) {
         final boolean sat     = paramSat.getValue();
         final double  factorR = paramFactorR.getValue();
         final double  phaseA  = Math.PI * paramPhaseA.getValue() / 180;

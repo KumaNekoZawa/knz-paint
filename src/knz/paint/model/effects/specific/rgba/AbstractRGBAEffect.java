@@ -31,7 +31,15 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
     }
 
     @Override
-    public BufferedImage applyHelper(BufferedImage image) {
+    protected final void applyHead(BufferedImage image) {
+        applyHead();
+    }
+
+    protected void applyHead() {
+    }
+
+    @Override
+    protected final BufferedImage applyBody(BufferedImage image) {
         final boolean red   = paramRed.getValue();
         final boolean green = paramGreen.getValue();
         final boolean blue  = paramBlue.getValue();
@@ -63,6 +71,14 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
             }
         }
         return result;
+    }
+
+    @Override
+    protected final void applyFoot(BufferedImage image) {
+        applyFoot();
+    }
+
+    protected void applyFoot() {
     }
 
     protected abstract void filter(int x, int y, int in_r, int in_g, int in_b, int in_a);

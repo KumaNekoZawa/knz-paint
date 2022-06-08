@@ -17,13 +17,18 @@ public abstract class AbstractEffect {
     }
 
     public final BufferedImage apply(BufferedImage image) {
-        init(image.getWidth(), image.getHeight());
-        return applyHelper(image);
+        applyHead(image);
+        final BufferedImage result = applyBody(image);
+        applyFoot(image);
+        return result;
     }
 
-    protected abstract BufferedImage applyHelper(BufferedImage image);
+    protected void applyHead(BufferedImage image) {
+    }
 
-    public void init(int width, int height) {
+    protected abstract BufferedImage applyBody(BufferedImage image);
+
+    protected void applyFoot(BufferedImage image) {
     }
 
     public String getName() {

@@ -32,14 +32,14 @@ public class ShearSlicingEffect extends AbstractPositionalEffect {
     }
 
     @Override
-    public void init(int width, int height) {
+    protected void applyHead(int width, int height) {
         this.shiftX = new int[height];
-        init(shiftX, height);
+        applyHead(shiftX, height);
         this.shiftY = new int[width];
-        init(shiftY, width);
+        applyHead(shiftY, width);
     }
 
-    private void init(int[] shift, int size) {
+    private void applyHead(int[] shift, int size) {
         final boolean relative = paramRelative.getValue();
         final int shiftR  = paramShiftR.getValue();
         final int factorR = paramFactorR.getValue();
