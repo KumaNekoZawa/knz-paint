@@ -7,18 +7,17 @@ import knz.paint.model.effects.specific.AbstractEffect;
 
 public abstract class AbstractRGBAEffect extends AbstractEffect {
 
-    private boolean showDefaultParameters;
     private boolean affectsAlpha;
     private BooleanParameter paramRed   = new BooleanParameter("Affect red",   true);
     private BooleanParameter paramGreen = new BooleanParameter("Affect green", true);
     private BooleanParameter paramBlue  = new BooleanParameter("Affect blue",  true);
-    private BooleanParameter paramAlpha = new BooleanParameter("Affect alpha", false);
+    private BooleanParameter paramAlpha;
 
     protected int out_r, out_g, out_b, out_a;
 
     public AbstractRGBAEffect(String name, boolean showDefaultParameters, boolean affectsAlpha) {
         super(name);
-        this.showDefaultParameters = showDefaultParameters;
+        this.paramAlpha = new BooleanParameter("Affect alpha", !showDefaultParameters && affectsAlpha);
         this.affectsAlpha = affectsAlpha;
         if (showDefaultParameters) {
             this.parameters.add(paramRed);
@@ -59,10 +58,10 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
                 out_b = in_b;
                 out_a = in_a;
                 filter(x, y, in_r, in_g, in_b, in_a);
-                out_r =                  !showDefaultParameters || red    ? Math.max(0x00, Math.min(0xFF, out_r)) : in_r;
-                out_g =                  !showDefaultParameters || green  ? Math.max(0x00, Math.min(0xFF, out_g)) : in_g;
-                out_b =                  !showDefaultParameters || blue   ? Math.max(0x00, Math.min(0xFF, out_b)) : in_b;
-                out_a = affectsAlpha && (!showDefaultParameters || alpha) ? Math.max(0x00, Math.min(0xFF, out_a)) : in_a;
+                out_r = red   ? Math.max(0x00, Math.min(0xFF, out_r)) : in_r;
+                out_g = green ? Math.max(0x00, Math.min(0xFF, out_g)) : in_g;
+                out_b = blue  ? Math.max(0x00, Math.min(0xFF, out_b)) : in_b;
+                out_a = alpha ? Math.max(0x00, Math.min(0xFF, out_a)) : in_a;
                 final int out = (out_a << 24)
                               | (out_r << 16)
                               | (out_g << 8)

@@ -6,21 +6,21 @@ import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class StainedGlassEffect extends AbstractPositionalEffect {
 
-    private IntegerParameter paramAmount = new IntegerParameter("Amount", 1, 100, 1000);
+    private IntegerParameter paramTiles = new IntegerParameter("Tiles", 1, 100, 1000);
 
     private int[] pixelsX, pixelsY;
 
     public StainedGlassEffect() {
         super("Stained glass");
-        this.parameters.add(paramAmount);
+        this.parameters.add(paramTiles);
     }
 
     @Override
     protected void applyHead(int width, int height) {
-        final int amount = paramAmount.getValue();
-        pixelsX = new int[amount];
-        pixelsY = new int[amount];
-        for (int i = 0; i < amount; i++) {
+        final int tiles = paramTiles.getValue();
+        pixelsX = new int[tiles];
+        pixelsY = new int[tiles];
+        for (int i = 0; i < tiles; i++) {
             pixelsX[i] = (int) (Math.random() * width);
             pixelsY[i] = (int) (Math.random() * height);
         }

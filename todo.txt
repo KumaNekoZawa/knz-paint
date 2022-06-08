@@ -62,3 +62,4 @@ look at other programs
     pinta
     photofiltre
     xnview
+    imagej

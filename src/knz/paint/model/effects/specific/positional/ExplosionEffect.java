@@ -1,5 +1,6 @@
 package knz.paint.model.effects.specific.positional;
 
+import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class ExplosionEffect extends AbstractPositionalEffect {
@@ -7,7 +8,7 @@ public class ExplosionEffect extends AbstractPositionalEffect {
     private IntegerParameter paramRadius = new IntegerParameter("Radius", 1, 1, 100);
 
     public ExplosionEffect() {
-        super("Explosion");
+        super("Explosion", BorderFillStrategy.EXTEND_EDGES);
         this.parameters.add(paramRadius);
     }
 

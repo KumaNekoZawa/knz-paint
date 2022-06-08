@@ -1,6 +1,7 @@
 package knz.paint.model.effects.specific.positional;
 
 import knz.paint.model.effects.parameter.BooleanParameter;
+import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.IntegerParameter;
 import knz.paint.model.effects.parameter.Preset;
 import knz.paint.model.effects.parameter.PresetParameter;
@@ -8,10 +9,10 @@ import knz.paint.model.effects.parameter.PresetParameter;
 public class ShearSlicingEffect extends AbstractPositionalEffect {
 
     private PresetParameter paramPresets = new PresetParameter(
-        new String[] { "Relative", "Shift r", "Factor r", "Shift d", "Factor d" },
-        new Preset("Default", false,   0,  1, 0,  1),
-        new Preset("Shear",   true,   -1,  3, 0,  1),
-        new Preset("Slicing", false, -32, 64, 8, 32)
+        new String[] { "Border fill strategy", "Relative", "Shift r", "Factor r", "Shift d", "Factor d" },
+        new Preset("Default", BorderFillStrategy.FILL_TRANSPARENT, false,   0,  1, 0,  1),
+        new Preset("Shear",   BorderFillStrategy.FILL_BLACK,       true,   -1,  3, 0,  1),
+        new Preset("Slicing", BorderFillStrategy.EXTEND_EDGES,     false, -32, 64, 8, 32)
     );
     private BooleanParameter paramRelative = new BooleanParameter("Relative", false);
     private IntegerParameter paramShiftR   = new IntegerParameter("Shift r",  -100, 0, 100);
@@ -22,7 +23,7 @@ public class ShearSlicingEffect extends AbstractPositionalEffect {
     private int[] shiftX, shiftY;
 
     public ShearSlicingEffect() {
-        super("Shear/slicing effect");
+        super("Shear/slicing effect", BorderFillStrategy.FILL_TRANSPARENT);
         this.parameters.add(paramPresets);
         this.parameters.add(paramRelative);
         this.parameters.add(paramShiftR);

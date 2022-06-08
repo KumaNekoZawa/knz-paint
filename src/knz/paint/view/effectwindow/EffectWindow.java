@@ -27,6 +27,8 @@ import javax.swing.event.ChangeListener;
 import knz.paint.model.ImageState;
 import knz.paint.model.effects.parameter.AbstractParameter;
 import knz.paint.model.effects.parameter.BooleanParameter;
+import knz.paint.model.effects.parameter.BorderFillStrategy;
+import knz.paint.model.effects.parameter.BorderFillStrategyParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
 import knz.paint.model.effects.parameter.PresetParameter;
@@ -94,7 +96,13 @@ public class EffectWindow extends JDialog {
                             final Object value = values[i];
                             final AbstractParameter parameterToSet = parameters.get(parameterToSetName);
                             final JComponent parameterToSetElement = parameterElements.get(parameterToSetName);
-                            if (parameterToSet instanceof BooleanParameter && parameterToSetElement instanceof JCheckBox) {
+                            if (parameterToSet instanceof BorderFillStrategyParameter && parameterToSetElement instanceof JComboBox) {
+                                final BorderFillStrategyParameter borderFillStrategyParameterToSet = (BorderFillStrategyParameter) parameterToSet;
+                                final JComboBox<?> comboBox = (JComboBox<?>) parameterToSetElement;
+                                final BorderFillStrategy borderFillStrategyValue = (BorderFillStrategy) value;
+                                borderFillStrategyParameterToSet.setValue(borderFillStrategyValue);
+                                comboBox.setSelectedIndex(borderFillStrategyValue.ordinal());
+                            } else if (parameterToSet instanceof BooleanParameter && parameterToSetElement instanceof JCheckBox) {
                                 final BooleanParameter booleanParameterToSet = (BooleanParameter) parameterToSet;
                                 final JCheckBox checkBox = (JCheckBox) parameterToSetElement;
                                 final boolean booleanValue = (boolean) value;
@@ -116,6 +124,21 @@ public class EffectWindow extends JDialog {
                                 throw new AssertionError();
                             }
                         }
+                        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        mainPanel.repaint();
+                    }
+                });
+                parameterElements.put(parameterName, comboBox);
+                add(comboBox, c);
+                c.gridy++;
+            } else if (parameter instanceof BorderFillStrategyParameter) {
+                final BorderFillStrategyParameter borderFillStrategyParameter = (BorderFillStrategyParameter) parameter;
+                final JComboBox<String> comboBox = new JComboBox<>(BorderFillStrategy.getNames());
+                comboBox.setSelectedIndex(borderFillStrategyParameter.getDef().ordinal());
+                comboBox.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        borderFillStrategyParameter.setValue(BorderFillStrategy.values()[comboBox.getSelectedIndex()]);
                         imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
                         mainPanel.repaint();
                     }

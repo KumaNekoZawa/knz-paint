@@ -1,11 +1,11 @@
 package knz.paint.model.effects.specific.rgba;
 
-import knz.paint.model.effects.parameter.DoubleParameter;
+import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class NormalizationEffect extends AbstractRGBAEffect {
 
-    private DoubleParameter paramMin = new DoubleParameter("Min", 0, 0, 1);
-    private DoubleParameter paramMax = new DoubleParameter("Max", 0, 1, 1);
+    private IntegerParameter paramMin = new IntegerParameter("Min", 0x00, 0x00, 0xFF);
+    private IntegerParameter paramMax = new IntegerParameter("Max", 0x00, 0xFF, 0xFF);
 
     public NormalizationEffect() {
         super("Normalization", true, true);
@@ -15,12 +15,13 @@ public class NormalizationEffect extends AbstractRGBAEffect {
 
     @Override
     protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
-        final double min = paramMin.getValue();
-        final double max = paramMax.getValue();
-        out_r = (int) (0xFF * (in_r / (double) 0xFF - min) / (max - min));
-        out_g = (int) (0xFF * (in_g / (double) 0xFF - min) / (max - min));
-        out_b = (int) (0xFF * (in_b / (double) 0xFF - min) / (max - min));
-        out_a = (int) (0xFF * (in_a / (double) 0xFF - min) / (max - min));
+        final int min = paramMin.getValue();
+        final int max = paramMax.getValue();
+        final int divider = Math.max(1, max - min);
+        out_r = 0xFF * (in_r - min) / divider;
+        out_g = 0xFF * (in_g - min) / divider;
+        out_b = 0xFF * (in_b - min) / divider;
+        out_a = 0xFF * (in_a - min) / divider;
     }
 
 }

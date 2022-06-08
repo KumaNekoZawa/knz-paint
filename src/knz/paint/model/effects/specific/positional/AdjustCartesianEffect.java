@@ -1,5 +1,6 @@
 package knz.paint.model.effects.specific.positional;
 
+import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class AdjustCartesianEffect extends AbstractPositionalEffect {
@@ -10,7 +11,7 @@ public class AdjustCartesianEffect extends AbstractPositionalEffect {
     private DoubleParameter paramShiftY  = new DoubleParameter("Shift y", -1, 0, 1);
 
     public AdjustCartesianEffect() {
-        super("Adjust cartesian");
+        super("Adjust cartesian", BorderFillStrategy.FILL_TRANSPARENT);
         this.parameters.add(paramFactorX);
         this.parameters.add(paramShiftX);
         this.parameters.add(paramFactorY);

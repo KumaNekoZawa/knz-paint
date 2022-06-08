@@ -1,19 +1,18 @@
 package knz.paint.model.effects.specific.positional.polar;
 
+import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.specific.positional.AbstractPositionalEffect;
 
 public abstract class AbstractPolarEffect extends AbstractPositionalEffect {
 
-    private boolean showDefaultParameters;
     private DoubleParameter paramShiftX = new DoubleParameter("Shift x", 0, 0.5, 1);
     private DoubleParameter paramShiftY = new DoubleParameter("Shift y", 0, 0.5, 1);
 
     protected double fromR, fromA;
 
     public AbstractPolarEffect(String name, boolean showDefaultParameters) {
-        super(name);
-        this.showDefaultParameters = showDefaultParameters;
+        super(name, BorderFillStrategy.FILL_TRANSPARENT);
         if (showDefaultParameters) {
             this.parameters.add(paramShiftX);
             this.parameters.add(paramShiftY);
