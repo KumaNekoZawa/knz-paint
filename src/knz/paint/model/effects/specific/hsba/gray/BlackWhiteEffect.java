@@ -15,7 +15,7 @@ public class BlackWhiteEffect extends AbstractGrayEffect {
     }
 
     @Override
-    protected void filter(int x, int y, float in_b, int in_a) {
+    protected void filter(float in_b, int in_a) {
         final boolean random    = paramRandom.getValue();
         final double  threshold = random ? Math.random() : paramThreshold.getValue();
         out_b = in_b < threshold ? 0 : 1;

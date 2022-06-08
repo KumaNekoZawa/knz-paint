@@ -15,7 +15,7 @@ public class SolarizationEffect extends AbstractRGBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+    protected void filter(int in_r, int in_g, int in_b, int in_a) {
         final boolean negate    = paramNegate.getValue();
         final int     threshold = paramThreshold.getValue();
         out_r = (negate ? in_r > threshold : in_r < threshold) ? 0xFF - in_r : in_r;

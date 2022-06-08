@@ -14,7 +14,7 @@ public class NormalizationEffect extends AbstractRGBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+    protected void filter(int in_r, int in_g, int in_b, int in_a) {
         final int min = paramMin.getValue();
         final int max = paramMax.getValue();
         final int divider = Math.max(1, max - min);

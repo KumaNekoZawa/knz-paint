@@ -12,7 +12,7 @@ public class NoiseEffect extends AbstractRGBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+    protected void filter(int in_r, int in_g, int in_b, int in_a) {
         final double amount = paramAmount.getValue();
         final double negAmount = 1 - amount;
         out_r = (int) (negAmount * in_r + amount * Math.random() * 0xFF);

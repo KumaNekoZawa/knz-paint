@@ -9,12 +9,12 @@ public abstract class AbstractGrayEffect extends AbstractHSBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, float in_h, float in_s, float in_b, int in_a) {
-        filter(x, y, in_b, in_a);
+    protected void filter(float in_h, float in_s, float in_b, int in_a) {
+        filter(in_b, in_a);
         out_h = 0;
         out_s = 0;
     }
 
-    protected abstract void filter(int x, int y, float in_b, int in_a);
+    protected abstract void filter(float in_b, int in_a);
 
 }

@@ -8,7 +8,7 @@ public class NegateEffect extends AbstractRGBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+    protected void filter(int in_r, int in_g, int in_b, int in_a) {
         out_r = 0xFF - in_r;
         out_g = 0xFF - in_g;
         out_b = 0xFF - in_b;

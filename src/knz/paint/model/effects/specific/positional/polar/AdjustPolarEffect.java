@@ -18,7 +18,7 @@ public class AdjustPolarEffect extends AbstractPolarEffect {
     }
 
     @Override
-    protected void filter(int width, int height, int toX, int toY, double toR, double toA) {
+    protected void filter(double toR, double toA) {
         final double factorR   = paramFactorR.getValue();
         final double exponentR = paramExponentR.getValue();
         final double factorA   = paramFactorA.getValue();

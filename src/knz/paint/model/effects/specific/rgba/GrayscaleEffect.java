@@ -26,7 +26,7 @@ public class GrayscaleEffect extends AbstractRGBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+    protected void filter(int in_r, int in_g, int in_b, int in_a) {
         final double red   = paramRed.getValue();
         final double green = paramGreen.getValue();
         final double blue  = paramBlue.getValue();

@@ -13,7 +13,7 @@ public class AdjustGammaEffect extends AbstractRGBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, int in_r, int in_g, int in_b, int in_a) {
+    protected void filter(int in_r, int in_g, int in_b, int in_a) {
         final double exponent = paramExponent.getValue();
         out_r = (int) (0xFF * Math.pow(in_r / (double) 0xFF, exponent));
         out_g = (int) (0xFF * Math.pow(in_g / (double) 0xFF, exponent));

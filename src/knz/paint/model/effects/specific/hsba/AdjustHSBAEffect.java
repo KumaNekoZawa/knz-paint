@@ -23,7 +23,7 @@ public class AdjustHSBAEffect extends AbstractHSBAEffect {
     }
 
     @Override
-    protected void filter(int x, int y, float in_h, float in_s, float in_b, int in_a) {
+    protected void filter(float in_h, float in_s, float in_b, int in_a) {
         final double  huePhase    = paramHuePhase.getValue() / 360;
         final boolean invertSB    = paramInvertSB.getValue();
         final double  saturation  = paramSaturation.getValue();

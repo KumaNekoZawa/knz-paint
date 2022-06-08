@@ -43,7 +43,7 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
                 out_s = in_s;
                 out_b = in_b;
                 out_a = in_a;
-                filter(x, y, in_h, in_s, in_b, in_a);
+                filter(in_h, in_s, in_b, in_a);
                 out_a = Math.max(0x00, Math.min(0xFF, out_a));
                 final int out = (out_a << 24) | (Color.HSBtoRGB(out_h, out_s, out_b) & 0xFFFFFF);
                 result.setRGB(x, y, out);
@@ -60,6 +60,6 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
     protected void applyFoot() {
     }
 
-    protected abstract void filter(int x, int y, float in_h, float in_s, float in_b, int in_a);
+    protected abstract void filter(float in_h, float in_s, float in_b, int in_a);
 
 }

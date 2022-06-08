@@ -30,11 +30,11 @@ public abstract class AbstractPolarEffect extends AbstractPositionalEffect {
         final double toA = Math.atan2(x, y);
         fromR = toR;
         fromA = toA;
-        filter(width, height, toX, toY, toR, toA);
+        filter(toR, toA);
         fromX = (int) (fromR * Math.sin(fromA) * size) + shiftX;
         fromY = (int) (fromR * Math.cos(fromA) * size) + shiftY;
     }
 
-    protected abstract void filter(int width, int height, int toX, int toY, double toR, double toA);
+    protected abstract void filter(double toR, double toA);
 
 }

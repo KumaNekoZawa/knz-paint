@@ -57,7 +57,7 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
                 out_g = in_g;
                 out_b = in_b;
                 out_a = in_a;
-                filter(x, y, in_r, in_g, in_b, in_a);
+                filter(in_r, in_g, in_b, in_a);
                 out_r = red   ? Math.max(0x00, Math.min(0xFF, out_r)) : in_r;
                 out_g = green ? Math.max(0x00, Math.min(0xFF, out_g)) : in_g;
                 out_b = blue  ? Math.max(0x00, Math.min(0xFF, out_b)) : in_b;
@@ -80,6 +80,6 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
     protected void applyFoot() {
     }
 
-    protected abstract void filter(int x, int y, int in_r, int in_g, int in_b, int in_a);
+    protected abstract void filter(int in_r, int in_g, int in_b, int in_a);
 
 }
