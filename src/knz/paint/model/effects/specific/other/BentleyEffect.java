@@ -1,29 +1,27 @@
-package knz.paint.model.effects.specific;
+package knz.paint.model.effects.specific.other;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
+import knz.paint.model.effects.specific.AbstractEffect;
 
-public class PolarBentleyEffect extends AbstractEffect {
+public class BentleyEffect extends AbstractEffect {
 
-    private BooleanParameter paramSat     = new BooleanParameter("Saturation instead of Brightness", false);
-    private DoubleParameter  paramFactorR = new DoubleParameter("Factor r", 0, 0, 250);
-    private DoubleParameter  paramPhaseA  = new DoubleParameter("Phase a", MIN_ANGLE, 0, MAX_ANGLE);
+    private BooleanParameter paramSat    = new BooleanParameter("Saturation instead of Brightness", false);
+    private DoubleParameter  paramFactor = new DoubleParameter("Factor", -250, 0, 250);
 
-    public PolarBentleyEffect() {
-        super("Polar Bentley effect");
+    public BentleyEffect() {
+        super("Other.Bentley effect");
         this.parameters.add(paramSat);
-        this.parameters.add(paramFactorR);
-        this.parameters.add(paramPhaseA);
+        this.parameters.add(paramFactor);
     }
 
     @Override
     protected final BufferedImage applyBody(BufferedImage image) {
-        final boolean sat     = paramSat.getValue();
-        final double  factorR = paramFactorR.getValue();
-        final double  phaseA  = paramPhaseA.getValue() * Math.PI / 180;
+        final boolean sat    = paramSat.getValue();
+        final double  factor = paramFactor.getValue();
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());
@@ -35,13 +33,10 @@ public class PolarBentleyEffect extends AbstractEffect {
                     (in >> 8)  & 0xFF,
                      in        & 0xFF,
                 null);
-                final float in_h = in_hsb[0];
                 final float in_s = in_hsb[1];
                 final float in_b = in_hsb[2];
-                final double r = factorR * (sat ? in_s : in_b);
-                final double a = 2 * Math.PI * in_h + phaseA;
-                int fromX = toX + (int) (r * Math.sin(a));
-                int fromY = toY + (int) (r * Math.cos(a));
+                int fromX = toX;
+                int fromY = toY + (int) (factor * (sat ? in_s : in_b));
                 fromX = Math.max(0, Math.min(width  - 1, fromX));
                 fromY = Math.max(0, Math.min(height - 1, fromY));
                 result.setRGB(toX, toY, image.getRGB(fromX, fromY));

@@ -36,11 +36,23 @@ public abstract class AbstractEffect {
     protected void applyFoot(BufferedImage image) {
     }
 
-    public String getName() {
+    public final String getParentName() {
+        return name.contains(".")
+            ? name.substring(0, name.lastIndexOf("."))
+            : "";
+    }
+
+    public final String getFinalName() {
+        return name.contains(".")
+            ? name.substring(name.lastIndexOf(".") + 1)
+            : name;
+    }
+
+    public final String getName() {
         return name;
     }
 
-    public List<AbstractParameter> getParameters() {
+    public final List<AbstractParameter> getParameters() {
         return parameters;
     }
 

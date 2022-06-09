@@ -17,7 +17,7 @@ public class TadaEffect extends AbstractGraphicsEffect {
     private DoubleParameter  paramThicknessFactor = new DoubleParameter("Thickness factor", "°", 0, 1, 10);
 
     public TadaEffect() {
-        super("Tada effect");
+        super("Ta-dah effect");
         this.parameters.add(paramBrightness);
         this.parameters.add(paramTransparency);
         this.parameters.add(paramAngleShift);

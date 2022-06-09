@@ -8,7 +8,7 @@ import knz.paint.model.effects.specific.AbstractEffect;
 public abstract class AbstractGraphicsEffect extends AbstractEffect {
 
     public AbstractGraphicsEffect(String name) {
-        super(name);
+        super("Graphics." + name);
     }
 
     @Override

@@ -13,12 +13,12 @@ public abstract class AbstractPositionalEffect extends AbstractEffect {
     protected int fromX, fromY;
 
     public AbstractPositionalEffect(String name) {
-        super(name);
+        super("Positional." + name);
         this.paramBorderFillStrategy = new BorderFillStrategyParameter(BorderFillStrategy.EXTEND_EDGES);
     }
 
     public AbstractPositionalEffect(String name, BorderFillStrategy defaultBorderFillStrategy) {
-        super(name);
+        super("Positional." + name);
         this.paramBorderFillStrategy = new BorderFillStrategyParameter(defaultBorderFillStrategy);
         this.parameters.add(paramBorderFillStrategy);
     }

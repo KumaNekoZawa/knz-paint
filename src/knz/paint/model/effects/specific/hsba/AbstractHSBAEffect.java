@@ -11,7 +11,7 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
     protected int   out_a;
 
     public AbstractHSBAEffect(String name) {
-        super(name);
+        super("HSBA." + name);
     }
 
     @Override

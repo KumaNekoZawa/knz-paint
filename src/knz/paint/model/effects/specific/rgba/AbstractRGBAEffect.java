@@ -16,7 +16,7 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
     protected int out_r, out_g, out_b, out_a;
 
     public AbstractRGBAEffect(String name, boolean showDefaultParameters, boolean affectsAlpha) {
-        super(name);
+        super("RGBA." + name);
         this.paramAlpha = new BooleanParameter("Affect alpha", !showDefaultParameters && affectsAlpha);
         this.affectsAlpha = affectsAlpha;
         if (showDefaultParameters) {

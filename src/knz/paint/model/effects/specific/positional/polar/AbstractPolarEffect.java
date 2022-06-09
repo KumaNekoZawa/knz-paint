@@ -12,7 +12,7 @@ public abstract class AbstractPolarEffect extends AbstractPositionalEffect {
     protected double fromR, fromA;
 
     public AbstractPolarEffect(String name, BorderFillStrategy borderFillStrategy, boolean showDefaultParameters) {
-        super(name, borderFillStrategy);
+        super("Polar." + name, borderFillStrategy);
         if (showDefaultParameters) {
             this.parameters.add(paramShiftX);
             this.parameters.add(paramShiftY);

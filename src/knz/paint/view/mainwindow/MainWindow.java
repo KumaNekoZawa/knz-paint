@@ -15,7 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -39,14 +41,14 @@ import javax.swing.filechooser.FileFilter;
 import knz.paint.model.Config;
 import knz.paint.model.ImageState;
 import knz.paint.model.effects.specific.AbstractEffect;
-import knz.paint.model.effects.specific.BentleyEffect;
-import knz.paint.model.effects.specific.PolarBentleyEffect;
 import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
 import knz.paint.model.effects.specific.hsba.SaltPepperEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
+import knz.paint.model.effects.specific.other.BentleyEffect;
+import knz.paint.model.effects.specific.other.PolarBentleyEffect;
 import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
 import knz.paint.model.effects.specific.positional.ExplosionEffect;
 import knz.paint.model.effects.specific.positional.FlipEffect;
@@ -94,6 +96,12 @@ public class MainWindow extends JFrame {
     private static final FileFilter FILTER_PNG = createFileFilter("Portable Network Graphics", "png");
 
     private static final AbstractEffect[] EFFECTS = {
+        /* positional/polar */
+        new AdjustPolarEffect(),
+        new PolarMirrorEffect(),
+        new PolarMosaicEffect(),
+        new RotationEffect(),
+        new SwirlEffect(),
         /* positional */
         new AdjustCartesianEffect(),
         new ExplosionEffect(),
@@ -103,14 +111,6 @@ public class MainWindow extends JFrame {
         new ShearSlicingEffect(),
         new StainedGlassEffect(),
         new ZoomEffect(),
-        null,
-        /* positional/polar */
-        new AdjustPolarEffect(),
-        new PolarMirrorEffect(),
-        new PolarMosaicEffect(),
-        new RotationEffect(),
-        new SwirlEffect(),
-        null,
         /* rgba */
         new AdjustContrastEffect(),
         new AdjustGammaEffect(),
@@ -125,22 +125,18 @@ public class MainWindow extends JFrame {
         new ReduceContrastEffect(),
         new SepiaEffect(),
         new SolarizationEffect(),
-        null,
+        /* hsba/gray */
+        new BlackWhiteEffect(),
         /* hsba */
         new AdjustHSBAEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
         new SaltPepperEffect(),
-        null,
-        /* hsba/gray */
-        new BlackWhiteEffect(),
-        null,
-        /* misc. */
-        new BentleyEffect(),
-        new PolarBentleyEffect(),
-        null,
         /* graphics */
         new TadaEffect(),
+        /* other */
+        new BentleyEffect(),
+        new PolarBentleyEffect(),
     };
 
     private ColorPickerWindow colorPickerWindow = null;
@@ -184,6 +180,7 @@ public class MainWindow extends JFrame {
     private JMenu menuOptionsAirbrushSize = new JMenu("Size");
 
     private JMenu menuEffects = new JMenu("Effects");
+    private Map<String, JMenu> packageToMenu = new HashMap<>();
 
     private JScrollPane scrollPane;
     private MainPanel mainPanel;
@@ -523,12 +520,10 @@ public class MainWindow extends JFrame {
         menuOptions.add(menuOptionsAirbrush);
         menuBar.add(menuOptions);
 
+        packageToMenu.clear();
+        packageToMenu.put("", menuEffects);
         for (final AbstractEffect effect : EFFECTS) {
-            if (effect == null) {
-                menuEffects.addSeparator();
-                continue;
-            }
-            final String title = effect.getName() + (effect.getParameters().isEmpty() ? "" : "...");
+            final String title = effect.getFinalName() + (effect.getParameters().isEmpty() ? "" : "...");
             final JMenuItem menuEffectsEffect = new JMenuItem(title);
             menuEffectsEffect.addActionListener(new ActionListener() {
                 @Override
@@ -542,7 +537,7 @@ public class MainWindow extends JFrame {
                     }
                 }
             });
-            menuEffects.add(menuEffectsEffect);
+            makeSureMenuExists(effect.getParentName()).add(menuEffectsEffect);
         }
         menuBar.add(menuEffects);
 
@@ -633,6 +628,27 @@ public class MainWindow extends JFrame {
         menuViewZoomLevels.get(mainPanel.getImageState().getZoomLevel()).setSelected(true);
         mainPanel.updatePanelSize();
         mainPanel.repaint();
+    }
+
+    private JMenu makeSureMenuExists(String fullpath) {
+        JMenu result = menuEffects;
+        int i = 0;
+        int index;
+        do {
+            index = fullpath.indexOf(".", i);
+            final String subpath = index < 0 ? fullpath : fullpath.substring(0, index);
+            if (!packageToMenu.containsKey(subpath)) {
+                final String subname = subpath.substring(subpath.lastIndexOf(".") + 1);
+                final JMenu newMenu = new JMenu(subname);
+                packageToMenu.put(subpath, newMenu);
+                result.add(newMenu);
+            }
+            result = packageToMenu.get(subpath);
+            if (index >= 0) {
+                i = index + 1;
+            }
+        } while (index >= 0);
+        return result;
     }
 
     private void addToolBarButtons() {
