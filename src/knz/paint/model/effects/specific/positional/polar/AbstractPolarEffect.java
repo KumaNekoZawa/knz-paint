@@ -11,8 +11,8 @@ public abstract class AbstractPolarEffect extends AbstractPositionalEffect {
 
     protected double fromR, fromA;
 
-    public AbstractPolarEffect(String name, boolean showDefaultParameters) {
-        super(name, BorderFillStrategy.FILL_TRANSPARENT);
+    public AbstractPolarEffect(String name, BorderFillStrategy borderFillStrategy, boolean showDefaultParameters) {
+        super(name, borderFillStrategy);
         if (showDefaultParameters) {
             this.parameters.add(paramShiftX);
             this.parameters.add(paramShiftY);

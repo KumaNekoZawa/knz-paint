@@ -6,7 +6,7 @@ import knz.paint.model.effects.parameter.IntegerParameter;
 public class BitShiftEffect extends AbstractRGBAEffect {
 
     private BooleanParameter paramRotate = new BooleanParameter("Rotate", false);
-    private IntegerParameter paramAmount = new IntegerParameter("Amount", -8, 0, 8);
+    private IntegerParameter paramAmount = new IntegerParameter("Amount", " bit", -8, 0, 8);
 
     public BitShiftEffect() {
         super("Bit shift/rotate", true, true);

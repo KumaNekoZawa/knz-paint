@@ -1,11 +1,11 @@
 package knz.paint.model.effects.specific.positional;
 
 import knz.paint.model.effects.parameter.BorderFillStrategy;
-import knz.paint.model.effects.parameter.IntegerParameter;
+import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class ExplosionEffect extends AbstractPositionalEffect {
 
-    private IntegerParameter paramRadius = new IntegerParameter("Radius", 1, 1, 100);
+    private DoubleParameter paramRadius = new DoubleParameter("Radius", 0, 0, 100);
 
     public ExplosionEffect() {
         super("Explosion", BorderFillStrategy.EXTEND_EDGES);
@@ -17,8 +17,8 @@ public class ExplosionEffect extends AbstractPositionalEffect {
         final double radius = paramRadius.getValue();
         final double r = radius * Math.random();
         final double a = 2 * Math.PI * Math.random();
-        fromX = toX + (int) (r * Math.sin(a));
-        fromY = toY + (int) (r * Math.cos(a));
+        fromX = (int) (r * Math.sin(a)) + toX;
+        fromY = (int) (r * Math.cos(a)) + toY;
     }
 
 }

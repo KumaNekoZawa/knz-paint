@@ -5,12 +5,12 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class AdjustHSBAEffect extends AbstractHSBAEffect {
 
-    private DoubleParameter  paramHuePhase    = new DoubleParameter("Hue phase", -180, 0, 180);
+    private DoubleParameter  paramHuePhase    = new DoubleParameter("Hue phase", "°", MIN_ANGLE, 0, MAX_ANGLE);
     private BooleanParameter paramInvertSB    = new BooleanParameter("Invert Sat./Br. controls", true);
-    private DoubleParameter  paramSaturation  = new DoubleParameter("Saturation", 0, 1, 2);
-    private DoubleParameter  paramBrightness  = new DoubleParameter("Brightness", 0, 1, 2);
+    private DoubleParameter  paramSaturation  = new DoubleParameter("Saturation", 0, 1, MAX_EXPONENT);
+    private DoubleParameter  paramBrightness  = new DoubleParameter("Brightness", 0, 1, MAX_EXPONENT);
     private BooleanParameter paramInvertAlpha = new BooleanParameter("Invert Alpha control", false);
-    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha", 0, 1, 2);
+    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha", 0, 1, MAX_EXPONENT);
 
     public AdjustHSBAEffect() {
         super("Adjust HSBA");
@@ -40,7 +40,7 @@ public class AdjustHSBAEffect extends AbstractHSBAEffect {
             out_b = (float) Math.pow(in_b, invertSB ? 1 / brightness : brightness);
         }
         if (paramAlpha.isSet()) {
-            out_a = (int) (0xFF * (float) Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha : alpha));
+            out_a = (int) (Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha : alpha) * 0xFF);
         }
     }
 

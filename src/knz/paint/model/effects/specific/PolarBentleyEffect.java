@@ -10,7 +10,7 @@ public class PolarBentleyEffect extends AbstractEffect {
 
     private BooleanParameter paramSat     = new BooleanParameter("Saturation instead of Brightness", false);
     private DoubleParameter  paramFactorR = new DoubleParameter("Factor r", 0, 0, 250);
-    private DoubleParameter  paramPhaseA  = new DoubleParameter("Phase a", -180, 0, 180);
+    private DoubleParameter  paramPhaseA  = new DoubleParameter("Phase a", MIN_ANGLE, 0, MAX_ANGLE);
 
     public PolarBentleyEffect() {
         super("Polar Bentley effect");
@@ -23,7 +23,7 @@ public class PolarBentleyEffect extends AbstractEffect {
     protected final BufferedImage applyBody(BufferedImage image) {
         final boolean sat     = paramSat.getValue();
         final double  factorR = paramFactorR.getValue();
-        final double  phaseA  = Math.PI * paramPhaseA.getValue() / 180;
+        final double  phaseA  = paramPhaseA.getValue() * Math.PI / 180;
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());

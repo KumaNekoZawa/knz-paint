@@ -6,11 +6,11 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 public class AdjustRGBAEffect extends AbstractRGBAEffect {
 
     private BooleanParameter paramInvertRGB   = new BooleanParameter("Invert RGB controls", true);
-    private DoubleParameter  paramRed         = new DoubleParameter("Red",   0, 1, 2);
-    private DoubleParameter  paramGreen       = new DoubleParameter("Green", 0, 1, 2);
-    private DoubleParameter  paramBlue        = new DoubleParameter("Blue",  0, 1, 2);
+    private DoubleParameter  paramRed         = new DoubleParameter("Red",   0, 1, MAX_EXPONENT);
+    private DoubleParameter  paramGreen       = new DoubleParameter("Green", 0, 1, MAX_EXPONENT);
+    private DoubleParameter  paramBlue        = new DoubleParameter("Blue",  0, 1, MAX_EXPONENT);
     private BooleanParameter paramInvertAlpha = new BooleanParameter("Invert Alpha control", false);
-    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha", 0, 1, 2);
+    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha", 0, 1, MAX_EXPONENT);
 
     public AdjustRGBAEffect() {
         super("Adjust RGBA", false, true);
@@ -31,16 +31,16 @@ public class AdjustRGBAEffect extends AbstractRGBAEffect {
         final boolean invertAlpha = paramInvertAlpha.getValue();
         final double  alpha       = paramAlpha.getValue();
         if (paramRed.isSet()) {
-            out_r = (int) (0xFF * (float) Math.pow(in_r / (double) 0xFF, invertRGB   ? 1 / red   : red));
+            out_r = (int) (Math.pow(in_r / (double) 0xFF, invertRGB   ? 1 / red   : red)   * 0xFF);
         }
         if (paramGreen.isSet()) {
-            out_g = (int) (0xFF * (float) Math.pow(in_g / (double) 0xFF, invertRGB   ? 1 / green : green));
+            out_g = (int) (Math.pow(in_g / (double) 0xFF, invertRGB   ? 1 / green : green) * 0xFF);
         }
         if (paramBlue.isSet()) {
-            out_b = (int) (0xFF * (float) Math.pow(in_b / (double) 0xFF, invertRGB   ? 1 / blue  : blue));
+            out_b = (int) (Math.pow(in_b / (double) 0xFF, invertRGB   ? 1 / blue  : blue)  * 0xFF);
         }
         if (paramAlpha.isSet()) {
-            out_a = (int) (0xFF * (float) Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha : alpha));
+            out_a = (int) (Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha : alpha) * 0xFF);
         }
     }
 

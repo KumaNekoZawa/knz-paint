@@ -2,16 +2,26 @@ package knz.paint.model.effects.parameter;
 
 public class DoubleParameter extends AbstractParameter {
 
+    private String unit;
     private double min, def, max, resolution;
     private double value;
     private boolean set;
 
     public DoubleParameter(String name, double min, double def, double max) {
-        this(name, min, def, max, 100);
+        this(name, "", min, def, max, 100);
+    }
+
+    public DoubleParameter(String name, String unit, double min, double def, double max) {
+        this(name, unit, min, def, max, 100);
     }
 
     public DoubleParameter(String name, double min, double def, double max, double resolution) {
+        this(name, "", min, def, max, resolution);
+    }
+
+    public DoubleParameter(String name, String unit, double min, double def, double max, double resolution) {
         super(name);
+        this.unit = unit;
         this.min = min;
         this.def = def;
         this.max = max;
@@ -27,7 +37,11 @@ public class DoubleParameter extends AbstractParameter {
 
     @Override
     public String getLabelText() {
-        return getName() + ": " + String.format("%." + (int) Math.log10(resolution) + "f", value);
+        return getName() + ": " + String.format("%." + (int) Math.log10(resolution) + "f", value) + unit;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 
     public double getMin() {

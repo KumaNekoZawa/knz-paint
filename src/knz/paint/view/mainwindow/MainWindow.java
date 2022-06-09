@@ -56,6 +56,7 @@ import knz.paint.model.effects.specific.positional.ShearSlicingEffect;
 import knz.paint.model.effects.specific.positional.StainedGlassEffect;
 import knz.paint.model.effects.specific.positional.ZoomEffect;
 import knz.paint.model.effects.specific.positional.polar.AdjustPolarEffect;
+import knz.paint.model.effects.specific.positional.polar.PolarMirrorEffect;
 import knz.paint.model.effects.specific.positional.polar.PolarMosaicEffect;
 import knz.paint.model.effects.specific.positional.polar.RotationEffect;
 import knz.paint.model.effects.specific.positional.polar.SwirlEffect;
@@ -105,6 +106,7 @@ public class MainWindow extends JFrame {
         null,
         /* positional/polar */
         new AdjustPolarEffect(),
+        new PolarMirrorEffect(),
         new PolarMosaicEffect(),
         new RotationEffect(),
         new SwirlEffect(),

@@ -1,5 +1,6 @@
 package knz.paint.model.effects.specific.positional.polar;
 
+import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class SwirlEffect extends AbstractPolarEffect {
@@ -7,7 +8,7 @@ public class SwirlEffect extends AbstractPolarEffect {
     private DoubleParameter paramFactor = new DoubleParameter("Factor", -10, 0, 10);
 
     public SwirlEffect() {
-        super("Swirl", true);
+        super("Swirl", BorderFillStrategy.FILL_TRANSPARENT, true);
         this.parameters.add(paramFactor);
     }
 

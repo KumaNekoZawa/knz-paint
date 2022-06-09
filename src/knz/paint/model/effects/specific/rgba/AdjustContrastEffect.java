@@ -4,7 +4,7 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class AdjustContrastEffect extends AbstractRGBAEffect {
 
-    private DoubleParameter paramFactor = new DoubleParameter("Factor", 0, 1, 2);
+    private DoubleParameter paramFactor = new DoubleParameter("Factor", 0, 1, MAX_FACTOR);
 
     public AdjustContrastEffect() {
         super("Adjust contrast", true, true);

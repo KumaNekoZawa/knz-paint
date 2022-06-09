@@ -2,11 +2,17 @@ package knz.paint.model.effects.parameter;
 
 public class IntegerParameter extends AbstractParameter {
 
+    private String unit;
     private int min, def, max;
     private int value;
 
     public IntegerParameter(String name, int min, int def, int max) {
+        this(name, "", min, def, max);
+    }
+
+    public IntegerParameter(String name, String unit, int min, int def, int max) {
         super(name);
+        this.unit = unit;
         this.min = min;
         this.def = def;
         this.max = max;
@@ -20,7 +26,11 @@ public class IntegerParameter extends AbstractParameter {
 
     @Override
     public String getLabelText() {
-        return getName() + ": " + String.format("%d", value);
+        return getName() + ": " + String.format("%d", value) + unit;
+    }
+
+    public String getUnit() {
+        return unit;
     }
 
     public int getMin() {

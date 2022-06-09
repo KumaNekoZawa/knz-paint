@@ -3,20 +3,23 @@ package knz.paint.model.effects.specific.positional.polar;
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
-// XXX this is just a special case of the AdjustPolarEffect
-public class RotationEffect extends AbstractPolarEffect {
+public class PolarMirrorEffect extends AbstractPolarEffect {
 
     private DoubleParameter paramAngle = new DoubleParameter("Angle", "°", MIN_ANGLE, 0, MAX_ANGLE);
 
-    public RotationEffect() {
-        super("Rotation", BorderFillStrategy.FILL_TRANSPARENT, true);
+    public PolarMirrorEffect() {
+        super("Polar mirror", BorderFillStrategy.EXTEND_EDGES, true);
         this.parameters.add(paramAngle);
     }
 
     @Override
     protected void filter(double toR, double toA) {
         final double angle = paramAngle.getValue() * Math.PI / 180;
-        fromA = toA + angle;
+        fromA = floorMod(toA - angle, 2 * Math.PI) < Math.PI ? 2 * angle - toA : toA;
+    }
+
+    private static double floorMod(double x, double y) {
+        return x - Math.floor(x / y) * y;
     }
 
 }
