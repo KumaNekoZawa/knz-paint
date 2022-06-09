@@ -74,7 +74,6 @@ import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
 import knz.paint.model.effects.specific.rgba.NegateEffect;
 import knz.paint.model.effects.specific.rgba.NoiseEffect;
 import knz.paint.model.effects.specific.rgba.NormalizationEffect;
-import knz.paint.model.effects.specific.rgba.ReduceContrastEffect;
 import knz.paint.model.effects.specific.rgba.SepiaEffect;
 import knz.paint.model.effects.specific.rgba.SolarizationEffect;
 import knz.paint.model.tools.AirbrushType;
@@ -124,7 +123,6 @@ public class MainWindow extends JFrame {
         new NegateEffect(),
         new NoiseEffect(),
         new NormalizationEffect(),
-        new ReduceContrastEffect(),
         new SepiaEffect(),
         new SolarizationEffect(),
         /* hsba/gray */
@@ -386,6 +384,7 @@ public class MainWindow extends JFrame {
         menuViewPackAndCenter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setExtendedState(JFrame.NORMAL);
                 pack();
                 setLocationRelativeTo(null);
             }
@@ -610,6 +609,7 @@ public class MainWindow extends JFrame {
         }
         add(colorBar, BorderLayout.LINE_END);
 
+        updateStatusBar();
         add(statusBar, BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -625,6 +625,7 @@ public class MainWindow extends JFrame {
             Config.getConfig().getNewImageHeight(),
             Config.getConfig().getNewImageColor()
         );
+        mainPanel.updatePanelSize();
 
         setVisible(true);
     }

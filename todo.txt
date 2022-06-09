@@ -1,5 +1,3 @@
-delete old backup files?
-
 all FIXMEs/TODOs/XXXs: `grep -EIir 'FIXME|TODO|XXX' .`
 go through all // and /* comments
 fix all checkstyle warnings
