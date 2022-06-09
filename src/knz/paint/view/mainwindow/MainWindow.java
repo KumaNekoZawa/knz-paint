@@ -41,6 +41,7 @@ import knz.paint.model.ImageState;
 import knz.paint.model.effects.specific.AbstractEffect;
 import knz.paint.model.effects.specific.BentleyEffect;
 import knz.paint.model.effects.specific.PolarBentleyEffect;
+import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
@@ -135,6 +136,9 @@ public class MainWindow extends JFrame {
         /* misc. */
         new BentleyEffect(),
         new PolarBentleyEffect(),
+        null,
+        /* graphics */
+        new TadaEffect(),
     };
 
     private ColorPickerWindow colorPickerWindow = null;
