@@ -2,6 +2,7 @@ package knz.paint.view.mainwindow;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -611,7 +613,10 @@ public class MainWindow extends JFrame {
         add(statusBar, BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        setIconImage(new ImageIcon("icons" + File.separator + "icon.png").getImage());
+        final URL iconURL = Thread.currentThread().getContextClassLoader().getResource("icon.png");
+        if (iconURL != null) {
+            setIconImage(new ImageIcon(iconURL).getImage());
+        }
         setSize(Config.getConfig().getMainWindowWidth(),
                 Config.getConfig().getMainWindowHeight());
         setLocationRelativeTo(null);
@@ -660,9 +665,17 @@ public class MainWindow extends JFrame {
             final AbstractTool toolObject = tool.getToolObject();
             final String title = toolObject.getName();
             final String icon = toolObject.getIcon();
-            final JButton button = icon.isEmpty()
-                ? new JButton(title.substring(0, 2))
-                : new JButton(new ImageIcon("icons" + File.separator + icon));
+            JButton button = null;
+            if (icon != null && !icon.isEmpty()) {
+                final URL iconURL = Thread.currentThread().getContextClassLoader().getResource(icon);
+                if (iconURL != null) {
+                    button = new JButton(new ImageIcon(iconURL));
+                }
+            }
+            if (button == null) {
+                button = new JButton(title.substring(0, 2));
+                button.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+            }
             button.setToolTipText(title);
             button.addActionListener(new ActionListener() {
                 @Override

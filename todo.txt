@@ -4,8 +4,6 @@ all FIXMEs/TODOs/XXXs: `grep -EIir 'FIXME|TODO|XXX' .`
 go through all // and /* comments
 fix all checkstyle warnings
 
-move icons to resources
-
 redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
 
 transparency support

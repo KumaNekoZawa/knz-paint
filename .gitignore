@@ -1,5 +1,5 @@
 /bin/
 /etc/
-/icons/tool*.png
+/src/main/resources/tool*.png
 *.class
 *.jar

@@ -1,8 +1,9 @@
-<project name="KNZ-Paint" basedir="." default="package">
+<project name="knz-paint" basedir="." default="package">
 
     <property name="main.class" value="knz.paint.view.Main" />
     <property name="bin.dir"    value="bin" />
     <property name="src.dir"    value="src" />
+    <property name="res.dir"    value="src/main/resources" />
     <property name="jar.file"   value="${ant.project.name}.jar" />
 
     <target name="clean">
@@ -32,7 +33,9 @@
     </target>
 
     <target name="package" depends="build">
-        <jar destfile="${jar.file}" basedir="${bin.dir}">
+        <jar destfile="${jar.file}">
+            <fileset dir="${bin.dir}" />
+            <fileset dir="${res.dir}" />
             <manifest>
                 <attribute name="Main-Class" value="${main.class}" />
             </manifest>

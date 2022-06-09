@@ -12,6 +12,7 @@
     <allow class="java.awt.image.BufferedImage" />
     <allow class="javax.imageio.ImageIO" />
     <allow pkg="java.io" />
+    <allow pkg="java.net" />
     <allow pkg="java.util" />
     <allow pkg="knz.paint.model" />
     <subpackage name="view">
