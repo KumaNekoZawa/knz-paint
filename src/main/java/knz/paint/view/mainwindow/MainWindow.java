@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -47,6 +48,7 @@ import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
+import knz.paint.model.effects.specific.hsba.MixHSBEffect;
 import knz.paint.model.effects.specific.hsba.SaltPepperEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.other.BentleyEffect;
@@ -71,6 +73,7 @@ import knz.paint.model.effects.specific.rgba.AlphaAsGrayEffect;
 import knz.paint.model.effects.specific.rgba.BitShiftEffect;
 import knz.paint.model.effects.specific.rgba.ExtractRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
+import knz.paint.model.effects.specific.rgba.MixRGBEffect;
 import knz.paint.model.effects.specific.rgba.NegateEffect;
 import knz.paint.model.effects.specific.rgba.NoiseEffect;
 import knz.paint.model.effects.specific.rgba.NormalizationEffect;
@@ -120,6 +123,7 @@ public class MainWindow extends JFrame {
         new BitShiftEffect(),
         new ExtractRGBAEffect(),
         new GrayscaleEffect(),
+        new MixRGBEffect(),
         new NegateEffect(),
         new NoiseEffect(),
         new NormalizationEffect(),
@@ -131,6 +135,7 @@ public class MainWindow extends JFrame {
         new AdjustHSBAEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
+        new MixHSBEffect(),
         new SaltPepperEffect(),
         /* graphics */
         new TadaEffect(),
@@ -609,6 +614,7 @@ public class MainWindow extends JFrame {
         }
         add(colorBar, BorderLayout.LINE_END);
 
+        statusBar.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         updateStatusBar();
         add(statusBar, BorderLayout.PAGE_END);
 

@@ -117,7 +117,7 @@ public class EffectWindow extends JDialog {
                             } else if (parameterToSet instanceof DoubleParameter && parameterToSetElement instanceof JSlider) {
                                 final DoubleParameter doubleParameterToSet = (DoubleParameter) parameterToSet;
                                 final JSlider slider = (JSlider) parameterToSetElement;
-                                final double doubleValue = (double) value;
+                                final double doubleValue = value instanceof Integer ? (double) (int) value : (double) value;
                                 doubleParameterToSet.setValue(doubleValue);
                                 slider.setValue((int) (doubleParameterToSet.getResolution() * doubleValue));
                             } else {
