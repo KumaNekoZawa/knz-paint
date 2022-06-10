@@ -59,9 +59,18 @@ public class GradientSliderPanel extends JPanel {
         textField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                gradientSliderSubPanel.setSelectedValue(Integer.parseInt(textField.getText(), 16));
-                for (final ActionListener listener : listeners) {
-                    listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, GradientSliderPanel.class.getSimpleName()));
+                final String text = textField.getText();
+                if (text == null || text.isBlank()) {
+                    textField.setText(String.format("%02X", gradientSliderSubPanel.getSelectedValue()));
+                } else {
+                    final int valueOld = gradientSliderSubPanel.getSelectedValue();
+                    final int valueNew = Integer.parseInt(text, 16);
+                    if (valueNew != valueOld) {
+                        gradientSliderSubPanel.setSelectedValue(valueNew);
+                        for (final ActionListener listener : listeners) {
+                            listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, GradientSliderPanel.class.getSimpleName()));
+                        }
+                    }
                 }
             }
         });

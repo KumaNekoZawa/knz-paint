@@ -1,5 +1,6 @@
 /bin/
 /etc/
+/examples/
 /src/main/resources/tool*.png
 *.class
 *.jar

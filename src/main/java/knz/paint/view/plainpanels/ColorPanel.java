@@ -18,7 +18,8 @@ public class ColorPanel extends JPanel {
 
     public static final int ACTION_LISTENER_ID = 2000;
 
-    private List<ActionListener> listeners = new ArrayList<>();
+    private List<ActionListener>     listenersAction     = new ArrayList<>();
+    private List<ColorPanelListener> listenersColorPanel = new ArrayList<>();
 
     private Color color = null;
     private boolean highlighted = false;
@@ -28,7 +29,7 @@ public class ColorPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                for (final ActionListener listener : listeners) {
+                for (final ActionListener listener : listenersAction) {
                     listener.actionPerformed(new ActionEvent(e, ACTION_LISTENER_ID, ColorPanel.class.getSimpleName()));
                 }
             }
@@ -54,7 +55,11 @@ public class ColorPanel extends JPanel {
     }
 
     public void addActionListener(ActionListener listener) {
-        listeners.add(listener);
+        listenersAction.add(listener);
+    }
+
+    public void addColorPanelListener(ColorPanelListener listener) {
+        listenersColorPanel.add(listener);
     }
 
     public Color getColor() {
@@ -63,6 +68,9 @@ public class ColorPanel extends JPanel {
 
     public void setColor(Color color) {
         this.color = color;
+        for (final ColorPanelListener listener : listenersColorPanel) {
+            listener.colorChanged(new ColorPanelEvent(color));
+        }
     }
 
     public boolean isHighlighted() {

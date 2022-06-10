@@ -3,21 +3,25 @@ package knz.paint.view.colorpickerwindow;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JDialog;
 
-import knz.paint.model.tools.ToolState;
 import knz.paint.view.plainpanels.GradientSliderPanel;
 
-public class ColorPickerWindow extends JFrame {
+public class ColorPickerWindow extends JDialog {
 
     private enum ColorPickerMode {
         PRIMARY,
         SECONDARY,
     }
 
-    private ColorPickerTopPanel colorPickerTopPanel = new ColorPickerTopPanel();
+    private List<ColorPickerListener> listeners = new ArrayList<>();
+
+    private ColorPickerTopPanel colorPickerTopPanel;
     private GradientSliderPanel[] gradientSliderPanels = new GradientSliderPanel[] {
         new GradientSliderPanel("Gray",
             c -> (c.getRed() + c.getGreen() + c.getBlue()) / 3,
@@ -95,12 +99,16 @@ public class ColorPickerWindow extends JFrame {
 
     private ColorPickerMode mode = ColorPickerMode.PRIMARY;
 
-    private ToolState toolState;
+    private int numberOfColorsToChoose;
 
-    public ColorPickerWindow(ToolState toolState) {
-        super("Color picker...");
-        this.toolState = toolState;
+    public ColorPickerWindow(Window parent, int numberOfColorsToChoose) {
+        super(parent, "Color picker...");
+        if (!(1 <= numberOfColorsToChoose && numberOfColorsToChoose <= 2)) {
+            throw new IllegalArgumentException();
+        }
+        this.numberOfColorsToChoose = numberOfColorsToChoose;
 
+        colorPickerTopPanel = new ColorPickerTopPanel(numberOfColorsToChoose);
         colorPickerTopPanel.addColorPickerTopListener(new ColorPickerTopListener() {
             @Override
             public void clickedLeft(ColorPickerTopEvent e) {
@@ -110,8 +118,12 @@ public class ColorPickerWindow extends JFrame {
 
             @Override
             public void clickedSwap(ColorPickerTopEvent e) {
-                toolState.swapColors();
+                colorPickerTopPanel.swapColors();
                 updateAll();
+                for (final ColorPickerListener listener : listeners) {
+                    listener.colorChangedLeft(new ColorPickerEvent(colorPickerTopPanel.getColorLeft()));
+                    listener.colorChangedRight(new ColorPickerEvent(colorPickerTopPanel.getColorRight()));
+                }
             }
 
             @Override
@@ -142,10 +154,10 @@ public class ColorPickerWindow extends JFrame {
                     final Color colorOld;
                     switch (mode) {
                     case PRIMARY:
-                        colorOld = toolState.getColorPrimary();
+                        colorOld = colorPickerTopPanel.getColorLeft();
                         break;
                     case SECONDARY:
-                        colorOld = toolState.getColorSecondary();
+                        colorOld = colorPickerTopPanel.getColorRight();
                         break;
                     default:
                         throw new AssertionError();
@@ -153,15 +165,29 @@ public class ColorPickerWindow extends JFrame {
                     final Color colorNew = gradientSliderPanel.getColorFunction().apply(colorOld, gradientSliderPanel.getSelectedValue());
                     switch (mode) {
                     case PRIMARY:
-                        toolState.setColorPrimary(colorNew);
+                        colorPickerTopPanel.setColorLeft(colorNew);
                         break;
                     case SECONDARY:
-                        toolState.setColorSecondary(colorNew);
+                        colorPickerTopPanel.setColorRight(colorNew);
                         break;
                     default:
                         throw new AssertionError();
                     }
                     updateAll();
+                    switch (mode) {
+                    case PRIMARY:
+                        for (final ColorPickerListener listener : listeners) {
+                            listener.colorChangedLeft(new ColorPickerEvent(colorNew));
+                        }
+                        break;
+                    case SECONDARY:
+                        for (final ColorPickerListener listener : listeners) {
+                            listener.colorChangedRight(new ColorPickerEvent(colorNew));
+                        }
+                        break;
+                    default:
+                        throw new AssertionError();
+                    }
                 }
             });
             add(gradientSliderPanel, c);
@@ -173,35 +199,52 @@ public class ColorPickerWindow extends JFrame {
         setResizable(false);
         pack();
         setLocationRelativeTo(null);
-
-        updateAll();
-
         setVisible(true);
     }
 
-    public void updateAll() {
+    public void addColorPickerListener(ColorPickerListener listener) {
+        listeners.add(listener);
+    }
+
+    private void updateAll() {
         final Color color;
         switch (mode) {
         case PRIMARY:
-            color = toolState.getColorPrimary();
-            colorPickerTopPanel.setHighlightLeft(true);
-            colorPickerTopPanel.setHighlightRight(false);
+            color = colorPickerTopPanel.getColorLeft();
+            if (numberOfColorsToChoose >= 1) {
+                colorPickerTopPanel.setHighlightLeft(true);
+            }
+            if (numberOfColorsToChoose >= 2) {
+                colorPickerTopPanel.setHighlightRight(false);
+            }
             break;
         case SECONDARY:
-            color = toolState.getColorSecondary();
-            colorPickerTopPanel.setHighlightLeft(false);
-            colorPickerTopPanel.setHighlightRight(true);
+            color = colorPickerTopPanel.getColorRight();
+            if (numberOfColorsToChoose >= 1) {
+                colorPickerTopPanel.setHighlightLeft(false);
+            }
+            if (numberOfColorsToChoose >= 2) {
+                colorPickerTopPanel.setHighlightRight(true);
+            }
             break;
         default:
             throw new AssertionError();
         }
-        colorPickerTopPanel.setColorLeft(toolState.getColorPrimary());
-        colorPickerTopPanel.setColorRight(toolState.getColorSecondary());
         colorPickerTopPanel.repaint();
         for (final GradientSliderPanel gradientSliderPanel : gradientSliderPanels) {
             gradientSliderPanel.update(color);
             gradientSliderPanel.repaint();
         }
+    }
+
+    public void setColorLeft(Color color) {
+        colorPickerTopPanel.setColorLeft(color);
+        updateAll();
+    }
+
+    public void setColorRight(Color color) {
+        colorPickerTopPanel.setColorRight(color);
+        updateAll();
     }
 
 }

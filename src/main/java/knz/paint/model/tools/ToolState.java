@@ -64,9 +64,9 @@ public class ToolState {
     }
 
     public void swapColors() {
-        final Color colorPrimaryOld = colorPrimary;
+        final Color colorPrimaryOld   = colorPrimary;
         final Color colorSecondaryOld = colorSecondary;
-        colorPrimary = colorSecondaryOld;
+        colorPrimary   = colorSecondaryOld;
         colorSecondary = colorPrimaryOld;
     }
 

@@ -1,10 +1,14 @@
 package knz.paint.view.effectwindow;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -17,7 +21,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -29,19 +32,26 @@ import knz.paint.model.effects.parameter.AbstractParameter;
 import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.BorderFillStrategyParameter;
+import knz.paint.model.effects.parameter.ColorParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
 import knz.paint.model.effects.parameter.PresetParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
+import knz.paint.view.colorpickerwindow.ColorPickerEvent;
+import knz.paint.view.colorpickerwindow.ColorPickerListener;
+import knz.paint.view.colorpickerwindow.ColorPickerWindow;
 import knz.paint.view.mainwindow.MainPanel;
+import knz.paint.view.plainpanels.ColorPanel;
+import knz.paint.view.plainpanels.ColorPanelEvent;
+import knz.paint.view.plainpanels.ColorPanelListener;
 
 public class EffectWindow extends JDialog {
 
     private Map<String, AbstractParameter> parameters = new HashMap<>();
     private Map<String, JComponent> parameterElements = new HashMap<>();
 
-    public EffectWindow(JFrame parent, JScrollPane scrollPane, MainPanel mainPanel, AbstractEffect effect, String title) {
-        super(parent, title, true);
+    public EffectWindow(Window parent, JScrollPane scrollPane, MainPanel mainPanel, AbstractEffect effect, String title) {
+        super(parent, title, Dialog.ModalityType.APPLICATION_MODAL);
 
         for (final AbstractParameter parameter : effect.getParameters()) {
             parameter.reset();
@@ -120,6 +130,13 @@ public class EffectWindow extends JDialog {
                                 final double doubleValue = value instanceof Integer ? (double) (int) value : (double) value;
                                 doubleParameterToSet.setValue(doubleValue);
                                 slider.setValue((int) (doubleParameterToSet.getResolution() * doubleValue));
+                            } else if (parameterToSet instanceof ColorParameter && parameterToSetElement instanceof ColorPanel) {
+                                final ColorParameter colorParameterToSet = (ColorParameter) parameterToSet;
+                                final ColorPanel colorPanel = (ColorPanel) parameterToSetElement;
+                                final Color colorValue = (Color) value;
+                                colorParameterToSet.setValue(colorValue);
+                                colorPanel.setColor(colorValue);
+                                colorPanel.repaint();
                             } else {
                                 throw new AssertionError();
                             }
@@ -203,6 +220,48 @@ public class EffectWindow extends JDialog {
                     });
                     parameterElements.put(parameterName, slider);
                     add(slider, c);
+                    c.gridy++;
+                } else if (parameter instanceof ColorParameter) {
+                    final ColorParameter colorParameter = (ColorParameter) parameter;
+                    final ColorPanel colorPanel = new ColorPanel();
+                    final Dimension d = new Dimension(40, 40);
+                    colorPanel.setMaximumSize(d);
+                    colorPanel.setMinimumSize(d);
+                    colorPanel.setSize(d);
+                    colorPanel.setPreferredSize(d);
+                    colorPanel.setColor(colorParameter.getDef());
+                    colorPanel.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            final ColorPickerWindow colorPickerWindow = new ColorPickerWindow(EffectWindow.this, 1);
+                            colorPickerWindow.setColorLeft(colorPanel.getColor());
+                            colorPickerWindow.addColorPickerListener(new ColorPickerListener() {
+                                @Override
+                                public void colorChangedLeft(ColorPickerEvent e) {
+                                    final Color color = e.getColor();
+                                    colorPanel.setColor(color);
+                                    colorPanel.repaint();
+                                }
+
+                                @Override
+                                public void colorChangedRight(ColorPickerEvent e) {
+                                    throw new AssertionError();
+                                }
+                            });
+                        }
+                    });
+                    colorPanel.addColorPanelListener(new ColorPanelListener() {
+                        @Override
+                        public void colorChanged(ColorPanelEvent e) {
+                            final Color color = e.getColor();
+                            colorParameter.setValue(color);
+                            label.setText(parameter.getLabelText());
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
+                        }
+                    });
+                    parameterElements.put(parameterName, colorPanel);
+                    add(colorPanel, c);
                     c.gridy++;
                 } else {
                     throw new AssertionError();

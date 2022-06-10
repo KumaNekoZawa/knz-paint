@@ -48,8 +48,7 @@ import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
-import knz.paint.model.effects.specific.hsba.MixHSBEffect;
-import knz.paint.model.effects.specific.hsba.SaltPepperEffect;
+import knz.paint.model.effects.specific.hsba.MixHSBAEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.other.BentleyEffect;
 import knz.paint.model.effects.specific.other.PolarBentleyEffect;
@@ -73,12 +72,15 @@ import knz.paint.model.effects.specific.rgba.AlphaAsGrayEffect;
 import knz.paint.model.effects.specific.rgba.BitShiftEffect;
 import knz.paint.model.effects.specific.rgba.ExtractRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
-import knz.paint.model.effects.specific.rgba.MixRGBEffect;
+import knz.paint.model.effects.specific.rgba.MixRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NegateEffect;
 import knz.paint.model.effects.specific.rgba.NoiseEffect;
 import knz.paint.model.effects.specific.rgba.NormalizationEffect;
 import knz.paint.model.effects.specific.rgba.SepiaEffect;
 import knz.paint.model.effects.specific.rgba.SolarizationEffect;
+import knz.paint.model.effects.specific.xy.BorderEffect;
+import knz.paint.model.effects.specific.xy.GridEffect;
+import knz.paint.model.effects.specific.xy.SaltPepperEffect;
 import knz.paint.model.tools.AirbrushType;
 import knz.paint.model.tools.FillStyle;
 import knz.paint.model.tools.StrokeDash;
@@ -86,6 +88,8 @@ import knz.paint.model.tools.Tool;
 import knz.paint.model.tools.ToolState;
 import knz.paint.model.tools.specific.AbstractTool;
 import knz.paint.view.aboutwindow.AboutWindow;
+import knz.paint.view.colorpickerwindow.ColorPickerEvent;
+import knz.paint.view.colorpickerwindow.ColorPickerListener;
 import knz.paint.view.colorpickerwindow.ColorPickerWindow;
 import knz.paint.view.effectwindow.EffectWindow;
 import knz.paint.view.plainpanels.PalettePanel;
@@ -115,6 +119,10 @@ public class MainWindow extends JFrame {
         new ShearSlicingEffect(),
         new StainedGlassEffect(),
         new ZoomEffect(),
+        /* xy */
+        new BorderEffect(),
+        new GridEffect(),
+        new SaltPepperEffect(),
         /* rgba */
         new AdjustContrastEffect(),
         new AdjustGammaEffect(),
@@ -123,7 +131,7 @@ public class MainWindow extends JFrame {
         new BitShiftEffect(),
         new ExtractRGBAEffect(),
         new GrayscaleEffect(),
-        new MixRGBEffect(),
+        new MixRGBAEffect(),
         new NegateEffect(),
         new NoiseEffect(),
         new NormalizationEffect(),
@@ -135,8 +143,7 @@ public class MainWindow extends JFrame {
         new AdjustHSBAEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
-        new MixHSBEffect(),
-        new SaltPepperEffect(),
+        new MixHSBAEffect(),
         /* graphics */
         new TadaEffect(),
         /* other */
@@ -404,7 +411,20 @@ public class MainWindow extends JFrame {
                     if (colorPickerWindow != null) {
                         colorPickerWindow.dispose();
                     }
-                    colorPickerWindow = new ColorPickerWindow(toolState);
+                    colorPickerWindow = new ColorPickerWindow(MainWindow.this, 2);
+                    colorPickerWindow.setColorLeft(toolState.getColorPrimary());
+                    colorPickerWindow.setColorRight(toolState.getColorSecondary());
+                    colorPickerWindow.addColorPickerListener(new ColorPickerListener() {
+                        @Override
+                        public void colorChangedLeft(ColorPickerEvent e) {
+                            toolState.setColorPrimary(e.getColor());
+                        }
+
+                        @Override
+                        public void colorChangedRight(ColorPickerEvent e) {
+                            toolState.setColorSecondary(e.getColor());
+                        }
+                    });
                 }
             }
         });
@@ -726,7 +746,8 @@ public class MainWindow extends JFrame {
 
     private void updateChildWindows() {
         if (colorPickerWindow != null) {
-            colorPickerWindow.updateAll();
+            colorPickerWindow.setColorLeft(toolState.getColorPrimary());
+            colorPickerWindow.setColorRight(toolState.getColorSecondary());
         }
     }
 

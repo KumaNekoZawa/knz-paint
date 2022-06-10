@@ -3,13 +3,13 @@ package knz.paint.model.effects.specific.graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import knz.paint.model.effects.parameter.ColorParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class TadaEffect extends AbstractGraphicsEffect {
 
-    private IntegerParameter paramBrightness      = new IntegerParameter("Brightness",   0x00, 0x00, 0xFF);
-    private IntegerParameter paramTransparency    = new IntegerParameter("Transparency", 0x00, 0xFF, 0xFF);
+    private ColorParameter   paramColor           = new ColorParameter("Color", Color.BLACK);
     private IntegerParameter paramAngleShift      = new IntegerParameter("Angle shift",  "°", 1, 1, 10);
     private IntegerParameter paramAngleFactor     = new IntegerParameter("Angle factor", "°", 1, 1, 10);
     private DoubleParameter  paramInnerDistance   = new DoubleParameter("Inner distance", 0, 0.33, 1);
@@ -18,8 +18,7 @@ public class TadaEffect extends AbstractGraphicsEffect {
 
     public TadaEffect() {
         super("Ta-dah effect");
-        this.parameters.add(paramBrightness);
-        this.parameters.add(paramTransparency);
+        this.parameters.add(paramColor);
         this.parameters.add(paramAngleShift);
         this.parameters.add(paramAngleFactor);
         this.parameters.add(paramInnerDistance);
@@ -29,8 +28,7 @@ public class TadaEffect extends AbstractGraphicsEffect {
 
     @Override
     protected void filter(int width, int height, Graphics2D graphics2D) {
-        final int    brightness      = paramBrightness.getValue();
-        final int    transparency    = paramTransparency.getValue();
+        final Color  color           = paramColor.getValue();
         final int    angleShift      = paramAngleShift.getValue();
         final int    angleFactor     = paramAngleFactor.getValue();
         final double innerDistance   = paramInnerDistance.getValue();
@@ -39,7 +37,7 @@ public class TadaEffect extends AbstractGraphicsEffect {
         final int cx = width  / 2;
         final int cy = height / 2;
         final double ro = 0.75 * Math.max(width, height);
-        graphics2D.setColor(new Color(brightness, brightness, brightness, transparency));
+        graphics2D.setColor(color);
         for (int a = 0; a < 360; a += (int) (angleFactor * Math.random()) + angleShift) {
             final double ri = ((1 - innerDistance) * Math.random() + innerDistance) * ro;
             final double thickness = thicknessFactor * Math.random() + thicknessShift;
