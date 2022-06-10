@@ -6,7 +6,7 @@ import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class StainedGlassEffect extends AbstractPositionalEffect {
 
-    private IntegerParameter paramTiles = new IntegerParameter("Tiles", 1, 100, 1000);
+    private IntegerParameter paramTiles = new IntegerParameter("Tiles", " tiles", 1, 100, 1000);
 
     private int[] pixelsX, pixelsY;
 

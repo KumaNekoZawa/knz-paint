@@ -13,24 +13,24 @@ public class GrayscaleEffect extends AbstractRGBAEffect {
         new Preset("ITU-R BT.709 / CIE 1931", 0.2126, 0.7152, 0.0722),
         new Preset("ITU-R BT.2100",           0.2627, 0.6780, 0.0593)
     );
-    private DoubleParameter paramRed   = new DoubleParameter("Red",   0, 0.3333, 1, 10000);
-    private DoubleParameter paramGreen = new DoubleParameter("Green", 0, 0.3334, 1, 10000);
-    private DoubleParameter paramBlue  = new DoubleParameter("Blue",  0, 0.3333, 1, 10000);
+    private DoubleParameter paramR = new DoubleParameter("Red",   0, 0.3333, 1, 10000);
+    private DoubleParameter paramG = new DoubleParameter("Green", 0, 0.3334, 1, 10000);
+    private DoubleParameter paramB = new DoubleParameter("Blue",  0, 0.3333, 1, 10000);
 
     public GrayscaleEffect() {
         super("Grayscale", false, false);
         this.parameters.add(paramPresets);
-        this.parameters.add(paramRed);
-        this.parameters.add(paramGreen);
-        this.parameters.add(paramBlue);
+        this.parameters.add(paramR);
+        this.parameters.add(paramG);
+        this.parameters.add(paramB);
     }
 
     @Override
     protected void filter(int in_r, int in_g, int in_b, int in_a) {
-        final double red   = paramRed.getValue();
-        final double green = paramGreen.getValue();
-        final double blue  = paramBlue.getValue();
-        final int gray = (int) (red * in_r + green * in_g + blue * in_b);
+        final double r = paramR.getValue();
+        final double g = paramG.getValue();
+        final double b = paramB.getValue();
+        final int gray = (int) (r * in_r + g * in_g + b * in_b);
         out_r = gray;
         out_g = gray;
         out_b = gray;

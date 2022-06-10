@@ -6,45 +6,45 @@ import knz.paint.model.effects.parameter.IntegerParameter;
 public class BitShiftEffect extends AbstractRGBAEffect {
 
     private BooleanParameter paramRotate = new BooleanParameter("Rotate", false);
-    private IntegerParameter paramAmount = new IntegerParameter("Amount", " bit", -8, 0, 8);
+    private IntegerParameter paramBits   = new IntegerParameter("Bits", " bit", -8, 0, 8);
 
     public BitShiftEffect() {
         super("Bit shift/rotate", true, true);
         this.parameters.add(paramRotate);
-        this.parameters.add(paramAmount);
+        this.parameters.add(paramBits);
     }
 
     @Override
     protected void filter(int in_r, int in_g, int in_b, int in_a) {
         final boolean rotate = paramRotate.getValue();
-        int amount = paramAmount.getValue();
-        if (amount > 0) {
-            out_r = shiftOfRotateRight(rotate, in_r, amount);
-            out_g = shiftOfRotateRight(rotate, in_g, amount);
-            out_b = shiftOfRotateRight(rotate, in_b, amount);
-            out_a = shiftOfRotateRight(rotate, in_a, amount);
-        } else if (amount < 0) {
-            amount = -amount;
-            out_r = shiftOfRotateLeft(rotate, in_r, amount);
-            out_g = shiftOfRotateLeft(rotate, in_g, amount);
-            out_b = shiftOfRotateLeft(rotate, in_b, amount);
-            out_a = shiftOfRotateLeft(rotate, in_a, amount);
+        int bits = paramBits.getValue();
+        if (bits > 0) {
+            out_r = shiftOfRotateRight(rotate, in_r, bits);
+            out_g = shiftOfRotateRight(rotate, in_g, bits);
+            out_b = shiftOfRotateRight(rotate, in_b, bits);
+            out_a = shiftOfRotateRight(rotate, in_a, bits);
+        } else if (bits < 0) {
+            bits = -bits;
+            out_r = shiftOfRotateLeft(rotate, in_r, bits);
+            out_g = shiftOfRotateLeft(rotate, in_g, bits);
+            out_b = shiftOfRotateLeft(rotate, in_b, bits);
+            out_a = shiftOfRotateLeft(rotate, in_a, bits);
         }
     }
 
-    private static int shiftOfRotateRight(boolean rotate, int i, int amount) {
+    private static int shiftOfRotateRight(boolean rotate, int i, int bits) {
         if (rotate) {
-            return (((i << (8 - amount)) & 0xFF) | (i >>> amount)) & 0xFF;
+            return (((i << (8 - bits)) & 0xFF) | (i >>> bits)) & 0xFF;
         } else {
-            return (i >>> amount) & 0xFF;
+            return (i >>> bits) & 0xFF;
         }
     }
 
-    private static int shiftOfRotateLeft(boolean rotate, int i, int amount) {
+    private static int shiftOfRotateLeft(boolean rotate, int i, int bits) {
         if (rotate) {
-            return (((i >>> (8 - amount)) & 0xFF) | (i << amount)) & 0xFF;
+            return (((i >>> (8 - bits)) & 0xFF) | (i << bits)) & 0xFF;
         } else {
-            return (i << amount) & 0xFF;
+            return (i << bits) & 0xFF;
         }
     }
 
