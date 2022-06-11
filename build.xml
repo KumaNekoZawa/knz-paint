@@ -44,7 +44,7 @@
 
     <target name="checkstyle">
         <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" classpath="../checkstyle-10.3-all.jar" />
-        <checkstyle config="../knz-style.xml">
+        <checkstyle config="../knz-shared/knz-style.xml">
             <fileset dir="${src.dir}" includes="**/*.java" />
         </checkstyle>
         <checkstyle config="knz-style.xml">
