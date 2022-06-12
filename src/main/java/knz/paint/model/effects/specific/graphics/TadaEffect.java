@@ -27,7 +27,7 @@ public class TadaEffect extends AbstractGraphicsEffect {
     }
 
     @Override
-    protected void filter(int width, int height, Graphics2D graphics2D) {
+    protected void filter(int width, int height, Graphics2D graphics2d) {
         final Color  color           = paramColor.getValue();
         final int    angleShift      = paramAngleShift.getValue();
         final int    angleFactor     = paramAngleFactor.getValue();
@@ -37,7 +37,7 @@ public class TadaEffect extends AbstractGraphicsEffect {
         final int cx = width  / 2;
         final int cy = height / 2;
         final double ro = 0.75 * Math.max(width, height);
-        graphics2D.setColor(color);
+        graphics2d.setColor(color);
         for (int a = 0; a < 360; a += (int) (angleFactor * Math.random()) + angleShift) {
             final double ri = ((1 - innerDistance) * Math.random() + innerDistance) * ro;
             final double thickness = thicknessFactor * Math.random() + thicknessShift;
@@ -55,7 +55,7 @@ public class TadaEffect extends AbstractGraphicsEffect {
             final int x3 = (int) (ro * Math.sin(a3)) + cx;
             final int y3 = (int) (ro * Math.cos(a3)) + cy;
 
-            graphics2D.fillPolygon(
+            graphics2d.fillPolygon(
                 new int[] { x1, x2, x3 },
                 new int[] { y1, y2, y3 },
             3);

@@ -18,6 +18,12 @@
             <property name="file" value="import-control.xml" />
         </module>
 
+        <!-- NAMING CONVENTIONS -->
+        <module name="IllegalIdentifierName">
+            <message key="name.invalidPattern" value="Use graphics2d instead of graphics2D" />
+            <property name="format" value="^(?!graphics2D$).+$" />
+        </module>
+
     </module>
 
 </module>

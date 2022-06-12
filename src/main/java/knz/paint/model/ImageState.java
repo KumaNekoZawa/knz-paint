@@ -13,7 +13,7 @@ public class ImageState {
     public static final int DEFAULT_ZOOM_LEVEL = 5;
 
     private BufferedImage image;
-    private Graphics2D graphics2D;
+    private Graphics2D graphics2d;
 
     /* Temporary image that is being drawn when previewing effects. */
     private BufferedImage imageTemp;
@@ -37,44 +37,44 @@ public class ImageState {
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage imageNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        final Graphics2D graphics2DNew = imageNew.createGraphics();
-        graphics2DNew.setColor(backgroundColor);
-        graphics2DNew.fillRect(0, 0, width, height);
-        graphics2DNew.drawImage(image, 0, 0, null);
-        graphics2DNew.dispose();
+        final Graphics2D graphics2dNew = imageNew.createGraphics();
+        graphics2dNew.setColor(backgroundColor);
+        graphics2dNew.fillRect(0, 0, width, height);
+        graphics2dNew.drawImage(image, 0, 0, null);
+        graphics2dNew.dispose();
         return imageNew;
     }
 
     public Graphics2D getGraphics2D() {
-        return graphics2D;
+        return graphics2d;
     }
 
     public void setImage(BufferedImage image) {
         if (image == null) {
             throw new IllegalArgumentException();
         }
-        if (graphics2D != null) {
-            graphics2D.dispose();
+        if (graphics2d != null) {
+            graphics2d.dispose();
         }
         if (image.getType() == BufferedImage.TYPE_INT_ARGB) {
             this.image = image;
         } else {
             final BufferedImage imageNew = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            final Graphics2D graphics2DNew = imageNew.createGraphics();
-            graphics2DNew.drawImage(image, 0, 0, null);
-            graphics2DNew.dispose();
+            final Graphics2D graphics2dNew = imageNew.createGraphics();
+            graphics2dNew.drawImage(image, 0, 0, null);
+            graphics2dNew.dispose();
             this.image = imageNew;
         }
-        graphics2D = this.image.createGraphics();
+        graphics2d = this.image.createGraphics();
     }
 
     public void newImage(int width, int height, Color backgroundColor) {
         final BufferedImage imageNew = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         if (backgroundColor != null) {
-            final Graphics2D graphics2DNew = imageNew.createGraphics();
-            graphics2DNew.setColor(backgroundColor);
-            graphics2DNew.fillRect(0, 0, width, height);
-            graphics2DNew.dispose();
+            final Graphics2D graphics2dNew = imageNew.createGraphics();
+            graphics2dNew.setColor(backgroundColor);
+            graphics2dNew.fillRect(0, 0, width, height);
+            graphics2dNew.dispose();
         }
         setImage(imageNew);
     }

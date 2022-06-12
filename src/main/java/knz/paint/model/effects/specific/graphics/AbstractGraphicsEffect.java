@@ -24,10 +24,10 @@ public abstract class AbstractGraphicsEffect extends AbstractEffect {
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());
-        final Graphics2D graphics2D = result.createGraphics();
-        graphics2D.drawImage(image, 0, 0, null);
-        filter(width, height, graphics2D);
-        graphics2D.dispose();
+        final Graphics2D graphics2d = result.createGraphics();
+        graphics2d.drawImage(image, 0, 0, null);
+        filter(width, height, graphics2d);
+        graphics2d.dispose();
         return result;
     }
 
@@ -39,6 +39,6 @@ public abstract class AbstractGraphicsEffect extends AbstractEffect {
     protected void applyFoot() {
     }
 
-    protected abstract void filter(int width, int height, Graphics2D graphics2D);
+    protected abstract void filter(int width, int height, Graphics2D graphics2d);
 
 }

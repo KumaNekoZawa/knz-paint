@@ -4,7 +4,6 @@
 * fix all Checkstyle warnings
 
 # Bugs & cosmetic changes
-* rename all occurrences of "graphics2d" to "graphics2D"
 * some Listeners are in the View, some are in the Model; fix this
 * block UI while applying effects
 * "Grayscale" effect sliders are not precise

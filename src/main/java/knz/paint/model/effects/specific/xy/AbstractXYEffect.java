@@ -28,7 +28,7 @@ public abstract class AbstractXYEffect extends AbstractEffect {
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());
-        final Graphics2D graphics2D = result.createGraphics();
+        final Graphics2D graphics2d = result.createGraphics();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 final int in_rgba = image.getRGB(x, y);
@@ -36,12 +36,12 @@ public abstract class AbstractXYEffect extends AbstractEffect {
                 filter(width, height, x, y);
                 result.setRGB(x, y, in_rgba);
                 if (out_affected) {
-                    graphics2D.setColor(out_rgba);
-                    graphics2D.drawLine(x, y, x, y);
+                    graphics2d.setColor(out_rgba);
+                    graphics2d.drawLine(x, y, x, y);
                 }
             }
         }
-        graphics2D.dispose();
+        graphics2d.dispose();
         return result;
     }
 
