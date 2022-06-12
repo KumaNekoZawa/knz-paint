@@ -19,6 +19,7 @@ public class BlackWhiteEffect extends AbstractGrayEffect {
         final boolean random    = paramRandom.getValue();
         final double  threshold = random ? Math.random() : paramThreshold.getValue();
         out_b = in_b < threshold ? 0 : 1;
+        out_a = in_a;
     }
 
 }

@@ -44,6 +44,8 @@ public abstract class AbstractHSBAEffect extends AbstractEffect {
                 out_b = in_b;
                 out_a = in_a;
                 filter(in_h, in_s, in_b, in_a);
+                out_s = Math.max(0,    Math.min(1,    out_s));
+                out_b = Math.max(0,    Math.min(1,    out_b));
                 out_a = Math.max(0x00, Math.min(0xFF, out_a));
                 final int out = (out_a << 24) | (Color.HSBtoRGB(out_h, out_s, out_b) & 0xFFFFFF);
                 result.setRGB(x, y, out);

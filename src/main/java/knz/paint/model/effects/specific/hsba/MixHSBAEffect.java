@@ -42,18 +42,10 @@ public class MixHSBAEffect extends AbstractHSBAEffect {
         final double negAmountB = 1 - amountB;
         final double negAmountA = 1 - amountA;
         final float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-        if (paramAmountH.isSet()) {
-            out_h = (float) (negAmountH * in_h + amountH * hsb[0]);
-        }
-        if (paramAmountS.isSet()) {
-            out_s = (float) (negAmountS * in_s + amountS * hsb[1]);
-        }
-        if (paramAmountB.isSet()) {
-            out_b = (float) (negAmountB * in_b + amountB * hsb[2]);
-        }
-        if (paramAmountA.isSet()) {
-            out_a = (int) (negAmountA * in_a + amountA * color.getAlpha());
-        }
+        out_h = paramAmountH.isSet() ? (float) (negAmountH * in_h + amountH * hsb[0])           : in_h;
+        out_s = paramAmountS.isSet() ? (float) (negAmountS * in_s + amountS * hsb[1])           : in_s;
+        out_b = paramAmountB.isSet() ? (float) (negAmountB * in_b + amountB * hsb[2])           : in_b;
+        out_a = paramAmountA.isSet() ?   (int) (negAmountA * in_a + amountA * color.getAlpha()) : in_a;
     }
 
 }

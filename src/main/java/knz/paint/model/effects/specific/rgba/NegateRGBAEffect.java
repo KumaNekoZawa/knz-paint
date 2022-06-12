@@ -1,10 +1,10 @@
 package knz.paint.model.effects.specific.rgba;
 
 /* also called "Invert colors" or "Bit not" */
-public class NegateEffect extends AbstractRGBAEffect {
+public class NegateRGBAEffect extends AbstractRGBAEffect {
 
-    public NegateEffect() {
-        super("Negate", true, true);
+    public NegateRGBAEffect() {
+        super("Negate RGBA", true, true);
     }
 
     @Override

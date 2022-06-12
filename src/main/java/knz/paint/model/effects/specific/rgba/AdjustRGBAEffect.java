@@ -30,18 +30,10 @@ public class AdjustRGBAEffect extends AbstractRGBAEffect {
         final double b = paramB.getValue();
         final boolean invertA = paramInvertA.getValue();
         final double a = paramA.getValue();
-        if (paramR.isSet()) {
-            out_r = (int) (Math.pow(in_r / (double) 0xFF, invertRGB ? 1 / r : r) * 0xFF);
-        }
-        if (paramG.isSet()) {
-            out_g = (int) (Math.pow(in_g / (double) 0xFF, invertRGB ? 1 / g : g) * 0xFF);
-        }
-        if (paramB.isSet()) {
-            out_b = (int) (Math.pow(in_b / (double) 0xFF, invertRGB ? 1 / b : b) * 0xFF);
-        }
-        if (paramA.isSet()) {
-            out_a = (int) (Math.pow(in_a / (double) 0xFF, invertA   ? 1 / a : a) * 0xFF);
-        }
+        out_r = paramR.isSet() ? (int) (Math.pow(in_r / (double) 0xFF, invertRGB ? 1 / r : r) * 0xFF) : in_r;
+        out_g = paramG.isSet() ? (int) (Math.pow(in_g / (double) 0xFF, invertRGB ? 1 / g : g) * 0xFF) : in_g;
+        out_b = paramB.isSet() ? (int) (Math.pow(in_b / (double) 0xFF, invertRGB ? 1 / b : b) * 0xFF) : in_b;
+        out_a = paramA.isSet() ? (int) (Math.pow(in_a / (double) 0xFF, invertA   ? 1 / a : a) * 0xFF) : in_a;
     }
 
 }

@@ -30,18 +30,10 @@ public class AdjustHSBAEffect extends AbstractHSBAEffect {
         final double  brightness  = paramBrightness.getValue();
         final boolean invertAlpha = paramInvertAlpha.getValue();
         final double  alpha       = paramAlpha.getValue();
-        if (paramHuePhase.isSet()) {
-            out_h = in_h + (float) huePhase;
-        }
-        if (paramSaturation.isSet()) {
-            out_s = (float) Math.pow(in_s, invertSB ? 1 / saturation : saturation);
-        }
-        if (paramBrightness.isSet()) {
-            out_b = (float) Math.pow(in_b, invertSB ? 1 / brightness : brightness);
-        }
-        if (paramAlpha.isSet()) {
-            out_a = (int) (Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha : alpha) * 0xFF);
-        }
+        out_h = paramHuePhase.isSet()   ? in_h + (float) huePhase                                                              : in_h;
+        out_s = paramSaturation.isSet() ? (float) Math.pow(in_s,                 invertSB    ? 1 / saturation : saturation)    : in_s;
+        out_b = paramBrightness.isSet() ? (float) Math.pow(in_b,                 invertSB    ? 1 / brightness : brightness)    : in_b;
+        out_a = paramAlpha.isSet()      ?  (int) (Math.pow(in_a / (double) 0xFF, invertAlpha ? 1 / alpha      : alpha) * 0xFF) : in_a;
     }
 
 }

@@ -34,6 +34,7 @@ public class GrayscaleEffect extends AbstractRGBAEffect {
         out_r = gray;
         out_g = gray;
         out_b = gray;
+        out_a = in_a;
     }
 
 }

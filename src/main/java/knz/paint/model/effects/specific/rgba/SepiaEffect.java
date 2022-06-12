@@ -66,6 +66,7 @@ public class SepiaEffect extends AbstractRGBAEffect {
         out_r = (int) (rr * in_r + rg * in_g + rb * in_b);
         out_g = (int) (gr * in_r + gg * in_g + gb * in_b);
         out_b = (int) (br * in_r + bg * in_g + bb * in_b);
+        out_a = in_a;
     }
 
 }

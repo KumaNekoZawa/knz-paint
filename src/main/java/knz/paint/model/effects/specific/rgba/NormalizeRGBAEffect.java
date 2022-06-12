@@ -2,13 +2,13 @@ package knz.paint.model.effects.specific.rgba;
 
 import knz.paint.model.effects.parameter.IntegerParameter;
 
-public class NormalizationEffect extends AbstractRGBAEffect {
+public class NormalizeRGBAEffect extends AbstractRGBAEffect {
 
     private IntegerParameter paramMin = new IntegerParameter("Minimum", 0x00, 0x00, 0xFF);
     private IntegerParameter paramMax = new IntegerParameter("Maximum", 0x00, 0xFF, 0xFF);
 
-    public NormalizationEffect() {
-        super("Normalization", true, true);
+    public NormalizeRGBAEffect() {
+        super("Normalize RGBA", true, true);
         this.parameters.add(paramMin);
         this.parameters.add(paramMax);
     }

@@ -50,6 +50,9 @@ import knz.paint.model.effects.specific.hsba.ExtractAlphaEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
 import knz.paint.model.effects.specific.hsba.MixHSBAEffect;
+import knz.paint.model.effects.specific.hsba.NegateHSBAEffect;
+import knz.paint.model.effects.specific.hsba.NoiseHSBAEffect;
+import knz.paint.model.effects.specific.hsba.NormalizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.other.BentleyEffect;
 import knz.paint.model.effects.specific.other.PolarBentleyEffect;
@@ -73,9 +76,9 @@ import knz.paint.model.effects.specific.rgba.BitShiftEffect;
 import knz.paint.model.effects.specific.rgba.ExtractRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
 import knz.paint.model.effects.specific.rgba.MixRGBAEffect;
-import knz.paint.model.effects.specific.rgba.NegateEffect;
-import knz.paint.model.effects.specific.rgba.NoiseEffect;
-import knz.paint.model.effects.specific.rgba.NormalizationEffect;
+import knz.paint.model.effects.specific.rgba.NegateRGBAEffect;
+import knz.paint.model.effects.specific.rgba.NoiseRGBAEffect;
+import knz.paint.model.effects.specific.rgba.NormalizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SepiaEffect;
 import knz.paint.model.effects.specific.rgba.SolarizationEffect;
 import knz.paint.model.effects.specific.xy.BorderEffect;
@@ -131,9 +134,9 @@ public class MainWindow extends JFrame {
         new ExtractRGBAEffect(),
         new GrayscaleEffect(),
         new MixRGBAEffect(),
-        new NegateEffect(),
-        new NoiseEffect(),
-        new NormalizationEffect(),
+        new NegateRGBAEffect(),
+        new NoiseRGBAEffect(),
+        new NormalizeRGBAEffect(),
         new SepiaEffect(),
         new SolarizationEffect(),
         /* hsba/gray */
@@ -144,6 +147,9 @@ public class MainWindow extends JFrame {
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
         new MixHSBAEffect(),
+        new NegateHSBAEffect(),
+        new NoiseHSBAEffect(),
+        new NormalizeHSBAEffect(),
         /* graphics */
         new TadaEffect(),
         /* other */
