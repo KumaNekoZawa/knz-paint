@@ -4,9 +4,7 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.Preset;
 import knz.paint.model.effects.parameter.PresetParameter;
 
-// FIXME rename effect
-
-public class SepiaEffect extends AbstractRGBAEffect {
+public class MixChannelsRGBAEffect extends AbstractRGBAEffect {
 
     private PresetParameter paramPresets = new PresetParameter(
         new String[] {
@@ -40,8 +38,8 @@ public class SepiaEffect extends AbstractRGBAEffect {
     private DoubleParameter paramBG = new DoubleParameter("Blue: green",  0, 0, 1, 1000);
     private DoubleParameter paramBB = new DoubleParameter("Blue: blue",   0, 1, 1, 1000);
 
-    public SepiaEffect() {
-        super("Sepia", false, false);
+    public MixChannelsRGBAEffect() {
+        super("Mix channels", false, false);
         this.parameters.add(paramPresets);
         this.parameters.add(paramRR);
         this.parameters.add(paramRG);

@@ -2,5 +2,6 @@
 /etc/
 /examples/
 /src/main/resources/tool*.png
+/backup.png
 *.class
 *.jar

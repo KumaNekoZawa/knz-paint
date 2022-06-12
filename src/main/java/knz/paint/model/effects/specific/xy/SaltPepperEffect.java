@@ -13,7 +13,7 @@ public class SaltPepperEffect extends AbstractXYEffect {
     private ColorParameter  paramColorPepper = new ColorParameter("Pepper color", Color.BLACK);
 
     public SaltPepperEffect() {
-        super("Salt & Pepper");
+        super("Salt & pepper");
         this.parameters.add(paramAmount);
         this.parameters.add(paramRatio);
         this.parameters.add(paramColorSalt);

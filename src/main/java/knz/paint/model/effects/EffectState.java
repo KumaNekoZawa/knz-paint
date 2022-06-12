@@ -5,7 +5,6 @@ import java.util.List;
 
 import knz.paint.model.effects.parameter.AbstractParameter;
 
-/* Corresponds to the "Effects" menu in the MainWindow. */
 public class EffectState {
 
     private List<AbstractParameter> currentParameters;

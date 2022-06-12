@@ -20,7 +20,7 @@
 
         <!-- NAMING CONVENTIONS -->
         <module name="IllegalIdentifierName">
-            <message key="name.invalidPattern" value="Use graphics2d instead of graphics2D" />
+            <message key="name.invalidPattern" value="Line contains graphics2D; use graphics2d instead" />
             <property name="format" value="^(?!graphics2D$).+$" />
         </module>
 

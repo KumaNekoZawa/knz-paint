@@ -32,7 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
@@ -57,6 +56,7 @@ import knz.paint.model.effects.specific.hsba.NoiseHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NormalizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.SolarizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
+import knz.paint.model.effects.specific.hsba.gray.ThresholdEffect;
 import knz.paint.model.effects.specific.other.BentleyEffect;
 import knz.paint.model.effects.specific.other.PolarBentleyEffect;
 import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
@@ -78,11 +78,11 @@ import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
 import knz.paint.model.effects.specific.rgba.BitShiftEffect;
 import knz.paint.model.effects.specific.rgba.ExtractChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
+import knz.paint.model.effects.specific.rgba.MixChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.MixColorRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NegateRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NoiseRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NormalizeRGBAEffect;
-import knz.paint.model.effects.specific.rgba.SepiaEffect;
 import knz.paint.model.effects.specific.rgba.SolarizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SwapRedBlueEffect;
 import knz.paint.model.effects.specific.xy.BorderEffect;
@@ -104,6 +104,8 @@ import knz.paint.view.plainpanels.PalettePanel;
 public class MainWindow extends JFrame {
 
     private static final String TITLE = "熊猫沢ペイント";
+
+    private static final File FILE_BACKUP = new File("backup.png");
 
     private static final FileFilter FILTER_BMP = createFileFilter("Microsoft Windows Bitmap", "bmp", "dib");
     private static final FileFilter FILTER_GIF = createFileFilter("Graphics Interchange Format", "gif");
@@ -137,15 +139,16 @@ public class MainWindow extends JFrame {
         new BitShiftEffect(),
         new ExtractChannelsRGBAEffect(),
         new GrayscaleEffect(),
+        new MixChannelsRGBAEffect(),
         new MixColorRGBAEffect(),
         new NegateRGBAEffect(),
         new NoiseRGBAEffect(),
         new NormalizeRGBAEffect(),
-        new SepiaEffect(),
         new SolarizeRGBAEffect(),
         new SwapRedBlueEffect(),
         /* hsba/gray */
         new BlackWhiteEffect(),
+        new ThresholdEffect(),
         /* hsba */
         new AdjustChannelsHSBAEffect(),
         new ExtractAlphaEffect(),
@@ -664,12 +667,21 @@ public class MainWindow extends JFrame {
         setSize(Config.getConfig().getMainWindowWidth(),
                 Config.getConfig().getMainWindowHeight());
         setLocationRelativeTo(null);
-        mainPanel.getImageState().newImage(
-            Config.getConfig().getNewImageWidth(),
-            Config.getConfig().getNewImageHeight(),
-            Config.getConfig().getNewImageColor()
-        );
+        if (FILE_BACKUP.isFile()) {
+            try {
+                mainPanel.getImageState().setImage(ImageIO.read(FILE_BACKUP));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mainPanel.getImageState().newImage(
+                Config.getConfig().getNewImageWidth(),
+                Config.getConfig().getNewImageHeight(),
+                Config.getConfig().getNewImageColor()
+            );
+        }
         mainPanel.updatePanelSize();
+        mainPanel.repaint();
 
         setVisible(true);
     }
@@ -861,23 +873,18 @@ public class MainWindow extends JFrame {
     }
 
     private void quit() {
-        if (mainPanel.getImageState().hasChangedTillLastSave()) {
-            switch (JOptionPane.showConfirmDialog(this, "Do you want to save your image first?", getTitle(), JOptionPane.YES_NO_CANCEL_OPTION)) {
-            case JOptionPane.YES_OPTION:
-                save();
-                actuallyQuit();
-                break;
-            case JOptionPane.NO_OPTION:
-                actuallyQuit();
-                break;
-            case JOptionPane.CANCEL_OPTION:
-            default:
-                /* empty */
-                break;
+        final ImageState imageState = mainPanel.getImageState();
+        if (imageState.hasChangedTillLastSave()) {
+            if (FILE_BACKUP.exists()) {
+                FILE_BACKUP.delete();
             }
-        } else {
-            actuallyQuit();
+            try {
+                ImageIO.write(imageState.getImage(), "PNG", FILE_BACKUP);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        actuallyQuit();
     }
 
     private void actuallyQuit() {

@@ -3,7 +3,7 @@ package knz.paint.model.effects.specific.positional.polar;
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
-// XXX this is just a special case of the AdjustPolarEffect
+// XXX this is a special case of the AdjustPolarEffect
 public class RotationEffect extends AbstractPolarEffect {
 
     private DoubleParameter paramAngle = new DoubleParameter("Angle", "°", MIN_ANGLE, 0, MAX_ANGLE);

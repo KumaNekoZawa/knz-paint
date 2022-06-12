@@ -1,7 +1,5 @@
 # Always check these first
-* all FIXMEs/TODOs/XXXs: `grep -EIinr 'FIXME|TODO|XXX' .`
-* go through all // and /* comments
-* fix all Checkstyle warnings
+* go through all Checkstyle warnings/infos
 
 # Bugs & cosmetic changes
 * some Listeners are in the View, some are in the Model; fix this

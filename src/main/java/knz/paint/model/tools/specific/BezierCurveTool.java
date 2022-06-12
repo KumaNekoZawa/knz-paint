@@ -66,7 +66,6 @@ public class BezierCurveTool extends AbstractTool {
         graphics2d.setColor(toolState.getColorPrimary());
         graphics2d.setStroke(toolState.getStroke());
 
-        /* calc quality */
         final int minX = Arrays.stream(polygon2.xpoints).min().orElse(0);
         final int minY = Arrays.stream(polygon2.ypoints).min().orElse(0);
         final int maxX = Arrays.stream(polygon2.xpoints).max().orElse(0);

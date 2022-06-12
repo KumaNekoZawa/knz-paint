@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-/* Corresponds to the "View" menu in the MainWindow. */
 public class ImageState {
 
     public static final int[] ZOOM_DIVISORS = { 32, 16, 8, 4, 2, 1, 1, 1, 1,  1,  1 };
