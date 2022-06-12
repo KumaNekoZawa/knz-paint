@@ -11,6 +11,7 @@ public class ExtractSaturationEffect extends AbstractHSBAEffect {
         out_h = 0;
         out_s = 0;
         out_b = in_s;
+        out_a = 0xFF;
     }
 
 }

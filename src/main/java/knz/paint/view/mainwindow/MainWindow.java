@@ -46,6 +46,7 @@ import knz.paint.model.ImageState;
 import knz.paint.model.effects.specific.AbstractEffect;
 import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustHSBAEffect;
+import knz.paint.model.effects.specific.hsba.ExtractAlphaEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
 import knz.paint.model.effects.specific.hsba.MixHSBAEffect;
@@ -68,7 +69,6 @@ import knz.paint.model.effects.specific.positional.polar.SwirlEffect;
 import knz.paint.model.effects.specific.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
 import knz.paint.model.effects.specific.rgba.AdjustRGBAEffect;
-import knz.paint.model.effects.specific.rgba.AlphaAsGrayEffect;
 import knz.paint.model.effects.specific.rgba.BitShiftEffect;
 import knz.paint.model.effects.specific.rgba.ExtractRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
@@ -127,7 +127,6 @@ public class MainWindow extends JFrame {
         new AdjustContrastEffect(),
         new AdjustGammaEffect(),
         new AdjustRGBAEffect(),
-        new AlphaAsGrayEffect(),
         new BitShiftEffect(),
         new ExtractRGBAEffect(),
         new GrayscaleEffect(),
@@ -141,6 +140,7 @@ public class MainWindow extends JFrame {
         new BlackWhiteEffect(),
         /* hsba */
         new AdjustHSBAEffect(),
+        new ExtractAlphaEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
         new MixHSBAEffect(),

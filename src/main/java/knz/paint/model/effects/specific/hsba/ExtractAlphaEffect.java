@@ -1,16 +1,16 @@
 package knz.paint.model.effects.specific.hsba;
 
-public class ExtractBrightnessEffect extends AbstractHSBAEffect {
+public class ExtractAlphaEffect extends AbstractHSBAEffect {
 
-    public ExtractBrightnessEffect() {
-        super("Extract brightness");
+    public ExtractAlphaEffect() {
+        super("Extract alpha");
     }
 
     @Override
     protected void filter(float in_h, float in_s, float in_b, int in_a) {
         out_h = 0;
         out_s = 0;
-        out_b = in_b;
+        out_b = in_a / (float) 0xFF;
         out_a = 0xFF;
     }
 
