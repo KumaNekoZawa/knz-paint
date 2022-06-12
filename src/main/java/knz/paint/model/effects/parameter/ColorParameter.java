@@ -2,7 +2,7 @@ package knz.paint.model.effects.parameter;
 
 import java.awt.Color;
 
-public class ColorParameter extends AbstractParameter {
+public class ColorParameter extends AbstractLabeledParameter {
 
     private Color def;
     private Color value;
@@ -10,11 +10,10 @@ public class ColorParameter extends AbstractParameter {
     public ColorParameter(String name, Color def) {
         super(name);
         this.def = def;
-        reset();
     }
 
     @Override
-    public void reset() {
+    public void reset(int width, int height) {
         this.value = def;
     }
 

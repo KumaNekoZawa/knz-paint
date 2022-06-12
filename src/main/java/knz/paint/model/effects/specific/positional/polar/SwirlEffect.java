@@ -8,7 +8,7 @@ public class SwirlEffect extends AbstractPolarEffect {
     private DoubleParameter paramFactor = new DoubleParameter("Factor", -10, 0, 10);
 
     public SwirlEffect() {
-        super("Swirl", BorderFillStrategy.FILL_TRANSPARENT, true);
+        super("Swirl", BorderFillStrategy.FILL_TRANSPARENT);
         this.parameters.add(paramFactor);
     }
 

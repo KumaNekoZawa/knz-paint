@@ -7,19 +7,19 @@ import knz.paint.model.effects.specific.AbstractEffect;
 
 public abstract class AbstractRGBAEffect extends AbstractEffect {
 
+    private BooleanParameter paramR, paramG, paramB, paramA;
     private boolean affectsAlpha;
-    private BooleanParameter paramR = new BooleanParameter("Affect red",   true);
-    private BooleanParameter paramG = new BooleanParameter("Affect green", true);
-    private BooleanParameter paramB = new BooleanParameter("Affect blue",  true);
-    private BooleanParameter paramA;
 
     protected int out_r, out_g, out_b, out_a;
 
-    public AbstractRGBAEffect(String name, boolean showDefaultParameters, boolean affectsAlpha) {
+    public AbstractRGBAEffect(String name, boolean hasDefaultParameters, boolean affectsAlpha) {
         super("RGBA." + name);
-        this.paramA = new BooleanParameter("Affect alpha", !showDefaultParameters && affectsAlpha);
         this.affectsAlpha = affectsAlpha;
-        if (showDefaultParameters) {
+        if (hasDefaultParameters) {
+            this.paramR = new BooleanParameter("Affect red",   true);
+            this.paramG = new BooleanParameter("Affect green", true);
+            this.paramB = new BooleanParameter("Affect blue",  true);
+            this.paramA = new BooleanParameter("Affect alpha", false);
             this.parameters.add(paramR);
             this.parameters.add(paramG);
             this.parameters.add(paramB);
@@ -39,10 +39,10 @@ public abstract class AbstractRGBAEffect extends AbstractEffect {
 
     @Override
     protected final BufferedImage applyBody(BufferedImage image) {
-        final boolean r = paramR.getValue();
-        final boolean g = paramG.getValue();
-        final boolean b = paramB.getValue();
-        final boolean a = paramA.getValue();
+        final boolean r = paramR != null ? paramR.getValue() : true;
+        final boolean g = paramG != null ? paramG.getValue() : true;
+        final boolean b = paramB != null ? paramB.getValue() : true;
+        final boolean a = paramA != null ? paramA.getValue() : affectsAlpha;
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());

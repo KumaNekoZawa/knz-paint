@@ -9,9 +9,7 @@ public abstract class AbstractParameter {
         this.name = name;
     }
 
-    public abstract void reset();
-
-    public abstract String getLabelText();
+    public abstract void reset(int width, int height);
 
     public final String getName() {
         return name;

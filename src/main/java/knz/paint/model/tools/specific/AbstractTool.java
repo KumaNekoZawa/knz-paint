@@ -92,8 +92,8 @@ public abstract class AbstractTool {
     }
 
     private void updateXY(MouseInfo e) {
-        x = imageState.getZoomDivisor() * e.getX() / imageState.getZoomFactor();
-        y = imageState.getZoomDivisor() * e.getY() / imageState.getZoomFactor();
+        x = imageState.fromUserToImage(e.getX());
+        y = imageState.fromUserToImage(e.getY());
     }
 
     public void timerEvent(Graphics2D graphics2d) {

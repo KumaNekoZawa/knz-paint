@@ -7,8 +7,9 @@
     <allow class="java.awt.Color" />
     <allow class="java.awt.Cursor" />
     <allow class="java.awt.Graphics2D" />
-    <allow class="java.awt.Stroke" />
+    <allow class="java.awt.Point" />
     <allow class="java.awt.Polygon" />
+    <allow class="java.awt.Stroke" />
     <allow class="java.awt.image.BufferedImage" />
     <allow class="javax.imageio.ImageIO" />
     <allow pkg="java.io" />

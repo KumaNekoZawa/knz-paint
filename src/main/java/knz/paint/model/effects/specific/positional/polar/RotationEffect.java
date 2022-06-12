@@ -9,7 +9,7 @@ public class RotationEffect extends AbstractPolarEffect {
     private DoubleParameter paramAngle = new DoubleParameter("Angle", "°", MIN_ANGLE, 0, MAX_ANGLE);
 
     public RotationEffect() {
-        super("Rotation", BorderFillStrategy.FILL_TRANSPARENT, true);
+        super("Rotation", BorderFillStrategy.FILL_TRANSPARENT);
         this.parameters.add(paramAngle);
     }
 

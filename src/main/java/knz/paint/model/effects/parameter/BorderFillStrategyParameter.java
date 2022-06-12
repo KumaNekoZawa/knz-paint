@@ -8,17 +8,11 @@ public class BorderFillStrategyParameter extends AbstractParameter {
     public BorderFillStrategyParameter(BorderFillStrategy def) {
         super("Border fill strategy");
         this.def = def;
-        reset();
     }
 
     @Override
-    public void reset() {
+    public void reset(int width, int height) {
         this.value = def;
-    }
-
-    @Override
-    public String getLabelText() {
-        return getName() + ": " + value.getName();
     }
 
     public BorderFillStrategy getDef() {

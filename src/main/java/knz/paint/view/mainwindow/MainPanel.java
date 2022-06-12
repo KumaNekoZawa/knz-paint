@@ -1,9 +1,13 @@
 package knz.paint.view.mainwindow;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -23,7 +27,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import knz.paint.model.Config;
+import knz.paint.model.ImageMode;
 import knz.paint.model.ImageState;
+import knz.paint.model.effects.EffectState;
+import knz.paint.model.effects.parameter.AbstractParameter;
+import knz.paint.model.effects.parameter.PointListParameter;
+import knz.paint.model.effects.parameter.PointParameter;
 import knz.paint.model.tools.MouseInfo;
 import knz.paint.model.tools.Tool;
 import knz.paint.model.tools.ToolState;
@@ -34,6 +43,9 @@ import knz.paint.view.TransferableImage;
 
 public class MainPanel extends JPanel {
 
+    private static final int POINT_SIZE = 9;
+    private static final Stroke DEFAULT_STROKE = new BasicStroke(1f);
+
     private static final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     private List<MainPanelListener> listeners = new ArrayList<>();
@@ -43,16 +55,18 @@ public class MainPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
             toolObject.timerEvent(imageState.getGraphics2D());
-            postEvent(toolObject);
+            postToolEvent(toolObject);
         }
     });
 
-    private ToolState toolState;
     private ImageState imageState = new ImageState();
+    private ToolState toolState;
+    private EffectState effectState;
 
-    public MainPanel(ToolState toolState) {
+    public MainPanel(ToolState toolState, EffectState effectState) {
         super();
         this.toolState = toolState;
+        this.effectState = effectState;
 
         for (final Tool tool : Tool.values()) {
             tool.getToolObject().setImageState(imageState);
@@ -61,8 +75,15 @@ public class MainPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-                setCursor(toolObject.getCursor());
+                switch (imageState.getImageMode()) {
+                case TOOL:
+                    final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
+                    setCursor(toolObject.getCursor());
+                    break;
+                default:
+                    setCursor(AbstractTool.CURSOR_DEFAULT);
+                    break;
+                }
             }
 
             @Override
@@ -72,47 +93,104 @@ public class MainPanel extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-                toolObject.mousePressed(imageState.getGraphics2D(), getMouseInfo(e));
-                postEvent(toolObject);
-                if (toolObject.usesTimer()) {
-                    timer.start();
+                switch (imageState.getImageMode()) {
+                case TOOL:
+                    final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
+                    toolObject.mousePressed(imageState.getGraphics2D(), getMouseInfo(e));
+                    postToolEvent(toolObject);
+                    if (toolObject.usesTimer()) {
+                        timer.start();
+                    }
+                    break;
+                case EFFECT:
+                    final int x = imageState.fromUserToImage(e.getX());
+                    final int y = imageState.fromUserToImage(e.getY());
+                    effectState.setSelectedParameter(null);
+                    effectState.setSelectedPoint(null);
+                    for (final AbstractParameter parameter : effectState.getCurrentParameters()) {
+                        if (parameter instanceof PointParameter) {
+                            final PointParameter pointParameter = (PointParameter) parameter;
+                            final Point point = pointParameter.getValue();
+                            if (doesMouseHitPoint(parameter, point, x, y)) {
+                                break;
+                            }
+                        } else if (parameter instanceof PointListParameter) {
+                            final PointListParameter pointListParameter = (PointListParameter) parameter;
+                            for (final Point point : pointListParameter.getValue()) {
+                                if (doesMouseHitPoint(parameter, point, x, y)) {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    effectEvent(x, y);
+                    break;
+                default:
                 }
+            }
+
+            private boolean doesMouseHitPoint(AbstractParameter parameter, Point point, int x, int y) {
+                final int d = imageState.fromUserToImage(POINT_SIZE / 2);
+                if (point.x - d <= x && x <= point.x + d
+                 && point.y - d <= y && y <= point.y + d) {
+                    effectState.setSelectedParameter(parameter);
+                    effectState.setSelectedPoint(point);
+                    return true;
+                }
+                return false;
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-                if (toolObject.usesTimer()) {
-                    timer.stop();
-                }
-                toolObject.mouseReleased(imageState.getGraphics2D(), getMouseInfo(e));
-                postEvent(toolObject);
-                if (toolObject.doesChangeImage()) {
-                    imageState.setChangedTillLastSave(true);
+                switch (imageState.getImageMode()) {
+                case TOOL:
+                    final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
+                    if (toolObject.usesTimer()) {
+                        timer.stop();
+                    }
+                    toolObject.mouseReleased(imageState.getGraphics2D(), getMouseInfo(e));
+                    postToolEvent(toolObject);
+                    if (toolObject.doesChangeImage()) {
+                        imageState.setChangedTillLastSave(true);
+                    }
+                    break;
+                case EFFECT:
+                    final int x = imageState.fromUserToImage(e.getX());
+                    final int y = imageState.fromUserToImage(e.getY());
+                    effectEvent(x, y);
+                    break;
+                default:
                 }
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-                toolObject.mouseDragged(imageState.getGraphics2D(), getMouseInfo(e));
-                postEvent(toolObject);
-                updateStatusBar(e);
+                final int x = imageState.fromUserToImage(e.getX());
+                final int y = imageState.fromUserToImage(e.getY());
+                switch (imageState.getImageMode()) {
+                case TOOL:
+                    final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
+                    toolObject.mouseDragged(imageState.getGraphics2D(), getMouseInfo(e));
+                    postToolEvent(toolObject);
+                    break;
+                case EFFECT:
+                    effectEvent(x, y);
+                    break;
+                default:
+                }
+                updateStatusBar(x, y);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                updateStatusBar(e);
+                final int x = imageState.fromUserToImage(e.getX());
+                final int y = imageState.fromUserToImage(e.getY());
+                updateStatusBar(x, y);
             }
 
-            private void updateStatusBar(MouseEvent e) {
+            private void updateStatusBar(int x, int y) {
                 final BufferedImage image = imageState.getImage();
-                final int zoomDivisor = imageState.getZoomDivisor();
-                final int zoomFactor  = imageState.getZoomFactor();
-                final int x = zoomDivisor * e.getX() / zoomFactor;
-                final int y = zoomDivisor * e.getY() / zoomFactor;
                 if (0 <= x && x < image.getWidth()
                  && 0 <= y && y < image.getHeight()) {
                     final int rgba = image.getRGB(x, y);
@@ -135,7 +213,7 @@ public class MainPanel extends JPanel {
         );
     }
 
-    private void postEvent(AbstractTool toolObject) {
+    private void postToolEvent(AbstractTool toolObject) {
         if (toolObject.doesChangeImageSize()) {
             updatePanelSize();
         }
@@ -147,46 +225,92 @@ public class MainPanel extends JPanel {
         }
     }
 
+    private void effectEvent(int x, int y) {
+        final AbstractParameter selectedParameter = effectState.getSelectedParameter();
+        final Point selectedPoint = effectState.getSelectedPoint();
+        if (selectedParameter != null && selectedPoint != null) {
+            selectedPoint.x = x;
+            selectedPoint.y = y;
+            if (selectedParameter instanceof PointParameter) {
+                final PointParameter pointParameter = (PointParameter) selectedParameter;
+                pointParameter.firePointChangedEvent();
+            } else if (selectedParameter instanceof PointListParameter) {
+                final PointListParameter pointListParameter = (PointListParameter) selectedParameter;
+                pointListParameter.firePointChangedEvent(selectedPoint);
+            } else {
+                throw new AssertionError();
+            }
+            MainPanel.this.repaint();
+        }
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         final Graphics2D graphics2d = (Graphics2D) g;
+        final BufferedImage image = imageState.getImage();
+        final int imageWidth  = image.getWidth();
+        final int imageHeight = image.getHeight();
         final BufferedImage imageTemp = imageState.getImageTemp();
-        final int zoomFactor  = imageState.getZoomFactor();
-        final int zoomDivisor = imageState.getZoomDivisor();
-        if (imageTemp == null) {
-            final BufferedImage image = imageState.getImage();
-            final int imageWidth  = image.getWidth();
-            final int imageHeight = image.getHeight();
-            graphics2d.drawImage(image,
-                0,
-                0,
-                zoomFactor * imageWidth  / zoomDivisor,
-                zoomFactor * imageHeight / zoomDivisor,
-                null);
-            final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
-            if (toolObject.doesChangeCanvas()) {
-                final BufferedImage canvas = new BufferedImage(imageWidth, imageHeight, image.getType());
-                toolObject.paint(canvas.createGraphics());
-                graphics2d.drawImage(canvas,
-                    0,
-                    0,
-                    zoomFactor * imageWidth  / zoomDivisor,
-                    zoomFactor * imageHeight / zoomDivisor,
-                    null);
-            }
-        } else {
+        switch (imageState.getImageMode()) {
+        case EFFECT:
             final int imageTempX = imageState.getImageTempX();
             final int imageTempY = imageState.getImageTempY();
             final int imageTempWidth  = imageTemp.getWidth();
             final int imageTempHeight = imageTemp.getHeight();
             graphics2d.drawImage(imageTemp,
-                zoomFactor * imageTempX      / zoomDivisor,
-                zoomFactor * imageTempY      / zoomDivisor,
-                zoomFactor * imageTempWidth  / zoomDivisor,
-                zoomFactor * imageTempHeight / zoomDivisor,
+                imageState.fromImageToUser(imageTempX),
+                imageState.fromImageToUser(imageTempY),
+                imageState.fromImageToUser(imageTempWidth),
+                imageState.fromImageToUser(imageTempHeight),
+                null);
+            break;
+        default:
+            graphics2d.drawImage(image,
+                0,
+                0,
+                imageState.fromImageToUser(imageWidth),
+                imageState.fromImageToUser(imageHeight),
+                null);
+            break;
+        }
+        final AbstractTool toolObject = toolState.getSelectedTool().getToolObject();
+        if (toolObject.doesChangeCanvas()) {
+            final BufferedImage canvas = new BufferedImage(imageWidth, imageHeight, image.getType());
+            toolObject.paint(canvas.createGraphics());
+            graphics2d.drawImage(canvas,
+                0,
+                0,
+                imageState.fromImageToUser(imageWidth),
+                imageState.fromImageToUser(imageHeight),
                 null);
         }
+        if (imageState.getImageMode() == ImageMode.EFFECT) {
+            for (final AbstractParameter parameter : effectState.getCurrentParameters()) {
+                if (parameter instanceof PointParameter) {
+                    final PointParameter pointParameter = (PointParameter) parameter;
+                    final Point point = pointParameter.getValue();
+                    drawPoint(graphics2d, imageState.fromImageToUser(point.x), imageState.fromImageToUser(point.y));
+                } else if (parameter instanceof PointListParameter) {
+                    final PointListParameter pointListParameter = (PointListParameter) parameter;
+                    for (final Point point : pointListParameter.getValue()) {
+                        drawPoint(graphics2d, imageState.fromImageToUser(point.x), imageState.fromImageToUser(point.y));
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawPoint(Graphics2D graphics2d, int x, int y) {
+        final int l = x - POINT_SIZE / 2;
+        final int t = y - POINT_SIZE / 2;
+        final int s = POINT_SIZE - 1;
+        graphics2d.setStroke(DEFAULT_STROKE);
+        graphics2d.setColor(Color.WHITE);
+        graphics2d.fillOval(l, t, s, s);
+        graphics2d.setColor(Color.BLACK);
+        graphics2d.drawOval(l, t, s, s);
+        graphics2d.drawLine(x, y, x, y);
     }
 
     public void addMainPanelListener(MainPanelListener listener) {
@@ -195,13 +319,11 @@ public class MainPanel extends JPanel {
 
     public void updatePanelSize() {
         final BufferedImage image = imageState.getImage();
-        final int zoomFactor  = imageState.getZoomFactor();
-        final int zoomDivisor = imageState.getZoomDivisor();
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final Dimension d = new Dimension(
-            zoomFactor * width  / zoomDivisor,
-            zoomFactor * height / zoomDivisor
+            imageState.fromImageToUser(width),
+            imageState.fromImageToUser(height)
         );
         setMaximumSize(d);
         setMinimumSize(d);
@@ -214,6 +336,14 @@ public class MainPanel extends JPanel {
 
     public ImageState getImageState() {
         return imageState;
+    }
+
+    public ToolState getToolState() {
+        return toolState;
+    }
+
+    public EffectState getEffectState() {
+        return effectState;
     }
 
     /* Edit */

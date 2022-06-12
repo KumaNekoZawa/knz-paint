@@ -14,7 +14,6 @@ public abstract class AbstractPositionalEffect extends AbstractEffect {
 
     public AbstractPositionalEffect(String name) {
         super("Positional." + name);
-        this.paramBorderFillStrategy = new BorderFillStrategyParameter(BorderFillStrategy.EXTEND_EDGES);
     }
 
     public AbstractPositionalEffect(String name, BorderFillStrategy defaultBorderFillStrategy) {
@@ -33,7 +32,9 @@ public abstract class AbstractPositionalEffect extends AbstractEffect {
 
     @Override
     protected final BufferedImage applyBody(BufferedImage image) {
-        final BorderFillStrategy borderFillStrategy = paramBorderFillStrategy.getValue();
+        final BorderFillStrategy borderFillStrategy = paramBorderFillStrategy != null
+            ? paramBorderFillStrategy.getValue()
+            : BorderFillStrategy.EXTEND_EDGES;
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());

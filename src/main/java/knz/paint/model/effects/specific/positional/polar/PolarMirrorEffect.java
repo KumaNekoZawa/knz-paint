@@ -8,7 +8,7 @@ public class PolarMirrorEffect extends AbstractPolarEffect {
     private DoubleParameter paramAngle = new DoubleParameter("Angle", "°", MIN_ANGLE, 0, MAX_ANGLE);
 
     public PolarMirrorEffect() {
-        super("Polar mirror", BorderFillStrategy.EXTEND_EDGES, true);
+        super("Polar mirror", BorderFillStrategy.EXTEND_EDGES);
         this.parameters.add(paramAngle);
     }
 

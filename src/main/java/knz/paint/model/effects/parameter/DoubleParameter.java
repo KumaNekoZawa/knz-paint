@@ -1,6 +1,6 @@
 package knz.paint.model.effects.parameter;
 
-public class DoubleParameter extends AbstractParameter {
+public class DoubleParameter extends AbstractLabeledParameter {
 
     private String unit;
     private double min, def, max, resolution;
@@ -26,11 +26,10 @@ public class DoubleParameter extends AbstractParameter {
         this.def = def;
         this.max = max;
         this.resolution = resolution;
-        reset();
     }
 
     @Override
-    public void reset() {
+    public void reset(int width, int height) {
         this.value = def;
         this.set = false;
     }

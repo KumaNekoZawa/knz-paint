@@ -15,10 +15,11 @@ public class ImageState {
     private BufferedImage image;
     private Graphics2D graphics2D;
 
-    /* temporary image that is being drawn when previewing effects */
+    /* Temporary image that is being drawn when previewing effects. */
     private BufferedImage imageTemp;
     private int imageTempX, imageTempY;
 
+    private ImageMode imageMode = ImageMode.TOOL;
     private boolean changedTillLastSave = false;
 
     /* View */
@@ -91,15 +92,25 @@ public class ImageState {
     }
 
     public void setImageTemp(BufferedImage imageTempNew, int imageTempNewX, int imageTempNewY) {
+        imageMode = ImageMode.EFFECT;
         imageTemp = imageTempNew;
         imageTempX = imageTempNewX;
         imageTempY = imageTempNewY;
     }
 
     public void setImageTempReset() {
+        imageMode = ImageMode.TOOL;
         imageTemp = null;
         imageTempX = 0;
         imageTempY = 0;
+    }
+
+    public ImageMode getImageMode() {
+        return imageMode;
+    }
+
+    public void setImageMode(ImageMode imageMode) {
+        this.imageMode = imageMode;
     }
 
     public boolean hasChangedTillLastSave() {
@@ -136,12 +147,12 @@ public class ImageState {
         return false;
     }
 
-    public int getZoomDivisor() {
-        return ZOOM_DIVISORS[zoomLevel];
+    public int fromUserToImage(int coord) {
+        return coord * ZOOM_DIVISORS[zoomLevel] / ZOOM_FACTORS[zoomLevel];
     }
 
-    public int getZoomFactor() {
-        return ZOOM_FACTORS[zoomLevel];
+    public int fromImageToUser(int coord) {
+        return coord * ZOOM_FACTORS[zoomLevel] / ZOOM_DIVISORS[zoomLevel];
     }
 
 }

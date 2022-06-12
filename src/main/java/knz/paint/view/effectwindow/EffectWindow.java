@@ -2,7 +2,6 @@ package knz.paint.view.effectwindow;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,6 +27,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import knz.paint.model.ImageState;
+import knz.paint.model.effects.EffectState;
+import knz.paint.model.effects.parameter.AbstractLabeledParameter;
 import knz.paint.model.effects.parameter.AbstractParameter;
 import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.BorderFillStrategy;
@@ -35,6 +36,10 @@ import knz.paint.model.effects.parameter.BorderFillStrategyParameter;
 import knz.paint.model.effects.parameter.ColorParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
+import knz.paint.model.effects.parameter.PointEvent;
+import knz.paint.model.effects.parameter.PointListParameter;
+import knz.paint.model.effects.parameter.PointListener;
+import knz.paint.model.effects.parameter.PointParameter;
 import knz.paint.model.effects.parameter.PresetParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
 import knz.paint.view.colorpickerwindow.ColorPickerEvent;
@@ -51,22 +56,21 @@ public class EffectWindow extends JDialog {
     private Map<String, JComponent> parameterElements = new HashMap<>();
 
     public EffectWindow(Window parent, JScrollPane scrollPane, MainPanel mainPanel, AbstractEffect effect, String title) {
-        super(parent, title, Dialog.ModalityType.APPLICATION_MODAL);
+        super(parent, title);
 
+        final ImageState  imageState  = mainPanel.getImageState();
+        final EffectState effectState = mainPanel.getEffectState();
+        effectState.setCurrentParameters(effect.getParameters());
         for (final AbstractParameter parameter : effect.getParameters()) {
-            parameter.reset();
             parameters.put(parameter.getName(), parameter);
         }
 
-        final ImageState imageState = mainPanel.getImageState();
         final BufferedImage image = imageState.getImage();
         final Rectangle rect = scrollPane.getViewport().getViewRect();
-        final int zoomDivisor = imageState.getZoomDivisor();
-        final int zoomFactor  = imageState.getZoomFactor();
-        rect.x      = zoomDivisor * rect.x      / zoomFactor;
-        rect.y      = zoomDivisor * rect.y      / zoomFactor;
-        rect.width  = zoomDivisor * rect.width  / zoomFactor;
-        rect.height = zoomDivisor * rect.height / zoomFactor;
+        rect.x      = imageState.fromUserToImage(rect.x);
+        rect.y      = imageState.fromUserToImage(rect.y);
+        rect.width  = imageState.fromUserToImage(rect.width);
+        rect.height = imageState.fromUserToImage(rect.height);
         final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth()  - 1));
         final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
         final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
@@ -93,7 +97,118 @@ public class EffectWindow extends JDialog {
         c.gridy = 0;
         for (final AbstractParameter parameter : effect.getParameters()) {
             final String parameterName = parameter.getName();
-            if (parameter instanceof PresetParameter) {
+            if (parameter instanceof AbstractLabeledParameter) {
+                final AbstractLabeledParameter labeledParameter = (AbstractLabeledParameter) parameter;
+                final JLabel label = new JLabel(labeledParameter.getLabelText());
+                label.setAlignmentX(Component.LEFT_ALIGNMENT);
+                add(label, c);
+                c.gridy++;
+                if (parameter instanceof IntegerParameter) {
+                    final IntegerParameter integerParameter = (IntegerParameter) parameter;
+                    final JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                        integerParameter.getMin(),
+                        integerParameter.getMax(),
+                        integerParameter.getDef()
+                    );
+                    slider.addChangeListener(new ChangeListener() {
+                        @Override
+                        public void stateChanged(ChangeEvent e) {
+                            integerParameter.setValue(slider.getValue());
+                            label.setText(labeledParameter.getLabelText());
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
+                        }
+                    });
+                    parameterElements.put(parameterName, slider);
+                    add(slider, c);
+                    c.gridy++;
+                } else if (parameter instanceof DoubleParameter) {
+                    final DoubleParameter doubleParameter = (DoubleParameter) parameter;
+                    final JSlider slider = new JSlider(JSlider.HORIZONTAL,
+                        (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
+                        (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
+                        (int) (doubleParameter.getResolution() * doubleParameter.getDef())
+                    );
+                    slider.addChangeListener(new ChangeListener() {
+                        @Override
+                        public void stateChanged(ChangeEvent e) {
+                            doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
+                            label.setText(labeledParameter.getLabelText());
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
+                        }
+                    });
+                    parameterElements.put(parameterName, slider);
+                    add(slider, c);
+                    c.gridy++;
+                } else if (parameter instanceof ColorParameter) {
+                    final ColorParameter colorParameter = (ColorParameter) parameter;
+                    final ColorPanel colorPanel = new ColorPanel();
+                    final Dimension d = new Dimension(40, 40);
+                    colorPanel.setMaximumSize(d);
+                    colorPanel.setMinimumSize(d);
+                    colorPanel.setSize(d);
+                    colorPanel.setPreferredSize(d);
+                    colorPanel.setColor(colorParameter.getDef());
+                    colorPanel.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            final ColorPickerWindow colorPickerWindow = new ColorPickerWindow(EffectWindow.this, 1);
+                            colorPickerWindow.setColorLeft(colorPanel.getColor());
+                            colorPickerWindow.addColorPickerListener(new ColorPickerListener() {
+                                @Override
+                                public void colorChangedLeft(ColorPickerEvent e) {
+                                    final Color color = e.getColor();
+                                    colorPanel.setColor(color);
+                                    colorPanel.repaint();
+                                }
+
+                                @Override
+                                public void colorChangedRight(ColorPickerEvent e) {
+                                    throw new AssertionError();
+                                }
+                            });
+                        }
+                    });
+                    colorPanel.addColorPanelListener(new ColorPanelListener() {
+                        @Override
+                        public void colorChanged(ColorPanelEvent e) {
+                            final Color color = e.getColor();
+                            colorParameter.setValue(color);
+                            label.setText(labeledParameter.getLabelText());
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
+                        }
+                    });
+                    parameterElements.put(parameterName, colorPanel);
+                    add(colorPanel, c);
+                    c.gridy++;
+                } else if (parameter instanceof PointParameter) {
+                    final PointParameter pointParameter = (PointParameter) parameter;
+                    pointParameter.addPointListener(new PointListener() {
+                        @Override
+                        public void pointChanged(PointEvent e) {
+                            label.setText(labeledParameter.getLabelText());
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
+                        }
+                    });
+                } else if (parameter instanceof PointListParameter) {
+                    final PointListParameter pointListParameter = (PointListParameter) parameter;
+                    pointListParameter.addPointListener(new PointListener() {
+                        @Override
+                        public void pointChanged(PointEvent e) {
+                            // FIXME should not change unless + or - are pressed
+                            label.setText(labeledParameter.getLabelText());
+                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            mainPanel.repaint();
+                        }
+                    });
+                    // FIXME maybe show an + and an - button?
+                } else {
+                    throw new AssertionError();
+                }
+            } else if (parameter instanceof PresetParameter) {
                 final PresetParameter presetParameter = (PresetParameter) parameter;
                 final JComboBox<String> comboBox = new JComboBox<>(presetParameter.getPresetNames());
                 comboBox.addActionListener(new ActionListener() {
@@ -178,94 +293,6 @@ public class EffectWindow extends JDialog {
                 parameterElements.put(parameterName, checkBox);
                 add(checkBox, c);
                 c.gridy++;
-            } else {
-                final JLabel label = new JLabel(parameter.getLabelText());
-                label.setAlignmentX(Component.LEFT_ALIGNMENT);
-                add(label, c);
-                c.gridy++;
-                if (parameter instanceof IntegerParameter) {
-                    final IntegerParameter integerParameter = (IntegerParameter) parameter;
-                    final JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                        integerParameter.getMin(),
-                        integerParameter.getMax(),
-                        integerParameter.getDef()
-                    );
-                    slider.addChangeListener(new ChangeListener() {
-                        @Override
-                        public void stateChanged(ChangeEvent e) {
-                            integerParameter.setValue(slider.getValue());
-                            label.setText(parameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                            mainPanel.repaint();
-                        }
-                    });
-                    parameterElements.put(parameterName, slider);
-                    add(slider, c);
-                    c.gridy++;
-                } else if (parameter instanceof DoubleParameter) {
-                    final DoubleParameter doubleParameter = (DoubleParameter) parameter;
-                    final JSlider slider = new JSlider(JSlider.HORIZONTAL,
-                        (int) (doubleParameter.getResolution() * doubleParameter.getMin()),
-                        (int) (doubleParameter.getResolution() * doubleParameter.getMax()),
-                        (int) (doubleParameter.getResolution() * doubleParameter.getDef())
-                    );
-                    slider.addChangeListener(new ChangeListener() {
-                        @Override
-                        public void stateChanged(ChangeEvent e) {
-                            doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
-                            label.setText(parameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                            mainPanel.repaint();
-                        }
-                    });
-                    parameterElements.put(parameterName, slider);
-                    add(slider, c);
-                    c.gridy++;
-                } else if (parameter instanceof ColorParameter) {
-                    final ColorParameter colorParameter = (ColorParameter) parameter;
-                    final ColorPanel colorPanel = new ColorPanel();
-                    final Dimension d = new Dimension(40, 40);
-                    colorPanel.setMaximumSize(d);
-                    colorPanel.setMinimumSize(d);
-                    colorPanel.setSize(d);
-                    colorPanel.setPreferredSize(d);
-                    colorPanel.setColor(colorParameter.getDef());
-                    colorPanel.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            final ColorPickerWindow colorPickerWindow = new ColorPickerWindow(EffectWindow.this, 1);
-                            colorPickerWindow.setColorLeft(colorPanel.getColor());
-                            colorPickerWindow.addColorPickerListener(new ColorPickerListener() {
-                                @Override
-                                public void colorChangedLeft(ColorPickerEvent e) {
-                                    final Color color = e.getColor();
-                                    colorPanel.setColor(color);
-                                    colorPanel.repaint();
-                                }
-
-                                @Override
-                                public void colorChangedRight(ColorPickerEvent e) {
-                                    throw new AssertionError();
-                                }
-                            });
-                        }
-                    });
-                    colorPanel.addColorPanelListener(new ColorPanelListener() {
-                        @Override
-                        public void colorChanged(ColorPanelEvent e) {
-                            final Color color = e.getColor();
-                            colorParameter.setValue(color);
-                            label.setText(parameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
-                            mainPanel.repaint();
-                        }
-                    });
-                    parameterElements.put(parameterName, colorPanel);
-                    add(colorPanel, c);
-                    c.gridy++;
-                } else {
-                    throw new AssertionError();
-                }
             }
         }
         final JButton buttonOkay = new JButton("Okay");
@@ -274,6 +301,7 @@ public class EffectWindow extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 imageState.setImageTempReset();
                 imageState.setImage(effect.apply(image));
+                imageState.setChangedTillLastSave(true);
                 mainPanel.repaint();
                 EffectWindow.this.dispose();
             }

@@ -43,6 +43,8 @@ import javax.swing.filechooser.FileFilter;
 
 import knz.paint.model.Config;
 import knz.paint.model.ImageState;
+import knz.paint.model.effects.EffectState;
+import knz.paint.model.effects.parameter.AbstractParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
 import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustChannelsHSBAEffect;
@@ -211,6 +213,7 @@ public class MainWindow extends JFrame {
     private JLabel statusBar = new JLabel();
 
     private ToolState toolState = new ToolState();
+    private EffectState effectState = new EffectState();
 
     private File lastPath;
 
@@ -564,9 +567,14 @@ public class MainWindow extends JFrame {
             menuEffectsEffect.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    final ImageState imageState = mainPanel.getImageState();
+                    final BufferedImage image = imageState.getImage();
+                    for (final AbstractParameter parameter : effect.getParameters()) {
+                        parameter.reset(image.getWidth(), image.getHeight());
+                    }
                     if (effect.getParameters().isEmpty()) {
-                        final ImageState imageState = mainPanel.getImageState();
                         imageState.setImage(effect.apply(imageState.getImage()));
+                        imageState.setChangedTillLastSave(true);
                         mainPanel.repaint();
                     } else {
                         new EffectWindow(MainWindow.this, scrollPane, mainPanel, effect, title);
@@ -595,7 +603,7 @@ public class MainWindow extends JFrame {
         addToolBarButtons();
         add(toolBar, BorderLayout.LINE_START);
 
-        mainPanel = new MainPanel(toolState);
+        mainPanel = new MainPanel(toolState, effectState);
         mainPanel.addMainPanelListener(new MainPanelListener() {
             @Override
             public void mouseMoved(MainPanelMouseMovedEvent e) {

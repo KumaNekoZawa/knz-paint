@@ -9,7 +9,7 @@ public class PolarMosaicEffect extends AbstractPolarEffect {
     private DoubleParameter paramSizeA = new DoubleParameter("Size a", 0.01, 0.01, 1);
 
     public PolarMosaicEffect() {
-        super("Polar mosaic", BorderFillStrategy.EXTEND_EDGES, true);
+        super("Polar mosaic", BorderFillStrategy.EXTEND_EDGES);
         this.parameters.add(paramSizeR);
         this.parameters.add(paramSizeA);
     }

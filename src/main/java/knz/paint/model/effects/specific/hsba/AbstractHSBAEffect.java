@@ -8,7 +8,7 @@ import knz.paint.model.effects.specific.AbstractEffect;
 public abstract class AbstractHSBAEffect extends AbstractEffect {
 
     protected float out_h, out_s, out_b;
-    protected int   out_a;
+    protected int out_a;
 
     public AbstractHSBAEffect(String name) {
         super("HSBA." + name);

@@ -20,13 +20,8 @@ public class PresetParameter extends AbstractParameter {
     }
 
     @Override
-    public void reset() {
+    public void reset(int width, int height) {
         /* empty */
-    }
-
-    @Override
-    public String getLabelText() {
-        return getName();
     }
 
     public String[] getPresetNames() {

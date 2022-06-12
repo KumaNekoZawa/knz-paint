@@ -1,6 +1,6 @@
 package knz.paint.model.effects.parameter;
 
-public class IntegerParameter extends AbstractParameter {
+public class IntegerParameter extends AbstractLabeledParameter {
 
     private String unit;
     private int min, def, max;
@@ -16,11 +16,10 @@ public class IntegerParameter extends AbstractParameter {
         this.min = min;
         this.def = def;
         this.max = max;
-        reset();
     }
 
     @Override
-    public void reset() {
+    public void reset(int width, int height) {
         this.value = def;
     }
 
