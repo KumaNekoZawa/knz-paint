@@ -6,6 +6,7 @@ import knz.paint.model.effects.parameter.IntegerParameter;
 import knz.paint.model.effects.parameter.Preset;
 import knz.paint.model.effects.parameter.PresetParameter;
 
+/* see: Beyond Photography: The Digital Darkroom p.36-37,50-51 */
 public class ShearSlicingEffect extends AbstractPositionalEffect {
 
     private PresetParameter paramPresets = new PresetParameter(

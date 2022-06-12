@@ -7,6 +7,7 @@ import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
 
+/* see: Beyond Photography: The Digital Darkroom p.40-41 */
 public class BentleyEffect extends AbstractEffect {
 
     private BooleanParameter paramSat    = new BooleanParameter("Saturation instead of Brightness", false);

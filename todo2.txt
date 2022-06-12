@@ -1,4 +1,0 @@
-rename Options menu to Tools
-rename all graphics2D/graphics2d
-right now there are listeners both in model and in view??
-block ui while applying effects
