@@ -71,19 +71,19 @@ public class EffectWindow extends JDialog {
         rect.y      = imageState.fromUserToImage(rect.y);
         rect.width  = imageState.fromUserToImage(rect.width);
         rect.height = imageState.fromUserToImage(rect.height);
-        final int imageTempX = Math.max(0, Math.min(rect.x, image.getWidth()  - 1));
-        final int imageTempY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
-        final int imageTempWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
-        final int imageTempHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
-        final BufferedImage imageTemp = image.getSubimage(imageTempX, imageTempY, imageTempWidth, imageTempHeight);
+        final int imageEffectX = Math.max(0, Math.min(rect.x, image.getWidth()  - 1));
+        final int imageEffectY = Math.max(0, Math.min(rect.y, image.getHeight() - 1));
+        final int imageEffectWidth  = Math.min(rect.x + rect.width,  rect.x + image.getWidth())  - rect.x;
+        final int imageEffectHeight = Math.min(rect.y + rect.height, rect.y + image.getHeight()) - rect.y;
+        final BufferedImage imageEffect = image.getSubimage(imageEffectX, imageEffectY, imageEffectWidth, imageEffectHeight);
         /* initially draw the image with the effect once */
-        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+        imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
         mainPanel.repaint();
 
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                imageState.setImageTempReset();
+                imageState.setImageEffectReset();
                 mainPanel.repaint();
                 EffectWindow.this.dispose();
             }
@@ -115,7 +115,7 @@ public class EffectWindow extends JDialog {
                         public void stateChanged(ChangeEvent e) {
                             integerParameter.setValue(slider.getValue());
                             label.setText(labeledParameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                             mainPanel.repaint();
                         }
                     });
@@ -134,7 +134,7 @@ public class EffectWindow extends JDialog {
                         public void stateChanged(ChangeEvent e) {
                             doubleParameter.setValue(slider.getValue() / doubleParameter.getResolution());
                             label.setText(labeledParameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                             mainPanel.repaint();
                         }
                     });
@@ -176,7 +176,7 @@ public class EffectWindow extends JDialog {
                             final Color color = e.getColor();
                             colorParameter.setValue(color);
                             label.setText(labeledParameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                             mainPanel.repaint();
                         }
                     });
@@ -189,7 +189,7 @@ public class EffectWindow extends JDialog {
                         @Override
                         public void pointChanged(PointEvent e) {
                             label.setText(labeledParameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                             mainPanel.repaint();
                         }
                     });
@@ -200,7 +200,7 @@ public class EffectWindow extends JDialog {
                         public void pointChanged(PointEvent e) {
                             // FIXME should not change unless + or - are pressed
                             label.setText(labeledParameter.getLabelText());
-                            imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                            imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                             mainPanel.repaint();
                         }
                     });
@@ -256,7 +256,7 @@ public class EffectWindow extends JDialog {
                                 throw new AssertionError();
                             }
                         }
-                        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                         mainPanel.repaint();
                     }
                 });
@@ -271,7 +271,7 @@ public class EffectWindow extends JDialog {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         borderFillStrategyParameter.setValue(BorderFillStrategy.values()[comboBox.getSelectedIndex()]);
-                        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                         mainPanel.repaint();
                     }
                 });
@@ -286,7 +286,7 @@ public class EffectWindow extends JDialog {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         booleanParameter.setValue(checkBox.isSelected());
-                        imageState.setImageTemp(effect.apply(imageTemp), imageTempX, imageTempY);
+                        imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
                         mainPanel.repaint();
                     }
                 });
@@ -299,7 +299,7 @@ public class EffectWindow extends JDialog {
         buttonOkay.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                imageState.setImageTempReset();
+                imageState.setImageEffectReset();
                 imageState.setImage(effect.apply(image));
                 imageState.setChangedTillLastSave(true);
                 mainPanel.repaint();

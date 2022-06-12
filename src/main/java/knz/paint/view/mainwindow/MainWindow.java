@@ -60,6 +60,7 @@ import knz.paint.model.effects.specific.hsba.gray.ThresholdEffect;
 import knz.paint.model.effects.specific.other.BentleyEffect;
 import knz.paint.model.effects.specific.other.PolarBentleyEffect;
 import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
+import knz.paint.model.effects.specific.positional.DistortionEffect;
 import knz.paint.model.effects.specific.positional.ExplosionEffect;
 import knz.paint.model.effects.specific.positional.FlipEffect;
 import knz.paint.model.effects.specific.positional.MirrorEffect;
@@ -121,6 +122,7 @@ public class MainWindow extends JFrame {
         new SwirlEffect(),
         /* positional */
         new AdjustCartesianEffect(),
+        new DistortionEffect(),
         new ExplosionEffect(),
         new FlipEffect(),
         new MirrorEffect(),

@@ -190,7 +190,9 @@ public class MainPanel extends JPanel {
             }
 
             private void updateStatusBar(int x, int y) {
-                final BufferedImage image = imageState.getImage();
+                final BufferedImage image = imageState.getImageMode() == ImageMode.EFFECT
+                    ? imageState.getImageEffect()
+                    : imageState.getImage();
                 if (0 <= x && x < image.getWidth()
                  && 0 <= y && y < image.getHeight()) {
                     final int rgba = image.getRGB(x, y);
@@ -251,18 +253,18 @@ public class MainPanel extends JPanel {
         final BufferedImage image = imageState.getImage();
         final int imageWidth  = image.getWidth();
         final int imageHeight = image.getHeight();
-        final BufferedImage imageTemp = imageState.getImageTemp();
+        final BufferedImage imageEffect = imageState.getImageEffect();
         switch (imageState.getImageMode()) {
         case EFFECT:
-            final int imageTempX = imageState.getImageTempX();
-            final int imageTempY = imageState.getImageTempY();
-            final int imageTempWidth  = imageTemp.getWidth();
-            final int imageTempHeight = imageTemp.getHeight();
-            graphics2d.drawImage(imageTemp,
-                imageState.fromImageToUser(imageTempX),
-                imageState.fromImageToUser(imageTempY),
-                imageState.fromImageToUser(imageTempWidth),
-                imageState.fromImageToUser(imageTempHeight),
+            final int imageEffectX = imageState.getImageEffectX();
+            final int imageEffectY = imageState.getImageEffectY();
+            final int imageEffectWidth  = imageEffect.getWidth();
+            final int imageEffectHeight = imageEffect.getHeight();
+            graphics2d.drawImage(imageEffect,
+                imageState.fromImageToUser(imageEffectX),
+                imageState.fromImageToUser(imageEffectY),
+                imageState.fromImageToUser(imageEffectWidth),
+                imageState.fromImageToUser(imageEffectHeight),
                 null);
             break;
         default:

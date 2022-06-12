@@ -2,9 +2,6 @@
 * go through all Checkstyle warnings/infos
 
 # Bugs & cosmetic changes
-* some Listeners are in the View, some are in the Model; fix this
-* block UI while applying effects
-* "Grayscale" effect sliders are not precise
 * transparency support
     * clear selection could use transparent
     * any tool that uses setRGB() might need to be adjusted to use drawLine()
@@ -12,18 +9,19 @@
     * use keyboard keys !? or double click & right click !?
         * 'A': Apply (polygon will be applied to image and the operation is done)
         * 'C': Cancel (cancel operation and nothing will be applied)
+* "Grayscale" effect sliders are not precise
+* don't block UI while applying effects, make it work in all cases!
+    * basically update the subimage when necessary!
+* some Listeners are in the View, some are in the Model; fix this
 
 # Enhancements
 * redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
-* "Flood fill" tool with pattern
-* add menu icons
 * "Selection" tools: be able to move around selected content
 * https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
+* "Flood fill" tool with pattern
+* add menu icons
 
 # Features
-* actual "Resize" function, "Rotate left/right" functions and "Extend canvas" function
-* "Map editor" tool to draw images that snap to a 16x16 (or whatever) grid
-* a lot more effects! (see hidden effects.txt file)
 * more tools!
     * arrow tool?
     * triangle tool?
@@ -31,6 +29,9 @@
     * measure tool? (measures distances)
     * magnetic lasso tool? (as in Photoshop)
     * magic wand tool? (as in Photoshop)
+    * "Map editor" tool to draw images that snap to a 16x16 (or whatever) grid
+* a lot more effects! (see hidden effects.txt file)
+* actual "Resize" function, "Rotate left/right" functions and "Extend canvas" function
 * multi language ui support
 * preset brushes (not just heads/sizes but also effects on different colors)
     * pencil

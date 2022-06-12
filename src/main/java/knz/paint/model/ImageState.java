@@ -15,8 +15,8 @@ public class ImageState {
     private Graphics2D graphics2d;
 
     /* Temporary image that is being drawn when previewing effects. */
-    private BufferedImage imageTemp;
-    private int imageTempX, imageTempY;
+    private BufferedImage imageEffect;
+    private int imageEffectX, imageEffectY;
 
     private ImageMode imageMode = ImageMode.TOOL;
     private boolean changedTillLastSave = false;
@@ -78,30 +78,30 @@ public class ImageState {
         setImage(imageNew);
     }
 
-    public BufferedImage getImageTemp() {
-        return imageTemp;
+    public BufferedImage getImageEffect() {
+        return imageEffect;
     }
 
-    public int getImageTempX() {
-        return imageTempX;
+    public int getImageEffectX() {
+        return imageEffectX;
     }
 
-    public int getImageTempY() {
-        return imageTempY;
+    public int getImageEffectY() {
+        return imageEffectY;
     }
 
-    public void setImageTemp(BufferedImage imageTempNew, int imageTempNewX, int imageTempNewY) {
+    public void setImageEffect(BufferedImage imageEffectNew, int imageEffectNewX, int imageEffectNewY) {
         imageMode = ImageMode.EFFECT;
-        imageTemp = imageTempNew;
-        imageTempX = imageTempNewX;
-        imageTempY = imageTempNewY;
+        imageEffect = imageEffectNew;
+        imageEffectX = imageEffectNewX;
+        imageEffectY = imageEffectNewY;
     }
 
-    public void setImageTempReset() {
+    public void setImageEffectReset() {
         imageMode = ImageMode.TOOL;
-        imageTemp = null;
-        imageTempX = 0;
-        imageTempY = 0;
+        imageEffect = null;
+        imageEffectX = 0;
+        imageEffectY = 0;
     }
 
     public ImageMode getImageMode() {
