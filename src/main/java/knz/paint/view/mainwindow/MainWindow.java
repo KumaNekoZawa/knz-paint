@@ -45,14 +45,15 @@ import knz.paint.model.Config;
 import knz.paint.model.ImageState;
 import knz.paint.model.effects.specific.AbstractEffect;
 import knz.paint.model.effects.specific.graphics.TadaEffect;
-import knz.paint.model.effects.specific.hsba.AdjustHSBAEffect;
+import knz.paint.model.effects.specific.hsba.AdjustChannelsHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractAlphaEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
-import knz.paint.model.effects.specific.hsba.MixHSBAEffect;
+import knz.paint.model.effects.specific.hsba.MixColorHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NegateHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NoiseHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NormalizeHSBAEffect;
+import knz.paint.model.effects.specific.hsba.SolarizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.other.BentleyEffect;
 import knz.paint.model.effects.specific.other.PolarBentleyEffect;
@@ -69,18 +70,19 @@ import knz.paint.model.effects.specific.positional.polar.PolarMirrorEffect;
 import knz.paint.model.effects.specific.positional.polar.PolarMosaicEffect;
 import knz.paint.model.effects.specific.positional.polar.RotationEffect;
 import knz.paint.model.effects.specific.positional.polar.SwirlEffect;
+import knz.paint.model.effects.specific.rgba.AdjustChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
-import knz.paint.model.effects.specific.rgba.AdjustRGBAEffect;
 import knz.paint.model.effects.specific.rgba.BitShiftEffect;
-import knz.paint.model.effects.specific.rgba.ExtractRGBAEffect;
+import knz.paint.model.effects.specific.rgba.ExtractChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
-import knz.paint.model.effects.specific.rgba.MixRGBAEffect;
+import knz.paint.model.effects.specific.rgba.MixColorRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NegateRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NoiseRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NormalizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SepiaEffect;
-import knz.paint.model.effects.specific.rgba.SolarizationEffect;
+import knz.paint.model.effects.specific.rgba.SolarizeRGBAEffect;
+import knz.paint.model.effects.specific.rgba.SwapRedBlueEffect;
 import knz.paint.model.effects.specific.xy.BorderEffect;
 import knz.paint.model.effects.specific.xy.GridEffect;
 import knz.paint.model.effects.specific.xy.SaltPepperEffect;
@@ -127,29 +129,31 @@ public class MainWindow extends JFrame {
         new GridEffect(),
         new SaltPepperEffect(),
         /* rgba */
+        new AdjustChannelsRGBAEffect(),
         new AdjustContrastEffect(),
         new AdjustGammaEffect(),
-        new AdjustRGBAEffect(),
         new BitShiftEffect(),
-        new ExtractRGBAEffect(),
+        new ExtractChannelsRGBAEffect(),
         new GrayscaleEffect(),
-        new MixRGBAEffect(),
+        new MixColorRGBAEffect(),
         new NegateRGBAEffect(),
         new NoiseRGBAEffect(),
         new NormalizeRGBAEffect(),
         new SepiaEffect(),
-        new SolarizationEffect(),
+        new SolarizeRGBAEffect(),
+        new SwapRedBlueEffect(),
         /* hsba/gray */
         new BlackWhiteEffect(),
         /* hsba */
-        new AdjustHSBAEffect(),
+        new AdjustChannelsHSBAEffect(),
         new ExtractAlphaEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
-        new MixHSBAEffect(),
+        new MixColorHSBAEffect(),
         new NegateHSBAEffect(),
         new NoiseHSBAEffect(),
         new NormalizeHSBAEffect(),
+        new SolarizeHSBAEffect(),
         /* graphics */
         new TadaEffect(),
         /* other */

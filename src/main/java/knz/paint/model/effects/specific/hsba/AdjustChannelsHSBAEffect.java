@@ -3,17 +3,17 @@ package knz.paint.model.effects.specific.hsba;
 import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
-public class AdjustHSBAEffect extends AbstractHSBAEffect {
+public class AdjustChannelsHSBAEffect extends AbstractHSBAEffect {
 
     private DoubleParameter  paramHuePhase    = new DoubleParameter("Hue phase", "°", MIN_ANGLE, 0, MAX_ANGLE);
     private BooleanParameter paramInvertSB    = new BooleanParameter("Invert Sat./Br. controls", true);
     private DoubleParameter  paramSaturation  = new DoubleParameter("Saturation", 0, 1, MAX_EXPONENT);
     private DoubleParameter  paramBrightness  = new DoubleParameter("Brightness", 0, 1, MAX_EXPONENT);
     private BooleanParameter paramInvertAlpha = new BooleanParameter("Invert Alpha control", false);
-    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha", 0, 1, MAX_EXPONENT);
+    private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha",      0, 1, MAX_EXPONENT);
 
-    public AdjustHSBAEffect() {
-        super("Adjust HSBA");
+    public AdjustChannelsHSBAEffect() {
+        super("Adjust channels");
         this.parameters.add(paramHuePhase);
         this.parameters.add(paramInvertSB);
         this.parameters.add(paramSaturation);

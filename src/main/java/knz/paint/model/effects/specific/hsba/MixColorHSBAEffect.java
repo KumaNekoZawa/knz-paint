@@ -7,7 +7,7 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.Preset;
 import knz.paint.model.effects.parameter.PresetParameter;
 
-public class MixHSBAEffect extends AbstractHSBAEffect {
+public class MixColorHSBAEffect extends AbstractHSBAEffect {
 
     private PresetParameter paramPresets = new PresetParameter(
         new String[] { "Amount hue", "Amount saturation", "Amount brightness", "Color" },
@@ -20,8 +20,8 @@ public class MixHSBAEffect extends AbstractHSBAEffect {
     private DoubleParameter paramAmountA = new DoubleParameter("Amount alpha",      0, 0, 1);
     private ColorParameter  paramColor   = new ColorParameter("Color", Color.BLACK);
 
-    public MixHSBAEffect() {
-        super("Mix HSBA");
+    public MixColorHSBAEffect() {
+        super("Mix color");
         this.parameters.add(paramPresets);
         this.parameters.add(paramAmountH);
         this.parameters.add(paramAmountS);

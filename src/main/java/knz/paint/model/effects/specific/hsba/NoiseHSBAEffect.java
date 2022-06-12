@@ -10,7 +10,7 @@ public class NoiseHSBAEffect extends AbstractHSBAEffect {
     private DoubleParameter paramAmountA = new DoubleParameter("Amount alpha",      0, 0, 1);
 
     public NoiseHSBAEffect() {
-        super("Noise (HSBA)");
+        super("Noise");
         this.parameters.add(paramAmountH);
         this.parameters.add(paramAmountS);
         this.parameters.add(paramAmountB);

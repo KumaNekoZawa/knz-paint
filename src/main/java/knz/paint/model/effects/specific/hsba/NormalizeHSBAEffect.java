@@ -13,7 +13,7 @@ public class NormalizeHSBAEffect extends AbstractHSBAEffect {
     private IntegerParameter paramMaxA = new IntegerParameter("Maximum alpha", 0x00, 0xFF, 0xFF);
 
     public NormalizeHSBAEffect() {
-        super("Normalize HSBA");
+        super("Normalize");
         this.parameters.add(paramMinS);
         this.parameters.add(paramMaxS);
         this.parameters.add(paramMinB);

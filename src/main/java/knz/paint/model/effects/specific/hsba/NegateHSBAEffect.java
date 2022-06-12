@@ -10,7 +10,7 @@ public class NegateHSBAEffect extends AbstractHSBAEffect {
     private BooleanParameter paramAffectA = new BooleanParameter("Affect alpha",      false);
 
     public NegateHSBAEffect() {
-        super("Negate HSBA");
+        super("Negate");
         this.parameters.add(paramAffectH);
         this.parameters.add(paramAffectS);
         this.parameters.add(paramAffectB);

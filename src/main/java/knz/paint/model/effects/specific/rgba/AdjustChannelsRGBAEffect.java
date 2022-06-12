@@ -3,7 +3,7 @@ package knz.paint.model.effects.specific.rgba;
 import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
-public class AdjustRGBAEffect extends AbstractRGBAEffect {
+public class AdjustChannelsRGBAEffect extends AbstractRGBAEffect {
 
     private BooleanParameter paramInvertRGB = new BooleanParameter("Invert RGB controls", true);
     private DoubleParameter  paramR         = new DoubleParameter("Red",   0, 1, MAX_EXPONENT);
@@ -12,8 +12,8 @@ public class AdjustRGBAEffect extends AbstractRGBAEffect {
     private BooleanParameter paramInvertA   = new BooleanParameter("Invert Alpha control", false);
     private DoubleParameter  paramA         = new DoubleParameter("Alpha", 0, 1, MAX_EXPONENT);
 
-    public AdjustRGBAEffect() {
-        super("Adjust RGBA", false, true);
+    public AdjustChannelsRGBAEffect() {
+        super("Adjust channels", false, true);
         this.parameters.add(paramInvertRGB);
         this.parameters.add(paramR);
         this.parameters.add(paramG);

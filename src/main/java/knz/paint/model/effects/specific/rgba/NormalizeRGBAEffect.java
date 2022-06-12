@@ -8,7 +8,7 @@ public class NormalizeRGBAEffect extends AbstractRGBAEffect {
     private IntegerParameter paramMax = new IntegerParameter("Maximum", 0x00, 0xFF, 0xFF);
 
     public NormalizeRGBAEffect() {
-        super("Normalize RGBA", true, true);
+        super("Normalize", true, true);
         this.parameters.add(paramMin);
         this.parameters.add(paramMax);
     }

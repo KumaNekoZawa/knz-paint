@@ -4,6 +4,8 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.Preset;
 import knz.paint.model.effects.parameter.PresetParameter;
 
+// FIXME rename effect
+
 public class SepiaEffect extends AbstractRGBAEffect {
 
     private PresetParameter paramPresets = new PresetParameter(

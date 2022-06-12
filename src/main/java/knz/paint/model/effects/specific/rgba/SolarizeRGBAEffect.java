@@ -3,13 +3,13 @@ package knz.paint.model.effects.specific.rgba;
 import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
 
-public class SolarizationEffect extends AbstractRGBAEffect {
+public class SolarizeRGBAEffect extends AbstractRGBAEffect {
 
     private BooleanParameter paramNegate    = new BooleanParameter("Negate", false);
     private IntegerParameter paramThreshold = new IntegerParameter("Threshold", 0x00, 0x00, 0x100);
 
-    public SolarizationEffect() {
-        super("Solarization", true, true);
+    public SolarizeRGBAEffect() {
+        super("Solarize", true, true);
         this.parameters.add(paramNegate);
         this.parameters.add(paramThreshold);
     }

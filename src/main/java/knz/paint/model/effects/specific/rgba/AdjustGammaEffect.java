@@ -8,7 +8,7 @@ public class AdjustGammaEffect extends AbstractRGBAEffect {
     private DoubleParameter paramExponent = new DoubleParameter("Exponent", 0, 1, MAX_EXPONENT);
 
     public AdjustGammaEffect() {
-        super("Adjust gamma", true, true);
+        super("Adjust gamma", false, false);
         this.parameters.add(paramExponent);
     }
 
@@ -18,7 +18,7 @@ public class AdjustGammaEffect extends AbstractRGBAEffect {
         out_r = (int) (Math.pow(in_r / (double) 0xFF, exponent) * 0xFF);
         out_g = (int) (Math.pow(in_g / (double) 0xFF, exponent) * 0xFF);
         out_b = (int) (Math.pow(in_b / (double) 0xFF, exponent) * 0xFF);
-        out_a = (int) (Math.pow(in_a / (double) 0xFF, exponent) * 0xFF);
+        out_a = in_a;
     }
 
 }

@@ -7,7 +7,7 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 import knz.paint.model.effects.parameter.Preset;
 import knz.paint.model.effects.parameter.PresetParameter;
 
-public class MixRGBAEffect extends AbstractRGBAEffect {
+public class MixColorRGBAEffect extends AbstractRGBAEffect {
 
     private PresetParameter paramPresets = new PresetParameter(
         new String[] { "Amount", "Color" },
@@ -17,8 +17,8 @@ public class MixRGBAEffect extends AbstractRGBAEffect {
     private DoubleParameter paramAmount = new DoubleParameter("Amount", 0, 0, 1);
     private ColorParameter  paramColor  = new ColorParameter("Color", Color.BLACK);
 
-    public MixRGBAEffect() {
-        super("Mix RGBA", true, true);
+    public MixColorRGBAEffect() {
+        super("Mix color", true, true);
         this.parameters.add(paramPresets);
         this.parameters.add(paramAmount);
         this.parameters.add(paramColor);

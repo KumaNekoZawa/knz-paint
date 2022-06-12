@@ -4,7 +4,7 @@ package knz.paint.model.effects.specific.rgba;
 public class NegateRGBAEffect extends AbstractRGBAEffect {
 
     public NegateRGBAEffect() {
-        super("Negate RGBA", true, true);
+        super("Negate", true, true);
     }
 
     @Override

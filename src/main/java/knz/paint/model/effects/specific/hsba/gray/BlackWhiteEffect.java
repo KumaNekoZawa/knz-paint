@@ -5,11 +5,13 @@ import knz.paint.model.effects.parameter.DoubleParameter;
 
 public class BlackWhiteEffect extends AbstractGrayEffect {
 
+    // FIXME these two parameters don't work well together
+
     private BooleanParameter paramRandom    = new BooleanParameter("Random", false);
     private DoubleParameter  paramThreshold = new DoubleParameter("Threshold", 0, 0.5, 1);
 
     public BlackWhiteEffect() {
-        super("Black & White");
+        super("Black & white");
         this.parameters.add(paramRandom);
         this.parameters.add(paramThreshold);
     }

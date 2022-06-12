@@ -7,7 +7,7 @@ public class NoiseRGBAEffect extends AbstractRGBAEffect {
     private DoubleParameter paramAmount = new DoubleParameter("Amount", 0, 0, 1);
 
     public NoiseRGBAEffect() {
-        super("Noise (RGBA)", true, true);
+        super("Noise", true, true);
         this.parameters.add(paramAmount);
     }
 
