@@ -191,17 +191,17 @@ public class MainWindow extends JFrame {
     private List<JMenuItem> menuViewZoomLevels = new ArrayList<>();
     private JMenuItem menuViewPackAndCenter = new JMenuItem("Pack & center");
 
-    private JMenu menuOptions = new JMenu("Options");
-    private JMenuItem menuOptionsColorPicker = new JMenuItem("Color picker...");
-    private JMenu menuOptionsFillStyle = new JMenu("Fill style");
-    private JMenu menuOptionsStrokeWidth = new JMenu("Stroke width");
-    private JMenu menuOptionsStrokeDash = new JMenu("Stroke dash");
-    private JMenu menuOptionsRoundedRectangle = new JMenu("Rounded rectangle");
-    private JMenu menuOptionsRoundedRectangleArcWidth  = new JMenu("Arc width");
-    private JMenu menuOptionsRoundedRectangleArcHeight = new JMenu("Arc height");
-    private JMenu menuOptionsAirbrush = new JMenu("Airbrush");
-    private JMenu menuOptionsAirbrushType = new JMenu("Type");
-    private JMenu menuOptionsAirbrushSize = new JMenu("Size");
+    private JMenu menuTools = new JMenu("Tools");
+    private JMenuItem menuToolsColorPicker = new JMenuItem("Color picker...");
+    private JMenu menuToolsFillStyle = new JMenu("Fill style");
+    private JMenu menuToolsStrokeWidth = new JMenu("Stroke width");
+    private JMenu menuToolsStrokeDash = new JMenu("Stroke dash");
+    private JMenu menuToolsRoundedRectangle = new JMenu("Rounded rectangle");
+    private JMenu menuToolsRoundedRectangleArcWidth  = new JMenu("Arc width");
+    private JMenu menuToolsRoundedRectangleArcHeight = new JMenu("Arc height");
+    private JMenu menuToolsAirbrush = new JMenu("Airbrush");
+    private JMenu menuToolsAirbrushType = new JMenu("Type");
+    private JMenu menuToolsAirbrushSize = new JMenu("Size");
 
     private JMenu menuEffects = new JMenu("Effects");
     private Map<String, JMenu> packageToMenu = new HashMap<>();
@@ -417,7 +417,7 @@ public class MainWindow extends JFrame {
         menuView.add(menuViewPackAndCenter);
         menuBar.add(menuView);
 
-        menuOptionsColorPicker.addActionListener(new ActionListener() {
+        menuToolsColorPicker.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (colorPickerWindow == null || !colorPickerWindow.isDisplayable()) {
@@ -441,123 +441,123 @@ public class MainWindow extends JFrame {
                 }
             }
         });
-        menuOptions.add(menuOptionsColorPicker);
+        menuTools.add(menuToolsColorPicker);
         final ButtonGroup bgFillStyle = new ButtonGroup();
         for (final FillStyle fillStyle : FillStyle.values()) {
-            final JRadioButtonMenuItem menuOptionsFillStyleChild = new JRadioButtonMenuItem(fillStyle.getTitle());
-            menuOptionsFillStyleChild.addActionListener(new ActionListener() {
+            final JRadioButtonMenuItem menuToolsFillStyleChild = new JRadioButtonMenuItem(fillStyle.getTitle());
+            menuToolsFillStyleChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolState.setFillStyle(fillStyle);
                 }
             });
             if (fillStyle == ToolState.DEFAULT_FILL_STYLE) {
-                menuOptionsFillStyleChild.setSelected(true);
+                menuToolsFillStyleChild.setSelected(true);
             }
-            bgFillStyle.add(menuOptionsFillStyleChild);
-            menuOptionsFillStyle.add(menuOptionsFillStyleChild);
+            bgFillStyle.add(menuToolsFillStyleChild);
+            menuToolsFillStyle.add(menuToolsFillStyleChild);
         }
-        menuOptions.add(menuOptionsFillStyle);
+        menuTools.add(menuToolsFillStyle);
         final ButtonGroup bgStrokeWidth = new ButtonGroup();
         for (final int strokeWidth : ToolState.STOKE_WIDTHS) {
-            final JRadioButtonMenuItem menuOptionsStrokeWidthChild = new JRadioButtonMenuItem(strokeWidth + " px");
-            menuOptionsStrokeWidthChild.addActionListener(new ActionListener() {
+            final JRadioButtonMenuItem menuToolsStrokeWidthChild = new JRadioButtonMenuItem(strokeWidth + " px");
+            menuToolsStrokeWidthChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolState.setStrokeWidth(strokeWidth);
                 }
             });
             if (strokeWidth == ToolState.DEFAULT_STROKE_WIDTH) {
-                menuOptionsStrokeWidthChild.setSelected(true);
+                menuToolsStrokeWidthChild.setSelected(true);
             }
-            bgStrokeWidth.add(menuOptionsStrokeWidthChild);
-            menuOptionsStrokeWidth.add(menuOptionsStrokeWidthChild);
+            bgStrokeWidth.add(menuToolsStrokeWidthChild);
+            menuToolsStrokeWidth.add(menuToolsStrokeWidthChild);
         }
-        menuOptions.add(menuOptionsStrokeWidth);
+        menuTools.add(menuToolsStrokeWidth);
         final ButtonGroup bgStrokeDash = new ButtonGroup();
         for (final StrokeDash strokeDash : StrokeDash.values()) {
-            final JRadioButtonMenuItem menuOptionsStrokeDashChild = new JRadioButtonMenuItem(strokeDash.getTitle());
-            menuOptionsStrokeDashChild.addActionListener(new ActionListener() {
+            final JRadioButtonMenuItem menuToolsStrokeDashChild = new JRadioButtonMenuItem(strokeDash.getTitle());
+            menuToolsStrokeDashChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolState.setStrokeDash(strokeDash);
                 }
             });
             if (strokeDash == ToolState.DEFAULT_STROKE_DASH) {
-                menuOptionsStrokeDashChild.setSelected(true);
+                menuToolsStrokeDashChild.setSelected(true);
             }
-            bgStrokeDash.add(menuOptionsStrokeDashChild);
-            menuOptionsStrokeDash.add(menuOptionsStrokeDashChild);
+            bgStrokeDash.add(menuToolsStrokeDashChild);
+            menuToolsStrokeDash.add(menuToolsStrokeDashChild);
         }
-        menuOptions.add(menuOptionsStrokeDash);
-        menuOptions.addSeparator();
+        menuTools.add(menuToolsStrokeDash);
+        menuTools.addSeparator();
         final ButtonGroup bgRoundedRectangleArcWidth = new ButtonGroup();
         for (final int arcWidth : ToolState.ROUNDED_RECTANGLE_RADII) {
-            final JRadioButtonMenuItem menuOptionsRoundedRectangleArcWidthChild = new JRadioButtonMenuItem(arcWidth + " px");
-            menuOptionsRoundedRectangleArcWidthChild.addActionListener(new ActionListener() {
+            final JRadioButtonMenuItem menuToolsRoundedRectangleArcWidthChild = new JRadioButtonMenuItem(arcWidth + " px");
+            menuToolsRoundedRectangleArcWidthChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolState.setRoundedRectangleArcWidth(arcWidth);
                 }
             });
             if (arcWidth == ToolState.DEFAULT_ROUNDED_RECTANGLE_ARC_WIDTH) {
-                menuOptionsRoundedRectangleArcWidthChild.setSelected(true);
+                menuToolsRoundedRectangleArcWidthChild.setSelected(true);
             }
-            bgRoundedRectangleArcWidth.add(menuOptionsRoundedRectangleArcWidthChild);
-            menuOptionsRoundedRectangleArcWidth.add(menuOptionsRoundedRectangleArcWidthChild);
+            bgRoundedRectangleArcWidth.add(menuToolsRoundedRectangleArcWidthChild);
+            menuToolsRoundedRectangleArcWidth.add(menuToolsRoundedRectangleArcWidthChild);
         }
-        menuOptionsRoundedRectangle.add(menuOptionsRoundedRectangleArcWidth);
+        menuToolsRoundedRectangle.add(menuToolsRoundedRectangleArcWidth);
         final ButtonGroup bgRoundedRectangleArcHeight = new ButtonGroup();
         for (final int arcHeight : ToolState.ROUNDED_RECTANGLE_RADII) {
-            final JRadioButtonMenuItem menuOptionsRoundedRectangleArcHeightChild = new JRadioButtonMenuItem(arcHeight + " px");
-            menuOptionsRoundedRectangleArcHeightChild.addActionListener(new ActionListener() {
+            final JRadioButtonMenuItem menuToolsRoundedRectangleArcHeightChild = new JRadioButtonMenuItem(arcHeight + " px");
+            menuToolsRoundedRectangleArcHeightChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolState.setRoundedRectangleArcHeight(arcHeight);
                 }
             });
             if (arcHeight == ToolState.DEFAULT_ROUNDED_RECTANGLE_ARC_HEIGHT) {
-                menuOptionsRoundedRectangleArcHeightChild.setSelected(true);
+                menuToolsRoundedRectangleArcHeightChild.setSelected(true);
             }
-            bgRoundedRectangleArcHeight.add(menuOptionsRoundedRectangleArcHeightChild);
-            menuOptionsRoundedRectangleArcHeight.add(menuOptionsRoundedRectangleArcHeightChild);
+            bgRoundedRectangleArcHeight.add(menuToolsRoundedRectangleArcHeightChild);
+            menuToolsRoundedRectangleArcHeight.add(menuToolsRoundedRectangleArcHeightChild);
         }
-        menuOptionsRoundedRectangle.add(menuOptionsRoundedRectangleArcHeight);
-        menuOptions.add(menuOptionsRoundedRectangle);
+        menuToolsRoundedRectangle.add(menuToolsRoundedRectangleArcHeight);
+        menuTools.add(menuToolsRoundedRectangle);
         final ButtonGroup bgAirbrushType = new ButtonGroup();
         for (final AirbrushType airbrushType : AirbrushType.values()) {
-            final JRadioButtonMenuItem menuOptionsAirbrushTypeChild = new JRadioButtonMenuItem(airbrushType.getTitle());
-            menuOptionsAirbrushTypeChild.addActionListener(new ActionListener() {
+            final JRadioButtonMenuItem menuToolsAirbrushTypeChild = new JRadioButtonMenuItem(airbrushType.getTitle());
+            menuToolsAirbrushTypeChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolState.setAirbrushType(airbrushType);
                 }
             });
             if (airbrushType == ToolState.DEFAULT_AIRBRUSH_TYPE) {
-                menuOptionsAirbrushTypeChild.setSelected(true);
+                menuToolsAirbrushTypeChild.setSelected(true);
             }
-            bgAirbrushType.add(menuOptionsAirbrushTypeChild);
-            menuOptionsAirbrushType.add(menuOptionsAirbrushTypeChild);
+            bgAirbrushType.add(menuToolsAirbrushTypeChild);
+            menuToolsAirbrushType.add(menuToolsAirbrushTypeChild);
         }
-        menuOptionsAirbrush.add(menuOptionsAirbrushType);
+        menuToolsAirbrush.add(menuToolsAirbrushType);
         final ButtonGroup bgAirbrushSize = new ButtonGroup();
         for (final int airbrushSize : ToolState.AIRBRUSH_SIZES) {
-            final JRadioButtonMenuItem menuOptionsAirbrushSizeChild = new JRadioButtonMenuItem(airbrushSize + " px");
-            menuOptionsAirbrushSizeChild.addActionListener(new ActionListener() {
+            final JRadioButtonMenuItem menuToolsAirbrushSizeChild = new JRadioButtonMenuItem(airbrushSize + " px");
+            menuToolsAirbrushSizeChild.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     toolState.setAirbrushSize(airbrushSize);
                 }
             });
             if (airbrushSize == ToolState.DEFAULT_AIRBRUSH_SIZE) {
-                menuOptionsAirbrushSizeChild.setSelected(true);
+                menuToolsAirbrushSizeChild.setSelected(true);
             }
-            bgAirbrushSize.add(menuOptionsAirbrushSizeChild);
-            menuOptionsAirbrushSize.add(menuOptionsAirbrushSizeChild);
+            bgAirbrushSize.add(menuToolsAirbrushSizeChild);
+            menuToolsAirbrushSize.add(menuToolsAirbrushSizeChild);
         }
-        menuOptionsAirbrush.add(menuOptionsAirbrushSize);
-        menuOptions.add(menuOptionsAirbrush);
-        menuBar.add(menuOptions);
+        menuToolsAirbrush.add(menuToolsAirbrushSize);
+        menuTools.add(menuToolsAirbrush);
+        menuBar.add(menuTools);
 
         packageToMenu.clear();
         packageToMenu.put("", menuEffects);

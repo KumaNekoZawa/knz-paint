@@ -4,7 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 
-/* Corresponds to the "Options" menu in the MainWindow. */
+/* Corresponds to the "Tools" menu in the MainWindow. */
 public class ToolState {
 
     public static final int[] STOKE_WIDTHS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50 };
