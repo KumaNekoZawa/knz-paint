@@ -31,7 +31,7 @@
     * magic wand tool? (as in Photoshop)
     * "Map editor" tool to draw images that snap to a 16x16 (or whatever) grid
 * a lot more effects! (see hidden effects.txt file)
-* actual "Resize" function, "Rotate left/right" functions and "Extend canvas" function
+* actual "Resize" function, "Rotate left/right" functions and "Change canvas size" function
 * multi language ui support
 * preset brushes (not just heads/sizes but also effects on different colors)
     * pencil

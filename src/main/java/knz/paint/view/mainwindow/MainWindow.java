@@ -50,6 +50,7 @@ import knz.paint.model.effects.specific.hsba.AdjustChannelsHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractAlphaEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
+import knz.paint.model.effects.specific.hsba.MapRangeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.MixColorHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NegateHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NoiseHSBAEffect;
@@ -79,6 +80,7 @@ import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
 import knz.paint.model.effects.specific.rgba.BitShiftEffect;
 import knz.paint.model.effects.specific.rgba.ExtractChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
+import knz.paint.model.effects.specific.rgba.MapRangeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.MixChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.MixColorRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NegateRGBAEffect;
@@ -141,6 +143,7 @@ public class MainWindow extends JFrame {
         new BitShiftEffect(),
         new ExtractChannelsRGBAEffect(),
         new GrayscaleEffect(),
+        new MapRangeRGBAEffect(),
         new MixChannelsRGBAEffect(),
         new MixColorRGBAEffect(),
         new NegateRGBAEffect(),
@@ -156,6 +159,7 @@ public class MainWindow extends JFrame {
         new ExtractAlphaEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
+        new MapRangeHSBAEffect(),
         new MixColorHSBAEffect(),
         new NegateHSBAEffect(),
         new NoiseHSBAEffect(),
