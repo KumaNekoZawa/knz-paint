@@ -884,10 +884,6 @@ public class MainWindow extends JFrame {
                 e.printStackTrace();
             }
         }
-        actuallyQuit();
-    }
-
-    private void actuallyQuit() {
         if (colorPickerWindow != null) {
             colorPickerWindow.dispose();
         }
