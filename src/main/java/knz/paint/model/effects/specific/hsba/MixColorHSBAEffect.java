@@ -12,7 +12,7 @@ public class MixColorHSBAEffect extends AbstractHSBAEffect {
     private PresetParameter paramPresets = new PresetParameter(
         new String[] { "Amount hue", "Amount saturation", "Amount brightness", "Color" },
         new Preset("Default", 0,    0,    0, Color.BLACK),
-        new Preset("Sepia",   0.75, 0.75, 0, new Color(0xB3, 0x9F, 0x77))
+        new Preset("Sepia",   0.75, 0.75, 0, new Color(0xB3, 0x9F, 0x77, 0xFF))
     );
     private DoubleParameter paramAmountH = new DoubleParameter("Amount hue",        0, 0, 1);
     private DoubleParameter paramAmountS = new DoubleParameter("Amount saturation", 0, 0, 1);

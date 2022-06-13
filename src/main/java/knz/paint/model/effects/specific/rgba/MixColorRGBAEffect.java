@@ -12,7 +12,7 @@ public class MixColorRGBAEffect extends AbstractRGBAEffect {
     private PresetParameter paramPresets = new PresetParameter(
         new String[] { "Amount", "Color" },
         new Preset("Default", 0,    Color.BLACK),
-        new Preset("Sepia",   0.75, new Color(0xB3, 0x9F, 0x77))
+        new Preset("Sepia",   0.75, new Color(0xB3, 0x9F, 0x77, 0xFF))
     );
     private DoubleParameter paramAmount = new DoubleParameter("Amount", 0, 0, 1);
     private ColorParameter  paramColor  = new ColorParameter("Color", Color.BLACK);

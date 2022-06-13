@@ -25,6 +25,7 @@ public class Config {
 
     private int mainWindowWidth  = 800;
     private int mainWindowHeight = 600;
+    private WindowMode mainWindowMode = WindowMode.PACKED;
 
     private int newImageWidth  = 400;
     private int newImageHeight = 300;
@@ -49,12 +50,13 @@ public class Config {
             }
             mainWindowWidth  = Integer.parseInt(properties.getProperty("main-window.width"));
             mainWindowHeight = Integer.parseInt(properties.getProperty("main-window.height"));
+            mainWindowMode = WindowMode.valueOf(properties.getProperty("main-window.mode").toUpperCase());
             newImageWidth  = Integer.parseInt(properties.getProperty("new-image.width"));
             newImageHeight = Integer.parseInt(properties.getProperty("new-image.height"));
             newImageColor = parseColor(properties.getProperty("new-image.color"));
             toolsAirbrushUseTimer = Boolean.parseBoolean(properties.getProperty("tools.airbrush.use-timer"));
             toolsAirbrushPixelsPerTick = Integer.parseInt(properties.getProperty("tools.airbrush.pixels-per-tick"));
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException | NumberFormatException e) {
             e.printStackTrace();
         }
     }
@@ -64,11 +66,13 @@ public class Config {
         if (parts.length == 1) {
             return new Color(Integer.parseInt(parts[0]),
                              Integer.parseInt(parts[0]),
-                             Integer.parseInt(parts[0]));
+                             Integer.parseInt(parts[0]),
+                             0xFF);
         } else if (parts.length == 3) {
             return new Color(Integer.parseInt(parts[0]),
                              Integer.parseInt(parts[1]),
-                             Integer.parseInt(parts[2]));
+                             Integer.parseInt(parts[2]),
+                             0xFF);
         } else if (parts.length == 4) {
             return new Color(Integer.parseInt(parts[0]),
                              Integer.parseInt(parts[1]),
@@ -109,6 +113,10 @@ public class Config {
 
     public int getMainWindowHeight() {
         return mainWindowHeight;
+    }
+
+    public WindowMode getMainWindowMode() {
+        return mainWindowMode;
     }
 
     public int getNewImageWidth() {

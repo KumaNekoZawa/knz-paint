@@ -74,7 +74,8 @@ public class AirbrushTool extends AbstractTool {
             case RANDOM_COLOR:
                 rgb = new Color((int) (0xFF * Math.random()),
                                 (int) (0xFF * Math.random()),
-                                (int) (0xFF * Math.random())).getRGB();
+                                (int) (0xFF * Math.random()),
+                                0xFF).getRGB();
                 break;
             case RANDOM_HUE:
                 rgb = Color.HSBtoRGB((float) Math.random(), 1f, 1f);

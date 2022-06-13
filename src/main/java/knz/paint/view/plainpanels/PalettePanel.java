@@ -77,13 +77,13 @@ public class PalettePanel extends JPanel {
                         switch (color.length()) {
                         case 2: {
                             final int gray = Integer.parseInt(color, 16);
-                            image.setRGB(x, y, new Color(gray, gray, gray).getRGB());
+                            image.setRGB(x, y, new Color(gray, gray, gray, 0xFF).getRGB());
                         }   break;
                         case 6: {
                             final int r = Integer.parseInt(color.substring(0, 2), 16);
                             final int g = Integer.parseInt(color.substring(2, 4), 16);
                             final int b = Integer.parseInt(color.substring(4, 6), 16);
-                            image.setRGB(x, y, new Color(r, g, b).getRGB());
+                            image.setRGB(x, y, new Color(r, g, b, 0xFF).getRGB());
                         }   break;
                         case 8: {
                             final int a = Integer.parseInt(color.substring(0, 2), 16);

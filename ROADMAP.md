@@ -13,6 +13,7 @@
 * don't block UI while applying effects, make it work in all cases!
     * basically update the subimage when necessary!
 * some Listeners are in the View, some are in the Model; fix this
+* when using the ColorPickerWindow the user should be able to select a color from the image
 
 # Enhancements
 * redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable

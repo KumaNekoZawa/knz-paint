@@ -423,6 +423,7 @@ public class MainWindow extends JFrame {
                 setLocationRelativeTo(null);
             }
         });
+        menuViewPackAndCenter.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
         menuView.add(menuViewPackAndCenter);
         menuBar.add(menuView);
 
@@ -666,13 +667,12 @@ public class MainWindow extends JFrame {
         add(statusBar, BorderLayout.PAGE_END);
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+
         final URL iconURL = Thread.currentThread().getContextClassLoader().getResource("icon.png");
         if (iconURL != null) {
             setIconImage(new ImageIcon(iconURL).getImage());
         }
-        setSize(Config.getConfig().getMainWindowWidth(),
-                Config.getConfig().getMainWindowHeight());
-        setLocationRelativeTo(null);
+
         if (FILE_BACKUP.isFile()) {
             try {
                 mainPanel.getImageState().setImage(ImageIO.read(FILE_BACKUP));
@@ -688,6 +688,23 @@ public class MainWindow extends JFrame {
         }
         mainPanel.updatePanelSize();
         mainPanel.repaint();
+
+        setSize(Config.getConfig().getMainWindowWidth(),
+                Config.getConfig().getMainWindowHeight());
+        switch (Config.getConfig().getMainWindowMode()) {
+        case NORMAL:
+            /* empty */
+            break;
+        case PACKED:
+            pack();
+            break;
+        case MAXIMIZED:
+            setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+            break;
+        default:
+            throw new AssertionError();
+        }
+        setLocationRelativeTo(null);
 
         setVisible(true);
     }
