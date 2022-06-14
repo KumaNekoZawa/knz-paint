@@ -58,9 +58,6 @@ import knz.paint.model.effects.specific.hsba.NormalizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.SolarizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.hsba.gray.ThresholdEffect;
-import knz.paint.model.effects.specific.other.BentleyEffect;
-import knz.paint.model.effects.specific.other.ChessonEffect;
-import knz.paint.model.effects.specific.other.PolarBentleyEffect;
 import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
 import knz.paint.model.effects.specific.positional.DistortionEffect;
 import knz.paint.model.effects.specific.positional.ExplosionEffect;
@@ -172,10 +169,6 @@ public class MainWindow extends JFrame {
         new SolarizeHSBAEffect(),
         /* graphics */
         new TadaEffect(),
-        /* other */
-        new BentleyEffect(),
-        new PolarBentleyEffect(),
-        new ChessonEffect(),
     };
 
     private ColorPickerWindow colorPickerWindow = null;
