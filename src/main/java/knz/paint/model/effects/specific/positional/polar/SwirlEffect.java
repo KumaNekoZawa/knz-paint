@@ -16,6 +16,7 @@ public class SwirlEffect extends AbstractPolarEffect {
     @Override
     protected void filter(double toR, double toA) {
         final double factor = paramFactor.getValue();
+        fromR = toR;
         fromA = toA + factor * toR;
     }
 

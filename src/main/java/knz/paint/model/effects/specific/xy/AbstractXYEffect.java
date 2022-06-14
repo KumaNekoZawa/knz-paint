@@ -9,7 +9,7 @@ import knz.paint.model.effects.specific.AbstractEffect;
 public abstract class AbstractXYEffect extends AbstractEffect {
 
     protected boolean out_affected;
-    protected Color out_rgba;
+    protected Color out_color;
 
     public AbstractXYEffect(String name) {
         super("XY." + name);
@@ -31,12 +31,12 @@ public abstract class AbstractXYEffect extends AbstractEffect {
         final Graphics2D graphics2d = result.createGraphics();
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                final int in_rgba = image.getRGB(x, y);
+                final int in = image.getRGB(x, y);
                 out_affected = false;
                 filter(width, height, x, y);
-                result.setRGB(x, y, in_rgba);
+                result.setRGB(x, y, in);
                 if (out_affected) {
-                    graphics2d.setColor(out_rgba);
+                    graphics2d.setColor(out_color);
                     graphics2d.drawLine(x, y, x, y);
                 }
             }

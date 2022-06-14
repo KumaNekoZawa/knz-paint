@@ -23,7 +23,7 @@ public class BorderEffect extends AbstractXYEffect {
         if (!(size <= x && x < width  - size
            && size <= y && y < height - size)) {
             out_affected = true;
-            out_rgba = color;
+            out_color = color;
         }
     }
 

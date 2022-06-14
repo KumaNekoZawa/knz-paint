@@ -15,6 +15,7 @@ public class PolarMirrorEffect extends AbstractPolarEffect {
     @Override
     protected void filter(double toR, double toA) {
         final double angle = paramAngle.getValue() * Math.PI / 180;
+        fromR = toR;
         fromA = floorMod(toA - angle, 2 * Math.PI) < Math.PI ? 2 * angle - toA : toA;
     }
 

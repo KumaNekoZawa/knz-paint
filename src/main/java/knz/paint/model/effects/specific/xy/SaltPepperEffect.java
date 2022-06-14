@@ -28,7 +28,7 @@ public class SaltPepperEffect extends AbstractXYEffect {
         final Color  colorPepper = paramColorPepper.getValue();
         if (Math.random() < amount) {
             out_affected = true;
-            out_rgba = Math.random() < ratio
+            out_color = Math.random() < ratio
                 ? colorSalt
                 : colorPepper;
         }

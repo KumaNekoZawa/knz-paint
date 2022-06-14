@@ -32,7 +32,7 @@ public class GridEffect extends AbstractXYEffect {
         if ((lineX > 0 && x % fieldX < lineX)
          || (lineY > 0 && y % fieldY < lineY)) {
             out_affected = true;
-            out_rgba = color;
+            out_color = color;
         }
     }
 

@@ -16,6 +16,7 @@ public class RotationEffect extends AbstractPolarEffect {
     @Override
     protected void filter(double toR, double toA) {
         final double angle = paramAngle.getValue() * Math.PI / 180;
+        fromR = toR;
         fromA = toA + angle;
     }
 
