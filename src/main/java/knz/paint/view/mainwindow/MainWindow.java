@@ -65,6 +65,7 @@ import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
 import knz.paint.model.effects.specific.positional.DistortionEffect;
 import knz.paint.model.effects.specific.positional.ExplosionEffect;
 import knz.paint.model.effects.specific.positional.FlipEffect;
+import knz.paint.model.effects.specific.positional.FunhouseMirrorEffect;
 import knz.paint.model.effects.specific.positional.MirrorEffect;
 import knz.paint.model.effects.specific.positional.MosaicEffect;
 import knz.paint.model.effects.specific.positional.ShearSlicingEffect;
@@ -128,6 +129,7 @@ public class MainWindow extends JFrame {
         new DistortionEffect(),
         new ExplosionEffect(),
         new FlipEffect(),
+        new FunhouseMirrorEffect(),
         new MirrorEffect(),
         new MosaicEffect(),
         new ShearSlicingEffect(),
