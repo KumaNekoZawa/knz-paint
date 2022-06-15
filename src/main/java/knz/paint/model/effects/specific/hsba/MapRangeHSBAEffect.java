@@ -52,10 +52,6 @@ public class MapRangeHSBAEffect extends AbstractHSBAEffect {
             false
         )
     );
-    private BooleanParameter paramAffectH         = new BooleanParameter("Affect hue",        false);
-    private BooleanParameter paramAffectS         = new BooleanParameter("Affect saturation", false);
-    private BooleanParameter paramAffectB         = new BooleanParameter("Affect brightness", false);
-    private BooleanParameter paramAffectA         = new BooleanParameter("Affect alpha",      false);
     private ColorParameter   paramFromDark        = new ColorParameter("From dark",   COLOR_FROM);
     private ColorParameter   paramFromBright      = new ColorParameter("From bright", COLOR_TO);
     private ColorParameter   paramToDark          = new ColorParameter("To dark",     COLOR_FROM);
@@ -64,12 +60,8 @@ public class MapRangeHSBAEffect extends AbstractHSBAEffect {
     private BooleanParameter paramAffectLowSatBr  = new BooleanParameter("Affect low sat./br.", false);
 
     public MapRangeHSBAEffect() {
-        super("Map range");
+        super("Map range", true, true);
         this.parameters.add(paramPresets);
-        this.parameters.add(paramAffectH);
-        this.parameters.add(paramAffectS);
-        this.parameters.add(paramAffectB);
-        this.parameters.add(paramAffectA);
         this.parameters.add(paramFromDark);
         this.parameters.add(paramFromBright);
         this.parameters.add(paramToDark);
@@ -80,10 +72,6 @@ public class MapRangeHSBAEffect extends AbstractHSBAEffect {
 
     @Override
     protected void filter(float in_h, float in_s, float in_b, int in_a) {
-        final boolean affectH         = paramAffectH.getValue();
-        final boolean affectS         = paramAffectS.getValue();
-        final boolean affectB         = paramAffectB.getValue();
-        final boolean affectA         = paramAffectA.getValue();
         final Color   fromDark        = paramFromDark.getValue();
         final Color   fromBright      = paramFromBright.getValue();
         final Color   toDark          = paramToDark.getValue();
@@ -103,15 +91,15 @@ public class MapRangeHSBAEffect extends AbstractHSBAEffect {
         final int   minA = Math.min(fromDark.getAlpha(), fromBright.getAlpha());
         final int   maxA = Math.max(fromDark.getAlpha(), fromBright.getAlpha());
         if ((!affectRangeOnly
-             || ((!affectH || (minH <= in_h && in_h <= maxH))
-              && (!affectS || (minS <= in_s && in_s <= maxS))
-              && (!affectB || (minB <= in_b && in_b <= maxB))
-              && (!affectA || (minA <= in_a && in_a <= maxA))))
+             || (minH <= in_h && in_h <= maxH
+              && minS <= in_s && in_s <= maxS
+              && minB <= in_b && in_b <= maxB
+              && minA <= in_a && in_a <= maxA))
          && (!affectLowSatBr || (in_s >= 0.01f && in_b >= 0.01f))) {
-            out_h = affectH ? (toBrightHSB[0]      - toDarkHSB[0])      * (in_h - minH) / Math.max(0.01f, maxH - minH) + toDarkHSB[0]      : in_h;
-            out_s = affectS ? (toBrightHSB[1]      - toDarkHSB[1])      * (in_s - minS) / Math.max(0.01f, maxS - minS) + toDarkHSB[1]      : in_s;
-            out_b = affectB ? (toBrightHSB[2]      - toDarkHSB[2])      * (in_b - minB) / Math.max(0.01f, maxB - minB) + toDarkHSB[2]      : in_b;
-            out_a = affectA ? (toBright.getAlpha() - toDark.getAlpha()) * (in_a - minA) / Math.max(1,     maxA - minA) + toDark.getAlpha() : in_a;
+            out_h = (toBrightHSB[0]      - toDarkHSB[0])      * (in_h - minH) / Math.max(0.01f, maxH - minH) + toDarkHSB[0];
+            out_s = (toBrightHSB[1]      - toDarkHSB[1])      * (in_s - minS) / Math.max(0.01f, maxS - minS) + toDarkHSB[1];
+            out_b = (toBrightHSB[2]      - toDarkHSB[2])      * (in_b - minB) / Math.max(0.01f, maxB - minB) + toDarkHSB[2];
+            out_a = (toBright.getAlpha() - toDark.getAlpha()) * (in_a - minA) / Math.max(1,     maxA - minA) + toDark.getAlpha();
         } else {
             out_h = in_h;
             out_s = in_s;

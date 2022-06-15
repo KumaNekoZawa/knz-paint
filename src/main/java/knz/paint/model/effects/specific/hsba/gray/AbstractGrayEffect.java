@@ -4,8 +4,8 @@ import knz.paint.model.effects.specific.hsba.AbstractHSBAEffect;
 
 public abstract class AbstractGrayEffect extends AbstractHSBAEffect {
 
-    public AbstractGrayEffect(String name) {
-        super("Gray." + name);
+    public AbstractGrayEffect(String name, boolean affectsAlpha) {
+        super("Gray." + name, false, affectsAlpha);
     }
 
     @Override

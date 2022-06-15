@@ -3,7 +3,7 @@ package knz.paint.model.effects.specific.hsba;
 public class ExtractSaturationEffect extends AbstractHSBAEffect {
 
     public ExtractSaturationEffect() {
-        super("Extract saturation");
+        super("Extract saturation", false, true);
     }
 
     @Override

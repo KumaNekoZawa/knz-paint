@@ -21,7 +21,7 @@ public class MixColorHSBAEffect extends AbstractHSBAEffect {
     private ColorParameter  paramColor   = new ColorParameter("Color", Color.BLACK);
 
     public MixColorHSBAEffect() {
-        super("Mix color");
+        super("Mix color", false, true);
         this.parameters.add(paramPresets);
         this.parameters.add(paramAmountH);
         this.parameters.add(paramAmountS);

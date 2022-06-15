@@ -10,7 +10,7 @@ public class NoiseHSBAEffect extends AbstractHSBAEffect {
     private DoubleParameter paramAmountA = new DoubleParameter("Amount alpha",      0, 0, 1);
 
     public NoiseHSBAEffect() {
-        super("Noise");
+        super("Noise", false, true);
         this.parameters.add(paramAmountH);
         this.parameters.add(paramAmountS);
         this.parameters.add(paramAmountB);
@@ -27,10 +27,10 @@ public class NoiseHSBAEffect extends AbstractHSBAEffect {
         final double negAmountS = 1 - amountS;
         final double negAmountB = 1 - amountB;
         final double negAmountA = 1 - amountA;
-        out_h = (float) (negAmountH * in_h + amountH * Math.random());
-        out_s = (float) (negAmountS * in_s + amountS * Math.random());
-        out_b = (float) (negAmountB * in_b + amountB * Math.random());
-        out_a =   (int) (negAmountA * in_a + amountA * Math.random() * 0xFF);
+        out_h = paramAmountH.isSet() ? (float) (negAmountH * in_h + amountH * Math.random())        : in_h;
+        out_s = paramAmountS.isSet() ? (float) (negAmountS * in_s + amountS * Math.random())        : in_s;
+        out_b = paramAmountB.isSet() ? (float) (negAmountB * in_b + amountB * Math.random())        : in_b;
+        out_a = paramAmountA.isSet() ?   (int) (negAmountA * in_a + amountA * Math.random() * 0xFF) : in_a;
     }
 
 }

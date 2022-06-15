@@ -32,6 +32,8 @@
     * magic wand tool? (as in Photoshop)
     * "Map editor" tool to draw images that snap to a 16x16 (or whatever) grid
 * a lot more effects! (see hidden effects.txt file)
+    * new effect category: AbstractAreaEffect (the implementation only gives a matrix) RGBA/HSBA?
+    * new effect category: AbstractRankEffect (the implementation gets an array of pixels and has to return a value) RGBA/HSBA?
 * actual "Resize" function, "Rotate left/right" functions and "Change canvas size" function
 * multi language ui support
 * preset brushes (not just heads/sizes but also effects on different colors)

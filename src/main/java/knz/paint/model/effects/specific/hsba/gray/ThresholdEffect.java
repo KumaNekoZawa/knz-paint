@@ -7,7 +7,7 @@ public class ThresholdEffect extends AbstractGrayEffect {
     private DoubleParameter paramThreshold = new DoubleParameter("Threshold", 0, 0.5, 1);
 
     public ThresholdEffect() {
-        super("Threshold");
+        super("Threshold", false);
         this.parameters.add(paramThreshold);
     }
 

@@ -3,7 +3,7 @@ package knz.paint.model.effects.specific.hsba;
 public class ExtractAlphaEffect extends AbstractHSBAEffect {
 
     public ExtractAlphaEffect() {
-        super("Extract alpha");
+        super("Extract alpha", false, true);
     }
 
     @Override

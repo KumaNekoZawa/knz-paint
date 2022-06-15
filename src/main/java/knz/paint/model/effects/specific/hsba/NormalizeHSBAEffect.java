@@ -13,7 +13,7 @@ public class NormalizeHSBAEffect extends AbstractHSBAEffect {
     private IntegerParameter paramMaxA = new IntegerParameter("Maximum alpha", 0x00, 0xFF, 0xFF);
 
     public NormalizeHSBAEffect() {
-        super("Normalize");
+        super("Normalize", false, true);
         this.parameters.add(paramMinS);
         this.parameters.add(paramMaxS);
         this.parameters.add(paramMinB);
@@ -31,9 +31,9 @@ public class NormalizeHSBAEffect extends AbstractHSBAEffect {
         final int    minA = paramMinA.getValue();
         final int    maxA = paramMaxA.getValue();
         out_h = in_h;
-        out_s = (float) ((in_s - minS)        / Math.max(0.01, maxS - minS));
-        out_b = (float) ((in_b - minB)        / Math.max(0.01, maxB - minB));
-        out_a =          (in_a - minA) * 0xFF / Math.max(1,    maxA - minA);
+        out_s = paramMinS.isSet() || paramMaxS.isSet() ? (float) ((in_s - minS)        / Math.max(0.01, maxS - minS)) : in_s;
+        out_b = paramMinB.isSet() || paramMaxB.isSet() ? (float) ((in_b - minB)        / Math.max(0.01, maxB - minB)) : in_b;
+        out_a =                                                   (in_a - minA) * 0xFF / Math.max(1,    maxA - minA);
     }
 
 }

@@ -3,7 +3,7 @@ package knz.paint.model.effects.specific.hsba.gray;
 public class BlackWhiteEffect extends AbstractGrayEffect {
 
     public BlackWhiteEffect() {
-        super("Black & white");
+        super("Black & white", false);
     }
 
     @Override

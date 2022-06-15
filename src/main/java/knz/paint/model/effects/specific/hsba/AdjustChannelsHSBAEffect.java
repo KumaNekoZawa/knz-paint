@@ -13,7 +13,7 @@ public class AdjustChannelsHSBAEffect extends AbstractHSBAEffect {
     private DoubleParameter  paramAlpha       = new DoubleParameter("Alpha",      0, 1, MAX_EXPONENT);
 
     public AdjustChannelsHSBAEffect() {
-        super("Adjust channels");
+        super("Adjust channels", false, true);
         this.parameters.add(paramHuePhase);
         this.parameters.add(paramInvertSB);
         this.parameters.add(paramSaturation);

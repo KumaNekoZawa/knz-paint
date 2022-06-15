@@ -14,7 +14,7 @@ public class SolarizeHSBAEffect extends AbstractHSBAEffect {
     private IntegerParameter paramThresholdA = new IntegerParameter("Threshold alpha", 0x00, 0x00, 0x100);
 
     public SolarizeHSBAEffect() {
-        super("Solarize");
+        super("Solarize", false, true);
         this.parameters.add(paramNegateS);
         this.parameters.add(paramThresholdS);
         this.parameters.add(paramNegateB);
@@ -31,9 +31,10 @@ public class SolarizeHSBAEffect extends AbstractHSBAEffect {
         final double thresholdB = paramThresholdB.getValue();
         final int    negateA    = paramNegateA.getValue() ? -1 : 1;
         final int    thresholdA = paramThresholdA.getValue();
-        out_s = (float) (negateS * Math.abs(in_s - thresholdS) + thresholdS);
-        out_b = (float) (negateB * Math.abs(in_b - thresholdB) + thresholdB);
-        out_a =          negateA * Math.abs(in_a - thresholdA) + thresholdA;
+        out_h = in_h;
+        out_s = paramThresholdS.isSet() ? (float) (negateS * Math.abs(in_s - thresholdS) + thresholdS) : in_s;
+        out_b = paramThresholdB.isSet() ? (float) (negateB * Math.abs(in_b - thresholdB) + thresholdB) : in_b;
+        out_a =                                    negateA * Math.abs(in_a - thresholdA) + thresholdA;
     }
 
 }

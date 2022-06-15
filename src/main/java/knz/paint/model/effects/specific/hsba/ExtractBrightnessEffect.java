@@ -3,7 +3,7 @@ package knz.paint.model.effects.specific.hsba;
 public class ExtractBrightnessEffect extends AbstractHSBAEffect {
 
     public ExtractBrightnessEffect() {
-        super("Extract brightness");
+        super("Extract brightness", false, true);
     }
 
     @Override
