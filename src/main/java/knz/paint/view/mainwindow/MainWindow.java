@@ -73,6 +73,9 @@ import knz.paint.model.effects.specific.positional.polar.PolarMirrorEffect;
 import knz.paint.model.effects.specific.positional.polar.PolarMosaicEffect;
 import knz.paint.model.effects.specific.positional.polar.RotationEffect;
 import knz.paint.model.effects.specific.positional.polar.SwirlEffect;
+import knz.paint.model.effects.specific.rank.MaximumEffect;
+import knz.paint.model.effects.specific.rank.MedianEffect;
+import knz.paint.model.effects.specific.rank.MinimumEffect;
 import knz.paint.model.effects.specific.rgba.AdjustChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
@@ -165,6 +168,10 @@ public class MainWindow extends JFrame {
         new NoiseHSBAEffect(),
         new NormalizeHSBAEffect(),
         new SolarizeHSBAEffect(),
+        /* rank */
+        new MaximumEffect(),
+        new MedianEffect(),
+        new MinimumEffect(),
         /* graphics */
         new TadaEffect(),
     };
