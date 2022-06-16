@@ -1,23 +1,35 @@
-package knz.paint.model.effects.specific.rank;
+package knz.paint.model.effects.specific.area;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Comparator;
 
 import knz.paint.model.effects.parameter.IntegerParameter;
+import knz.paint.model.effects.parameter.Preset;
+import knz.paint.model.effects.parameter.PresetParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
 
-public abstract class AbstractRankEffect extends AbstractEffect {
+public class RankEffect extends AbstractEffect {
 
+    private PresetParameter paramPresets = new PresetParameter(
+        new String[] { "Area width", "Area height", "Rank" },
+        new Preset("Default", 0, 0, 4),
+        new Preset("Minimum", 1, 1, 0),
+        new Preset("Medium",  1, 1, 4),
+        new Preset("Maximum", 1, 1, 8)
+    );
     private IntegerParameter paramAreaX = new IntegerParameter("Area width",  0, 0, 10);
     private IntegerParameter paramAreaY = new IntegerParameter("Area height", 0, 0, 10);
+    private IntegerParameter paramRank  = new IntegerParameter("Rank", 0, 4, 8);
 
     protected int fromX, fromY;
 
-    public AbstractRankEffect(String name) {
-        super("Rank." + name);
+    public RankEffect() {
+        super("Area.Rank effect");
+        this.parameters.add(paramPresets);
         this.parameters.add(paramAreaX);
         this.parameters.add(paramAreaY);
+        this.parameters.add(paramRank);
     }
 
     @Override
@@ -32,6 +44,8 @@ public abstract class AbstractRankEffect extends AbstractEffect {
     protected final BufferedImage applyBody(BufferedImage image) {
         final int areaX = paramAreaX.getValue();
         final int areaY = paramAreaY.getValue();
+        final int rank  = paramRank.getValue();
+        final int ranks = paramRank.getMax() + 1;
         final int width  = image.getWidth();
         final int height = image.getHeight();
         final BufferedImage result = new BufferedImage(width, height, image.getType());
@@ -41,6 +55,13 @@ public abstract class AbstractRankEffect extends AbstractEffect {
             @Override
             public int compare(Integer i1, Integer i2) {
                 return Integer.compare(sortkey(i1), sortkey(i2));
+            }
+
+            private int sortkey(int in) {
+                final int in_r = (in >> 16) & 0xFF;
+                final int in_g = (in >>  8) & 0xFF;
+                final int in_b =  in        & 0xFF;
+                return (in_r + in_g + in_b) / 3;
             }
         };
         for (int y = 0; y < height; y++) {
@@ -52,7 +73,7 @@ public abstract class AbstractRankEffect extends AbstractEffect {
                     }
                 }
                 Arrays.sort(values, 0, i, comparator);
-                result.setRGB(x, y, values[filter(i)]);
+                result.setRGB(x, y, values[rank * i / ranks]);
             }
         }
         return result;
@@ -65,14 +86,5 @@ public abstract class AbstractRankEffect extends AbstractEffect {
 
     protected void applyFoot() {
     }
-
-    private static int sortkey(int in) {
-        final int in_r = (in >> 16) & 0xFF;
-        final int in_g = (in >>  8) & 0xFF;
-        final int in_b =  in        & 0xFF;
-        return (in_r + in_g + in_b) / 3;
-    }
-
-    protected abstract int filter(int valueCount);
 
 }
