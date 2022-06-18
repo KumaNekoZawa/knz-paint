@@ -45,6 +45,9 @@ import knz.paint.model.ImageState;
 import knz.paint.model.effects.EffectState;
 import knz.paint.model.effects.parameter.AbstractParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
+import knz.paint.model.effects.specific.area.Custom3x3Effect;
+import knz.paint.model.effects.specific.area.Custom5x5Effect;
+import knz.paint.model.effects.specific.area.OilPaintingEffect;
 import knz.paint.model.effects.specific.area.RankEffect;
 import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustChannelsHSBAEffect;
@@ -56,6 +59,7 @@ import knz.paint.model.effects.specific.hsba.MixColorHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NegateHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NoiseHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NormalizeHSBAEffect;
+import knz.paint.model.effects.specific.hsba.QuantizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.SolarizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.hsba.gray.ThresholdEffect;
@@ -86,6 +90,7 @@ import knz.paint.model.effects.specific.rgba.MixColorRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NegateRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NoiseRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NormalizeRGBAEffect;
+import knz.paint.model.effects.specific.rgba.QuantizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SolarizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SwapRedBlueEffect;
 import knz.paint.model.effects.specific.xy.BorderEffect;
@@ -150,6 +155,7 @@ public class MainWindow extends JFrame {
         new NegateRGBAEffect(),
         new NoiseRGBAEffect(),
         new NormalizeRGBAEffect(),
+        new QuantizeRGBAEffect(),
         new SolarizeRGBAEffect(),
         new SwapRedBlueEffect(),
         /* hsba/gray */
@@ -165,8 +171,12 @@ public class MainWindow extends JFrame {
         new NegateHSBAEffect(),
         new NoiseHSBAEffect(),
         new NormalizeHSBAEffect(),
+        new QuantizeHSBAEffect(),
         new SolarizeHSBAEffect(),
         /* area */
+        new Custom3x3Effect(),
+        new Custom5x5Effect(),
+        new OilPaintingEffect(),
         new RankEffect(),
         /* graphics */
         new TadaEffect(),

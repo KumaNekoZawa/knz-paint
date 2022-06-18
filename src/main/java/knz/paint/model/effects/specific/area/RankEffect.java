@@ -22,8 +22,6 @@ public class RankEffect extends AbstractEffect {
     private IntegerParameter paramAreaY = new IntegerParameter("Area height", 0, 0, 10);
     private IntegerParameter paramRank  = new IntegerParameter("Rank", 0, 4, 8);
 
-    protected int fromX, fromY;
-
     public RankEffect() {
         super("Area.Rank effect");
         this.parameters.add(paramPresets);
@@ -56,13 +54,6 @@ public class RankEffect extends AbstractEffect {
             public int compare(Integer i1, Integer i2) {
                 return Integer.compare(sortkey(i1), sortkey(i2));
             }
-
-            private int sortkey(int in) {
-                final int in_r = (in >> 16) & 0xFF;
-                final int in_g = (in >>  8) & 0xFF;
-                final int in_b =  in        & 0xFF;
-                return (in_r + in_g + in_b) / 3;
-            }
         };
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -85,6 +76,13 @@ public class RankEffect extends AbstractEffect {
     }
 
     protected void applyFoot() {
+    }
+
+    private static int sortkey(int in) {
+        final int in_r = (in >> 16) & 0xFF;
+        final int in_g = (in >>  8) & 0xFF;
+        final int in_b =  in        & 0xFF;
+        return (in_r + in_g + in_b) / 3;
     }
 
 }

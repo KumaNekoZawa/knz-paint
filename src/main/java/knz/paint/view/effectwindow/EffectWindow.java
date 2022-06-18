@@ -5,24 +5,31 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -35,6 +42,7 @@ import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.BorderFillStrategyParameter;
 import knz.paint.model.effects.parameter.ColorParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
+import knz.paint.model.effects.parameter.IntegerArrayParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
 import knz.paint.model.effects.parameter.PointEvent;
 import knz.paint.model.effects.parameter.PointListParameter;
@@ -54,6 +62,8 @@ public class EffectWindow extends JDialog {
 
     private Map<String, AbstractParameter> parameters = new HashMap<>();
     private Map<String, JComponent> parameterElements = new HashMap<>();
+
+    private boolean closing = false;
 
     public EffectWindow(Window parent, JScrollPane scrollPane, MainPanel mainPanel, AbstractEffect effect, String title) {
         super(parent, title);
@@ -83,6 +93,7 @@ public class EffectWindow extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                closing = true;
                 imageState.setImageEffectReset();
                 mainPanel.repaint();
                 EffectWindow.this.dispose();
@@ -121,6 +132,49 @@ public class EffectWindow extends JDialog {
                     });
                     parameterElements.put(parameterName, slider);
                     add(slider, c);
+                    c.gridy++;
+                } else if (parameter instanceof IntegerArrayParameter) {
+                    final IntegerArrayParameter integerArrayParameter = (IntegerArrayParameter) parameter;
+                    final int sizeX = integerArrayParameter.getSizeX();
+                    final int sizeY = integerArrayParameter.getSizeY();
+                    final JPanel panel = new JPanel();
+                    panel.setLayout(new GridLayout(sizeX, sizeY));
+                    for (int y = 0; y < sizeY; y++) {
+                        for (int x = 0; x < sizeX; x++) {
+                            final int fx = x;
+                            final int fy = y;
+                            final JTextField textField = new JTextField(Integer.toString(integerArrayParameter.getDef(x, y)));
+                            textField.setHorizontalAlignment(SwingConstants.RIGHT);
+                            textField.setInputVerifier(new InputVerifier() {
+                                @Override
+                                public boolean verify(JComponent input) {
+                                    return ((JTextField) input).getText().matches("^-?[0-9]+$");
+                                }
+                            });
+                            textField.addFocusListener(new FocusAdapter() {
+                                @Override
+                                public void focusLost(FocusEvent e) {
+                                    if (closing) {
+                                        return;
+                                    }
+                                    final String text = textField.getText();
+                                    if (text == null || text.isBlank()) {
+                                        textField.setText("0");
+                                        integerArrayParameter.setValue(fx, fy, 0);
+                                    } else {
+                                        final int value = Integer.parseInt(text);
+                                        integerArrayParameter.setValue(fx, fy, value);
+                                    }
+                                    label.setText(labeledParameter.getLabelText());
+                                    imageState.setImageEffect(effect.apply(imageEffect), imageEffectX, imageEffectY);
+                                    mainPanel.repaint();
+                                }
+                            });
+                            panel.add(textField);
+                        }
+                    }
+                    parameterElements.put(parameterName, panel);
+                    add(panel, c);
                     c.gridy++;
                 } else if (parameter instanceof DoubleParameter) {
                     final DoubleParameter doubleParameter = (DoubleParameter) parameter;
@@ -239,6 +293,18 @@ public class EffectWindow extends JDialog {
                                 final int intValue = (int) value;
                                 integerParameterToSet.setValue(intValue);
                                 slider.setValue(intValue);
+                            } else if (parameterToSet instanceof IntegerArrayParameter && parameterToSetElement instanceof JPanel) {
+                                final IntegerArrayParameter integerArrayParameterToSet = (IntegerArrayParameter) parameterToSet;
+                                final JPanel panel = (JPanel) parameterToSetElement;
+                                final int[] intArrayValue = (int[]) value;
+                                integerArrayParameterToSet.setValues(intArrayValue);
+                                int j = 0;
+                                for (final Component component : panel.getComponents()) {
+                                    if (component instanceof JTextField) {
+                                        final JTextField textField = (JTextField) component;
+                                        textField.setText(Integer.toString(intArrayValue[j++]));
+                                    }
+                                }
                             } else if (parameterToSet instanceof DoubleParameter && parameterToSetElement instanceof JSlider) {
                                 final DoubleParameter doubleParameterToSet = (DoubleParameter) parameterToSet;
                                 final JSlider slider = (JSlider) parameterToSetElement;
@@ -295,8 +361,8 @@ public class EffectWindow extends JDialog {
                 c.gridy++;
             }
         }
-        final JButton buttonOkay = new JButton("Okay");
-        buttonOkay.addActionListener(new ActionListener() {
+        final JButton buttonApply = new JButton("Apply");
+        buttonApply.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 imageState.setImageEffectReset();
@@ -306,7 +372,7 @@ public class EffectWindow extends JDialog {
                 EffectWindow.this.dispose();
             }
         });
-        add(buttonOkay, c);
+        add(buttonApply, c);
 
         setAlwaysOnTop(true);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
