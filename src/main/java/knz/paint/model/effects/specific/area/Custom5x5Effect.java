@@ -15,6 +15,12 @@ public class Custom5x5Effect extends AbstractCustomEffect {
                   0,   0,   1,   0,   0,
                   0,   0,   0,   0,   0,
                   0,   0,   0,   0,   0 }),
+            new Preset("Diamond blur", true, new int[] {
+                  0,   0,   1,   0,   0,
+                  0,   1,   1,   1,   0,
+                  1,   1,   1,   1,   1,
+                  0,   1,   1,   1,   0,
+                  0,   0,   1,   0,   0 }),
             new Preset("Box blur", true, new int[] {
                   1,   1,   1,   1,   1,
                   1,   1,   1,   1,   1,
@@ -27,6 +33,12 @@ public class Custom5x5Effect extends AbstractCustomEffect {
                   7,  26,  41,  26,   7,
                   4,  16,  26,  16,   4,
                   1,   4,   7,   4,   1 }),
+            new Preset("Diamond sharp", false, new int[] {
+                  0,   0,  -1,   0,   0,
+                  0,  -1,  -1,  -1,   0,
+                 -1,  -1,  13,  -1,  -1,
+                  0,  -1,  -1,  -1,   0,
+                  0,   0,  -1,   0,   0 }),
             new Preset("Box sharp", false, new int[] {
                  -1,  -1,  -1,  -1,  -1,
                  -1,  -1,  -1,  -1,  -1,

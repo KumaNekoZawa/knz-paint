@@ -26,7 +26,7 @@ public class QuantizeHSBAEffect extends AbstractHSBAEffect {
         final int divisorB = 1 << paramDivisorB.getValue();
         final int divisorA = 1 << paramDivisorA.getValue();
         final float multiplier = 0x100;
-        out_h = (((int) (      360f * in_h)) / divisorH) * divisorH / 360f;
+        out_h = (((int)       (360f * in_h)) / divisorH) * divisorH / 360f;
         out_s = (((int) (multiplier * in_s)) / divisorS) * divisorS / multiplier;
         out_b = (((int) (multiplier * in_b)) / divisorB) * divisorB / multiplier;
         out_a =                      (in_a   / divisorA) * divisorA;

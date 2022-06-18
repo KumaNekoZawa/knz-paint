@@ -13,6 +13,10 @@ public class Custom3x3Effect extends AbstractCustomEffect {
                  0,  0,  0,
                  0,  1,  0,
                  0,  0,  0 }),
+            new Preset("Diamond blur", true, new int[] {
+                 0,  1,  0,
+                 1,  1,  1,
+                 0,  1,  0 }),
             new Preset("Box blur", true, new int[] {
                  1,  1,  1,
                  1,  1,  1,
@@ -21,6 +25,10 @@ public class Custom3x3Effect extends AbstractCustomEffect {
                  1,  2,  1,
                  2,  4,  2,
                  1,  2,  1 }),
+            new Preset("Diamond sharp", false, new int[] {
+                 0, -1,  0,
+                -1,  5, -1,
+                 0, -1,  0 }),
             new Preset("Box sharp", false, new int[] {
                 -1, -1, -1,
                 -1,  9, -1,
