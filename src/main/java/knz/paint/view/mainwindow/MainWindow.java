@@ -45,10 +45,10 @@ import knz.paint.model.ImageState;
 import knz.paint.model.effects.EffectState;
 import knz.paint.model.effects.parameter.AbstractParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
-import knz.paint.model.effects.specific.area.Custom3x3Effect;
-import knz.paint.model.effects.specific.area.Custom5x5Effect;
 import knz.paint.model.effects.specific.area.OilPaintingEffect;
 import knz.paint.model.effects.specific.area.RankEffect;
+import knz.paint.model.effects.specific.area.custom.Custom3x3Effect;
+import knz.paint.model.effects.specific.area.custom.Custom5x5Effect;
 import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustChannelsHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractAlphaEffect;
@@ -61,6 +61,13 @@ import knz.paint.model.effects.specific.hsba.NoiseHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NormalizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.QuantizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.SolarizeHSBAEffect;
+import knz.paint.model.effects.specific.hsba.colorblindness.AchromatopsiaEffect;
+import knz.paint.model.effects.specific.hsba.colorblindness.DeuteranomalyEffect;
+import knz.paint.model.effects.specific.hsba.colorblindness.DeuteranopiaEffect;
+import knz.paint.model.effects.specific.hsba.colorblindness.ProtanomalyEffect;
+import knz.paint.model.effects.specific.hsba.colorblindness.ProtanopiaEffect;
+import knz.paint.model.effects.specific.hsba.colorblindness.TritanomalyEffect;
+import knz.paint.model.effects.specific.hsba.colorblindness.TritanopiaEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.hsba.gray.ThresholdEffect;
 import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
@@ -158,6 +165,14 @@ public class MainWindow extends JFrame {
         new QuantizeRGBAEffect(),
         new SolarizeRGBAEffect(),
         new SwapRedBlueEffect(),
+        /* hsba/colorblindness */
+        new AchromatopsiaEffect(),
+        new DeuteranomalyEffect(),
+        new DeuteranopiaEffect(),
+        new ProtanomalyEffect(),
+        new ProtanopiaEffect(),
+        new TritanomalyEffect(),
+        new TritanopiaEffect(),
         /* hsba/gray */
         new BlackWhiteEffect(),
         new ThresholdEffect(),

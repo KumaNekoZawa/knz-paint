@@ -1,4 +1,4 @@
-package knz.paint.model.effects.specific.area;
+package knz.paint.model.effects.specific.area.custom;
 
 import java.awt.image.BufferedImage;
 

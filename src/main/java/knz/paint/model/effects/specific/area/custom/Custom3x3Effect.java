@@ -1,4 +1,4 @@
-package knz.paint.model.effects.specific.area;
+package knz.paint.model.effects.specific.area.custom;
 
 import knz.paint.model.effects.parameter.IntegerArrayParameter;
 import knz.paint.model.effects.parameter.Preset;
