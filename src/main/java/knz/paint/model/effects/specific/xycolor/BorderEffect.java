@@ -1,11 +1,11 @@
-package knz.paint.model.effects.specific.xy;
+package knz.paint.model.effects.specific.xycolor;
 
 import java.awt.Color;
 
 import knz.paint.model.effects.parameter.ColorParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
 
-public class BorderEffect extends AbstractXYEffect {
+public class BorderEffect extends AbstractXYToColorEffect {
 
     private IntegerParameter paramSize  = new IntegerParameter("Size", 1, 1, 100);
     private ColorParameter   paramColor = new ColorParameter("Color", Color.BLACK);

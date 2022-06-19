@@ -1,9 +1,9 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import knz.paint.model.effects.parameter.IntegerParameter;
 
 /* also called "Pixelization" */
-public class MosaicEffect extends AbstractPositionalEffect {
+public class MosaicEffect extends AbstractXYEffect {
 
     private IntegerParameter paramSize = new IntegerParameter("Size", 1, 1, 100);
 

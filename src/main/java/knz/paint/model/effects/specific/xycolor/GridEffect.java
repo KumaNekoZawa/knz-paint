@@ -1,11 +1,11 @@
-package knz.paint.model.effects.specific.xy;
+package knz.paint.model.effects.specific.xycolor;
 
 import java.awt.Color;
 
 import knz.paint.model.effects.parameter.ColorParameter;
 import knz.paint.model.effects.parameter.IntegerParameter;
 
-public class GridEffect extends AbstractXYEffect {
+public class GridEffect extends AbstractXYToColorEffect {
 
     private IntegerParameter paramFieldX = new IntegerParameter("Field width",  2, 2, 100);
     private IntegerParameter paramFieldY = new IntegerParameter("Field height", 2, 2, 100);

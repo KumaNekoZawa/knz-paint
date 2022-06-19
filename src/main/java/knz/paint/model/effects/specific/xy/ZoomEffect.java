@@ -1,10 +1,10 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
 // XXX this is a special case of the AdjustCartesianEffect (the two factors being linked and inverted)
-public class ZoomEffect extends AbstractPositionalEffect {
+public class ZoomEffect extends AbstractXYEffect {
 
     private DoubleParameter paramFactor = new DoubleParameter("Factor", 0, 1, 10);
 

@@ -1,4 +1,4 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import knz.paint.model.effects.parameter.BooleanParameter;
 import knz.paint.model.effects.parameter.BorderFillStrategy;
@@ -7,7 +7,7 @@ import knz.paint.model.effects.parameter.Preset;
 import knz.paint.model.effects.parameter.PresetParameter;
 
 /* see: Beyond Photography: The Digital Darkroom p.36-37,50-51 */
-public class ShearSlicingEffect extends AbstractPositionalEffect {
+public class ShearSlicingEffect extends AbstractXYEffect {
 
     private PresetParameter paramPresets = new PresetParameter(
         new String[] { "Border fill strategy", "Relative", "Shift r", "Factor r", "Shift d", "Factor d" },

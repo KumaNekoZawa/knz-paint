@@ -1,9 +1,9 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
-public class ExplosionEffect extends AbstractPositionalEffect {
+public class ExplosionEffect extends AbstractXYEffect {
 
     private DoubleParameter paramRadius = new DoubleParameter("Radius", 0, 0, 100);
 

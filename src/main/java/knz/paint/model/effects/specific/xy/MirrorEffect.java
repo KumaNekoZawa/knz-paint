@@ -1,8 +1,8 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import knz.paint.model.effects.parameter.DoubleParameter;
 
-public class MirrorEffect extends AbstractPositionalEffect {
+public class MirrorEffect extends AbstractXYEffect {
 
     private DoubleParameter paramX = new DoubleParameter("X", 0, 0, 1);
     private DoubleParameter paramY = new DoubleParameter("Y", 0, 0, 1);

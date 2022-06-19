@@ -1,9 +1,9 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import knz.paint.model.effects.parameter.DoubleParameter;
 
 /* see: Beyond Photography: The Digital Darkroom p.56-57 */
-public class FunhouseMirrorEffect extends AbstractPositionalEffect {
+public class FunhouseMirrorEffect extends AbstractXYEffect {
 
     private DoubleParameter paramFactorXArg = new DoubleParameter("Factor x argument", "°", -10, 0, 10);
     private DoubleParameter paramFactorXRes = new DoubleParameter("Factor x result", 1, 1, 1000);

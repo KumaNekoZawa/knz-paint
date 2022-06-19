@@ -1,11 +1,11 @@
-package knz.paint.model.effects.specific.xy;
+package knz.paint.model.effects.specific.xycolor;
 
 import java.awt.Color;
 
 import knz.paint.model.effects.parameter.ColorParameter;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
-public class SaltPepperEffect extends AbstractXYEffect {
+public class SaltPepperEffect extends AbstractXYToColorEffect {
 
     private DoubleParameter paramAmount      = new DoubleParameter("Amount", 0, 0, 1);
     private DoubleParameter paramRatio       = new DoubleParameter("Ratio", 0, 0.5, 1);

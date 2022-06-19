@@ -1,11 +1,11 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import java.awt.Point;
 
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.PointParameter;
 
-public class DistortionEffect extends AbstractPositionalEffect {
+public class DistortionEffect extends AbstractXYEffect {
 
     private PointParameter paramTL = new PointParameter("Top left",     0, 0);
     private PointParameter paramTR = new PointParameter("Top right",    1, 0);

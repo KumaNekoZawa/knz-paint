@@ -70,21 +70,6 @@ import knz.paint.model.effects.specific.hsba.colorblindness.TritanomalyEffect;
 import knz.paint.model.effects.specific.hsba.colorblindness.TritanopiaEffect;
 import knz.paint.model.effects.specific.hsba.gray.BlackWhiteEffect;
 import knz.paint.model.effects.specific.hsba.gray.ThresholdEffect;
-import knz.paint.model.effects.specific.positional.AdjustCartesianEffect;
-import knz.paint.model.effects.specific.positional.DistortionEffect;
-import knz.paint.model.effects.specific.positional.ExplosionEffect;
-import knz.paint.model.effects.specific.positional.FlipEffect;
-import knz.paint.model.effects.specific.positional.FunhouseMirrorEffect;
-import knz.paint.model.effects.specific.positional.MirrorEffect;
-import knz.paint.model.effects.specific.positional.MosaicEffect;
-import knz.paint.model.effects.specific.positional.ShearSlicingEffect;
-import knz.paint.model.effects.specific.positional.StainedGlassEffect;
-import knz.paint.model.effects.specific.positional.ZoomEffect;
-import knz.paint.model.effects.specific.positional.polar.AdjustPolarEffect;
-import knz.paint.model.effects.specific.positional.polar.PolarMirrorEffect;
-import knz.paint.model.effects.specific.positional.polar.PolarMosaicEffect;
-import knz.paint.model.effects.specific.positional.polar.RotationEffect;
-import knz.paint.model.effects.specific.positional.polar.SwirlEffect;
 import knz.paint.model.effects.specific.rgba.AdjustChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
@@ -100,9 +85,24 @@ import knz.paint.model.effects.specific.rgba.NormalizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.QuantizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SolarizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SwapRedBlueEffect;
-import knz.paint.model.effects.specific.xy.BorderEffect;
-import knz.paint.model.effects.specific.xy.GridEffect;
-import knz.paint.model.effects.specific.xy.SaltPepperEffect;
+import knz.paint.model.effects.specific.xy.AdjustCartesianEffect;
+import knz.paint.model.effects.specific.xy.DistortionEffect;
+import knz.paint.model.effects.specific.xy.ExplosionEffect;
+import knz.paint.model.effects.specific.xy.FlipEffect;
+import knz.paint.model.effects.specific.xy.FunhouseMirrorEffect;
+import knz.paint.model.effects.specific.xy.MirrorEffect;
+import knz.paint.model.effects.specific.xy.MosaicEffect;
+import knz.paint.model.effects.specific.xy.ShearSlicingEffect;
+import knz.paint.model.effects.specific.xy.StainedGlassEffect;
+import knz.paint.model.effects.specific.xy.ZoomEffect;
+import knz.paint.model.effects.specific.xy.polar.AdjustPolarEffect;
+import knz.paint.model.effects.specific.xy.polar.PolarMirrorEffect;
+import knz.paint.model.effects.specific.xy.polar.PolarMosaicEffect;
+import knz.paint.model.effects.specific.xy.polar.RotationEffect;
+import knz.paint.model.effects.specific.xy.polar.SwirlEffect;
+import knz.paint.model.effects.specific.xycolor.BorderEffect;
+import knz.paint.model.effects.specific.xycolor.GridEffect;
+import knz.paint.model.effects.specific.xycolor.SaltPepperEffect;
 import knz.paint.model.tools.AirbrushType;
 import knz.paint.model.tools.FillStyle;
 import knz.paint.model.tools.StrokeDash;
@@ -128,13 +128,13 @@ public class MainWindow extends JFrame {
     private static final FileFilter FILTER_PNG = createFileFilter("Portable Network Graphics", "png");
 
     private static final AbstractEffect[] EFFECTS = {
-        /* positional/polar */
+        /* xy/polar */
         new AdjustPolarEffect(),
         new PolarMirrorEffect(),
         new PolarMosaicEffect(),
         new RotationEffect(),
         new SwirlEffect(),
-        /* positional */
+        /* xy */
         new AdjustCartesianEffect(),
         new DistortionEffect(),
         new ExplosionEffect(),
@@ -145,7 +145,7 @@ public class MainWindow extends JFrame {
         new ShearSlicingEffect(),
         new StainedGlassEffect(),
         new ZoomEffect(),
-        /* xy */
+        /* xycolor */
         new BorderEffect(),
         new GridEffect(),
         new SaltPepperEffect(),

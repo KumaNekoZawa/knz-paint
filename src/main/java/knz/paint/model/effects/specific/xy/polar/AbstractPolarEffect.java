@@ -1,19 +1,19 @@
-package knz.paint.model.effects.specific.positional.polar;
+package knz.paint.model.effects.specific.xy.polar;
 
 import java.awt.Point;
 
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.PointParameter;
-import knz.paint.model.effects.specific.positional.AbstractPositionalEffect;
+import knz.paint.model.effects.specific.xy.AbstractXYEffect;
 
-public abstract class AbstractPolarEffect extends AbstractPositionalEffect {
+public abstract class AbstractPolarEffect extends AbstractXYEffect {
 
     private PointParameter paramHotspot = new PointParameter("Hotspot", 0.5, 0.5);
 
     protected double fromR, fromA;
 
     public AbstractPolarEffect(String name, BorderFillStrategy borderFillStrategy) {
-        super("Polar." + name, borderFillStrategy);
+        super("Polar (RA)." + name, borderFillStrategy);
         this.parameters.add(paramHotspot);
     }
 

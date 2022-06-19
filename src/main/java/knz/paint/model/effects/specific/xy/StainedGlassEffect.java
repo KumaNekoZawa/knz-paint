@@ -1,10 +1,10 @@
-package knz.paint.model.effects.specific.positional;
+package knz.paint.model.effects.specific.xy;
 
 import java.util.Arrays;
 
 import knz.paint.model.effects.parameter.IntegerParameter;
 
-public class StainedGlassEffect extends AbstractPositionalEffect {
+public class StainedGlassEffect extends AbstractXYEffect {
 
     private IntegerParameter paramTiles = new IntegerParameter("Tiles", " tiles", 1, 100, 1000);
 

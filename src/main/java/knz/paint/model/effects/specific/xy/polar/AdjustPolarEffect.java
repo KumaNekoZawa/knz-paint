@@ -1,4 +1,4 @@
-package knz.paint.model.effects.specific.positional.polar;
+package knz.paint.model.effects.specific.xy.polar;
 
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
