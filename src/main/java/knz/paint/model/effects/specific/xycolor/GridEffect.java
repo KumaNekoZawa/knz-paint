@@ -9,8 +9,8 @@ public class GridEffect extends AbstractXYToColorEffect {
 
     private IntegerParameter paramFieldX = new IntegerParameter("Field width",  2, 2, 100);
     private IntegerParameter paramFieldY = new IntegerParameter("Field height", 2, 2, 100);
-    private IntegerParameter paramLineX  = new IntegerParameter("Line width",   0, 1, 100);
-    private IntegerParameter paramLineY  = new IntegerParameter("Line height",  0, 1, 100);
+    private IntegerParameter paramLineX  = new IntegerParameter("Line width",   0, 0, 100);
+    private IntegerParameter paramLineY  = new IntegerParameter("Line height",  0, 0, 100);
     private ColorParameter   paramColor  = new ColorParameter("Color", Color.BLACK);
 
     public GridEffect() {

@@ -7,7 +7,7 @@ import knz.paint.model.effects.parameter.IntegerParameter;
 
 public class BorderEffect extends AbstractXYToColorEffect {
 
-    private IntegerParameter paramSize  = new IntegerParameter("Size", 1, 1, 100);
+    private IntegerParameter paramSize  = new IntegerParameter("Size", 0, 0, 100);
     private ColorParameter   paramColor = new ColorParameter("Color", Color.BLACK);
 
     public BorderEffect() {
