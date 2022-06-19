@@ -51,6 +51,7 @@ import knz.paint.model.effects.specific.area.custom.Custom3x3Effect;
 import knz.paint.model.effects.specific.area.custom.Custom5x5Effect;
 import knz.paint.model.effects.specific.graphics.TadaEffect;
 import knz.paint.model.effects.specific.hsba.AdjustChannelsHSBAEffect;
+import knz.paint.model.effects.specific.hsba.ColorizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.ExtractAlphaEffect;
 import knz.paint.model.effects.specific.hsba.ExtractBrightnessEffect;
 import knz.paint.model.effects.specific.hsba.ExtractSaturationEffect;
@@ -74,6 +75,7 @@ import knz.paint.model.effects.specific.rgba.AdjustChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.AdjustContrastEffect;
 import knz.paint.model.effects.specific.rgba.AdjustGammaEffect;
 import knz.paint.model.effects.specific.rgba.BitShiftEffect;
+import knz.paint.model.effects.specific.rgba.ColorizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.ExtractChannelsRGBAEffect;
 import knz.paint.model.effects.specific.rgba.GrayscaleEffect;
 import knz.paint.model.effects.specific.rgba.MapRangeRGBAEffect;
@@ -154,6 +156,7 @@ public class MainWindow extends JFrame {
         new AdjustContrastEffect(),
         new AdjustGammaEffect(),
         new BitShiftEffect(),
+        new ColorizeRGBAEffect(),
         new ExtractChannelsRGBAEffect(),
         new GrayscaleEffect(),
         new MapRangeRGBAEffect(),
@@ -178,6 +181,7 @@ public class MainWindow extends JFrame {
         new ThresholdEffect(),
         /* hsba */
         new AdjustChannelsHSBAEffect(),
+        new ColorizeHSBAEffect(),
         new ExtractAlphaEffect(),
         new ExtractBrightnessEffect(),
         new ExtractSaturationEffect(),
