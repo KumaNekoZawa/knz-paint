@@ -21,12 +21,14 @@
 * https://docs.oracle.com/javase/tutorial/2d/geometry/strokeandfill.html
 * "Flood fill" tool with pattern
 * add menu icons
+* the user should be able to mask every effect with a grayscale bitmap
+    * this way "radial" versions of effects become easily possible etc.
 
 # Features
 * view
     * show histogram
     * show grid!?
-* more tools!
+* add more tools
     * arrow tool?
     * triangle tool?
     * clone stamp tool? (as in IrfanPaint and Photoshop)
@@ -34,8 +36,24 @@
     * magnetic lasso tool? (as in Photoshop)
     * magic wand tool? (as in Photoshop)
     * "Map editor" tool to draw images that snap to a 16x16 (or whatever) grid
-* a lot more effects! (see hidden effects.txt file)
-* actual "Resize" function, "Rotate left/right" functions, "Change canvas size" & "Auto-crop" function
+* add more effects
+    * replace color A with color B effect (with threshold)
+    * black & white effect with threshold depended on x,y coords
+    * "bone distort" effect
+    * delftware effect
+    * composite edge detection effect
+        * Extract brightness
+        * (Adjust background color using flood fill if black)
+        * Gamma correction 2.0~7.0
+        * Threshold ~0.66
+        * Laplacian 3x3
+        * Negate brightness
+        * Minimum (rank) effect
+* some effects that change the canvas size should be specially implemented
+    * "Resize" function
+    * "Rotate left/right" functions
+    * "Change canvas size" function
+    * "Auto-crop" function
 * multi language ui support
 * preset brushes (not just heads/sizes but also effects on different colors)
     * pencil
@@ -53,18 +71,3 @@
     * some menu points need entries too
     * new/open reset the history
     * history tree!?
-
-# ... and beyond!
-* merge with all other paint and viewer software I've written in the past!
-    * (but make uconvert a separate cli program written in C/C++)
-* look at other programs
-    * coreldraw
-    * gimp
-    * imagej
-    * irfanview
-    * paint
-    * photofiltre
-    * photoshop
-    * pinta
-    * xnview
-    * my old java image viewer project
