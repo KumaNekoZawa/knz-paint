@@ -96,6 +96,7 @@ import knz.paint.model.effects.specific.xy.ExplosionEffect;
 import knz.paint.model.effects.specific.xy.FlipEffect;
 import knz.paint.model.effects.specific.xy.MirrorEffect;
 import knz.paint.model.effects.specific.xy.MosaicEffect;
+import knz.paint.model.effects.specific.xy.MosaicMirrorEffect;
 import knz.paint.model.effects.specific.xy.RippleEffect;
 import knz.paint.model.effects.specific.xy.ShearSlicingEffect;
 import knz.paint.model.effects.specific.xy.StainedGlassEffect;
@@ -146,6 +147,7 @@ public class MainWindow extends JFrame {
         new FlipEffect(),
         new MirrorEffect(),
         new MosaicEffect(),
+        new MosaicMirrorEffect(),
         new RippleEffect(),
         new ShearSlicingEffect(),
         new StainedGlassEffect(),
