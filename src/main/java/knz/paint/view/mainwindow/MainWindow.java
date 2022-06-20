@@ -45,6 +45,7 @@ import knz.paint.model.ImageState;
 import knz.paint.model.effects.EffectState;
 import knz.paint.model.effects.parameter.AbstractParameter;
 import knz.paint.model.effects.specific.AbstractEffect;
+import knz.paint.model.effects.specific.AncientMapEffect;
 import knz.paint.model.effects.specific.area.OilPaintingEffect;
 import knz.paint.model.effects.specific.area.RankEffect;
 import knz.paint.model.effects.specific.area.custom.Custom3x3Effect;
@@ -203,6 +204,8 @@ public class MainWindow extends JFrame {
         new RankEffect(),
         /* graphics */
         new TadaEffect(),
+        /* misc */
+        new AncientMapEffect(),
     };
 
     private ColorPickerWindow colorPickerWindow = null;

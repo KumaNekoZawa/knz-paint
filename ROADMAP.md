@@ -40,7 +40,7 @@
     * "Map editor" tool to draw images that snap to a 16x16 (or whatever) grid
 * add more effects
     * replace color A with color B effect (with threshold)
-    * black & white effect with threshold depended on x,y coords
+    * black & white effect with threshold depended on x,y coords (this effect might be out of scope of this project)
     * "bone distort" effect
     * delftware effect
 * some effects that change the canvas size should be specially implemented
