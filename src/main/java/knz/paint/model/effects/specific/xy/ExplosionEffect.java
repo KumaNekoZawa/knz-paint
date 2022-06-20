@@ -3,6 +3,7 @@ package knz.paint.model.effects.specific.xy;
 import knz.paint.model.effects.parameter.BorderFillStrategy;
 import knz.paint.model.effects.parameter.DoubleParameter;
 
+/* also called "Diffuse effect" */
 public class ExplosionEffect extends AbstractXYEffect {
 
     private DoubleParameter paramRadius = new DoubleParameter("Radius", 0, 0, 100);

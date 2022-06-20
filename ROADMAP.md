@@ -14,6 +14,7 @@
     * basically update the subimage when necessary!
 * some Listeners are in the View, some are in the Model; fix this
 * when using the ColorPickerWindow the user should be able to select a color from the image
+* the hue slider in the ColorPickerWindow should use degrees 0°-359°
 
 # Enhancements
 * redraw icons to match the style from 90s Paint/Photoshop/etc. but still be self-drawn and usable
@@ -35,20 +36,13 @@
     * measure tool? (measures distances)
     * magnetic lasso tool? (as in Photoshop)
     * magic wand tool? (as in Photoshop)
+    * replace color tool? (as in IrfanPaint)
     * "Map editor" tool to draw images that snap to a 16x16 (or whatever) grid
 * add more effects
     * replace color A with color B effect (with threshold)
     * black & white effect with threshold depended on x,y coords
     * "bone distort" effect
     * delftware effect
-    * composite edge detection effect
-        * Extract brightness
-        * (Adjust background color using flood fill if black)
-        * Gamma correction 2.0~7.0
-        * Threshold ~0.66
-        * Laplacian 3x3
-        * Negate brightness
-        * Minimum (rank) effect
 * some effects that change the canvas size should be specially implemented
     * "Resize" function
     * "Rotate left/right" functions
@@ -71,3 +65,4 @@
     * some menu points need entries too
     * new/open reset the history
     * history tree!?
+    * now we can do composite effects!

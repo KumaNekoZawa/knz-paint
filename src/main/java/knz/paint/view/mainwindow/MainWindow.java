@@ -60,6 +60,7 @@ import knz.paint.model.effects.specific.hsba.MixColorHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NegateHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NoiseHSBAEffect;
 import knz.paint.model.effects.specific.hsba.NormalizeHSBAEffect;
+import knz.paint.model.effects.specific.hsba.PassHSBAEffect;
 import knz.paint.model.effects.specific.hsba.QuantizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.SolarizeHSBAEffect;
 import knz.paint.model.effects.specific.hsba.colorblindness.AchromatopsiaEffect;
@@ -84,6 +85,7 @@ import knz.paint.model.effects.specific.rgba.MixColorRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NegateRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NoiseRGBAEffect;
 import knz.paint.model.effects.specific.rgba.NormalizeRGBAEffect;
+import knz.paint.model.effects.specific.rgba.PassRGBAEffect;
 import knz.paint.model.effects.specific.rgba.QuantizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SolarizeRGBAEffect;
 import knz.paint.model.effects.specific.rgba.SwapRedBlueEffect;
@@ -91,9 +93,9 @@ import knz.paint.model.effects.specific.xy.AdjustCartesianEffect;
 import knz.paint.model.effects.specific.xy.DistortionEffect;
 import knz.paint.model.effects.specific.xy.ExplosionEffect;
 import knz.paint.model.effects.specific.xy.FlipEffect;
-import knz.paint.model.effects.specific.xy.FunhouseMirrorEffect;
 import knz.paint.model.effects.specific.xy.MirrorEffect;
 import knz.paint.model.effects.specific.xy.MosaicEffect;
+import knz.paint.model.effects.specific.xy.RippleEffect;
 import knz.paint.model.effects.specific.xy.ShearSlicingEffect;
 import knz.paint.model.effects.specific.xy.StainedGlassEffect;
 import knz.paint.model.effects.specific.xy.ZoomEffect;
@@ -141,9 +143,9 @@ public class MainWindow extends JFrame {
         new DistortionEffect(),
         new ExplosionEffect(),
         new FlipEffect(),
-        new FunhouseMirrorEffect(),
         new MirrorEffect(),
         new MosaicEffect(),
+        new RippleEffect(),
         new ShearSlicingEffect(),
         new StainedGlassEffect(),
         new ZoomEffect(),
@@ -165,6 +167,7 @@ public class MainWindow extends JFrame {
         new NegateRGBAEffect(),
         new NoiseRGBAEffect(),
         new NormalizeRGBAEffect(),
+        new PassRGBAEffect(),
         new QuantizeRGBAEffect(),
         new SolarizeRGBAEffect(),
         new SwapRedBlueEffect(),
@@ -190,6 +193,7 @@ public class MainWindow extends JFrame {
         new NegateHSBAEffect(),
         new NoiseHSBAEffect(),
         new NormalizeHSBAEffect(),
+        new PassHSBAEffect(),
         new QuantizeHSBAEffect(),
         new SolarizeHSBAEffect(),
         /* area */
