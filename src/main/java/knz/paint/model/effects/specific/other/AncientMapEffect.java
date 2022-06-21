@@ -1,11 +1,13 @@
-package knz.paint.model.effects.specific;
+package knz.paint.model.effects.specific.other;
 
 import java.awt.image.BufferedImage;
+
+import knz.paint.model.effects.specific.AbstractEffect;
 
 public class AncientMapEffect extends AbstractEffect {
 
     public AncientMapEffect() {
-        super("Misc.Ancient map");
+        super("Other.Ancient map");
     }
 
     @Override
